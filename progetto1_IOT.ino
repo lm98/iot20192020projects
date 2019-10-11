@@ -29,6 +29,8 @@ void loop() {
    * Leggo il potenziometro e scelgo il livello
    */
   livello=scegli_livello(analogRead(POTENTIOMETER));
+
+  
 }
 
 int scegli_livello(int valore){
