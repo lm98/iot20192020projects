@@ -1,12 +1,4 @@
-#define LED_VERDE_1 2
-#define LED_VERDE_2 5 
-#define LED_VERDE_3 7
-#define LED_BIANCO 9
-#define LED_ROSSO 8
-#define POTENTIOMETER A0
-#define BUTTON_START 12
-#define BUTTON_DOWN 13
-
+#include "macros.h"
 int livello = 0;
 
 bool gameStart;
@@ -35,6 +27,7 @@ void loop() {
   // NEW GAME PHASE //
   if(gameStart){
    blink();
+   Serial.println("C");
   }
   
   /*
@@ -47,34 +40,21 @@ void loop() {
 
 void blink(){
   if(currentBlinkDirection==0){
-    digitalWrite(LED_VERDE_1, HIGH);
-    delay(0);
-    digitalWrite(LED_VERDE_1, LOW);
-    delay(0);
-    digitalWrite(LED_VERDE_2, HIGH);
-    delay(0);
-    digitalWrite(LED_VERDE_2, LOW);
-    delay(0);
-    digitalWrite(LED_VERDE_3, HIGH);
-    delay(0);
-    digitalWrite(LED_VERDE_3, LOW);
-    delay(0);
+    blink_and_delay(LED_VERDE_1);
+    blink_and_delay(LED_VERDE_2);
+    blink_and_delay(LED_VERDE_3);
     currentBlinkDirection = 1;
   } else if(currentBlinkDirection==1){
-    digitalWrite(LED_VERDE_3, HIGH);
-    delay(0);
-    digitalWrite(LED_VERDE_3, LOW);
-    delay(0);
-    digitalWrite(LED_VERDE_2, HIGH);
-    delay(0);
-    digitalWrite(LED_VERDE_2, LOW);
-    delay(0);
-    digitalWrite(LED_VERDE_1, HIGH);
-    delay(0);
-    digitalWrite(LED_VERDE_1, LOW);
-    delay(0);
+    blink_and_delay(LED_VERDE_2);
     currentBlinkDirection = 0;   
   }
+}
+
+void blink_and_delay(int pin){ 
+  digitalWrite(pin,HIGH);
+  delay(DELAY_TIME);
+  digitalWrite(pin,LOW);
+  delay(DELAY_TIME);
 }
 
 int scegli_livello(int valore){
