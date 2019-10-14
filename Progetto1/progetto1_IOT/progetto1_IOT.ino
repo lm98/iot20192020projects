@@ -1,6 +1,7 @@
 #include "macros.h"
 #include "gamestart.h"
 #include "gameloop.h"
+#include "gameover.h"
 
 extern bool gameStart;
 
@@ -17,10 +18,11 @@ void setup() {
 
   // New Game phase setup:
   currentBlinkDirection = 0;
-  gameStart=true;
+  gameStart = true;
+  
   //Game Loop phase setup:
-  level=0;
-  fade_delay=10;
+  level = 0;
+  fade_delay = 10;
 
   //Button management
   attachInterrupt(digitalPinToInterrupt(BUTTON_START), start_game, RISING);
@@ -30,12 +32,11 @@ void setup() {
 }
 
 void loop() {
+  
   // NEW GAME PHASE //
   if(gameStart){
-    Serial.println(gameStart);
-    Serial.println("Sono dentro il loop");
    blink();
   }
   
-  level=choose_level(analogRead(POTENTIOMETER));
+  level = choose_level(analogRead(POTENTIOMETER));
 }

@@ -4,7 +4,6 @@
 
 bool gameStart;
 
-/* Blinks the argument pin one time */
 void blink_and_delay(int pin){ 
   digitalWrite(pin,HIGH);
   delay(DELAY_TIME);
@@ -28,8 +27,8 @@ void blink(){
  * 
  */
  void start_game(){
-  Serial.println("GO\n");
-  gameStart=false;
+  Serial.println("Go!\n");
+  gameStart = false;
   digitalWrite(LED_VERDE_1,LOW);
   digitalWrite(LED_VERDE_2,LOW);
   digitalWrite(LED_VERDE_3,LOW);

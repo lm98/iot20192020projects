@@ -4,6 +4,6 @@
 /**
  * The Game Over event, the program displays the final score and resets itself.
  */
-game_over(int);
+void game_over(int);
 
 #endif
