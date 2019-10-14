@@ -9,6 +9,6 @@
 #define POTENTIOMETER A0
 #define BUTTON_START 12
 #define BUTTON_DOWN 13
-#define DELAY_TIME 300
+#define DELAY_TIME 100
 
 #endif

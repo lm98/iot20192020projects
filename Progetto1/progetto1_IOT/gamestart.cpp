@@ -1,4 +1,4 @@
-#include <arduino.h>
+#include <Arduino.h>
 #include "macros.h"
 #include "gamestart.h"
 
@@ -21,3 +21,7 @@ void blink(){
     currentBlinkDirection = 0;   
   }
 }
+
+
+
+void fade

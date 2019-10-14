@@ -1,6 +1,5 @@
 #include "macros.h"
 #include "gamestart.h"
-int livello = 0;
 
 void setup() {
   // pin setup:
@@ -16,6 +15,9 @@ void setup() {
   // New Game phase setup:
   gameStart = true;
   currentBlinkDirection = 0;
+
+  //Game Loop phase setup:
+  livello=0;
   
   Serial.begin(9600);
   Serial.println("Welcome to Led to Bag. Press Key TS to Start\n");
@@ -27,14 +29,7 @@ void loop() {
    blink();
   }
   
-  /*
-   * Leggo il potenziometro e scelgo il livello
-   */
   livello=scegli_livello(analogRead(POTENTIOMETER));
 
   
-}
-
-int scegli_livello(int valore){
-  return valore/128;
 }
