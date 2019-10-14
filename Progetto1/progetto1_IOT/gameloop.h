@@ -1,9 +1,17 @@
 #ifndef _GAMELOOP_H_
 #define _GAMELOOP_H_
 
+static int fade_delay;
+static int level;
+
 /*
- * Legge il valore del potenziometro e lo traduce in una variabile da 1 a 8
+ * Read the pot. value and translate it in a value between 1 and 8
  */
-int scegli_livello(int);
+int choose_level(int);
+
+/*
+ * Pulse the led in pin specified in parameters
+ */
+void fade_led(int);
 
 #endif

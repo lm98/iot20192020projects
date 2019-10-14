@@ -1,5 +1,8 @@
 #include "macros.h"
 #include "gamestart.h"
+#include "gameloop.h"
+
+extern bool gameStart;
 
 void setup() {
   // pin setup:
@@ -13,11 +16,14 @@ void setup() {
   pinMode(BUTTON_DOWN,INPUT);
 
   // New Game phase setup:
-  gameStart = true;
   currentBlinkDirection = 0;
-
+  gameStart=true;
   //Game Loop phase setup:
-  livello=0;
+  level=0;
+  fade_delay=10;
+
+  //Button management
+  attachInterrupt(digitalPinToInterrupt(BUTTON_START), start_game, RISING);
   
   Serial.begin(9600);
   Serial.println("Welcome to Led to Bag. Press Key TS to Start\n");
@@ -26,10 +32,10 @@ void setup() {
 void loop() {
   // NEW GAME PHASE //
   if(gameStart){
+    Serial.println(gameStart);
+    Serial.println("Sono dentro il loop");
    blink();
   }
   
-  livello=scegli_livello(analogRead(POTENTIOMETER));
-
-  
+  level=choose_level(analogRead(POTENTIOMETER));
 }

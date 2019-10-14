@@ -2,6 +2,8 @@
 #include "macros.h"
 #include "gamestart.h"
 
+bool gameStart;
+
 /* Blinks the argument pin one time */
 void blink_and_delay(int pin){ 
   digitalWrite(pin,HIGH);
@@ -22,6 +24,15 @@ void blink(){
   }
 }
 
-
-
-void fade
+/*
+ * 
+ */
+ void start_game(){
+  Serial.println("GO\n");
+  gameStart=false;
+  digitalWrite(LED_VERDE_1,LOW);
+  digitalWrite(LED_VERDE_2,LOW);
+  digitalWrite(LED_VERDE_3,LOW);
+  digitalWrite(LED_BIANCO,HIGH);
+  
+ }
