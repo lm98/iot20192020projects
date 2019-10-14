@@ -1,3 +1,6 @@
+#ifndef _MACROS_H_
+#define _MACROS_H_
+
 #define LED_VERDE_1 2
 #define LED_VERDE_2 4 
 #define LED_VERDE_3 7
@@ -7,3 +10,5 @@
 #define BUTTON_START 12
 #define BUTTON_DOWN 13
 #define DELAY_TIME 300
+
+#endif

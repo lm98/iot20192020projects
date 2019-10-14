@@ -1,8 +1,6 @@
 #include "macros.h"
+#include "gamestart.h"
 int livello = 0;
-
-bool gameStart;
-int currentBlinkDirection;
 
 void setup() {
   // pin setup:
@@ -27,7 +25,6 @@ void loop() {
   // NEW GAME PHASE //
   if(gameStart){
    blink();
-   Serial.println("C");
   }
   
   /*
@@ -36,25 +33,6 @@ void loop() {
   livello=scegli_livello(analogRead(POTENTIOMETER));
 
   
-}
-
-void blink(){
-  if(currentBlinkDirection==0){
-    blink_and_delay(LED_VERDE_1);
-    blink_and_delay(LED_VERDE_2);
-    blink_and_delay(LED_VERDE_3);
-    currentBlinkDirection = 1;
-  } else if(currentBlinkDirection==1){
-    blink_and_delay(LED_VERDE_2);
-    currentBlinkDirection = 0;   
-  }
-}
-
-void blink_and_delay(int pin){ 
-  digitalWrite(pin,HIGH);
-  delay(DELAY_TIME);
-  digitalWrite(pin,LOW);
-  delay(DELAY_TIME);
 }
 
 int scegli_livello(int valore){
