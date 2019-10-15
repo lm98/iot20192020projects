@@ -2,6 +2,7 @@
 #include "macros.h"
 #include "gameloop.h"
 
+int pin;
 
 int choose_level(int value){
   return value/128;
@@ -23,4 +24,14 @@ void fade_led(int led_pin){
     analogWrite(led_pin,i);
     delay(fade_delay);
   }
+}
+
+void init_rnd_led(){
+  pin = random(4,7);
+  //fade_led(pin);
+  digitalWrite(pin,HIGH);
+}
+
+void down(){
+  pin--;
 }

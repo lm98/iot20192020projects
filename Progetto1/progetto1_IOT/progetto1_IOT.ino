@@ -3,7 +3,7 @@
 #include "gameloop.h"
 #include "gameover.h"
 
-extern bool gameStart;
+extern int gameStart;
 
 void setup() {
   // pin setup:
@@ -18,15 +18,16 @@ void setup() {
 
   // New Game phase setup:
   currentBlinkDirection = 0;
-  gameStart = true;
+  gameStart = 0;
   
   //Game Loop phase setup:
+  randomSeed(analogRead(0));
   level = 0;
   fade_delay = 10;
 
   //Button management
   attachInterrupt(digitalPinToInterrupt(BUTTON_START), start_game, RISING);
-  
+  attachInterrupt(digitalPinToInterrupt(BUTTON_DOWN), down ,RISING);
   Serial.begin(9600);
   Serial.println("Welcome to Led to Bag. Press Key TS to Start\n");
 }
@@ -34,8 +35,13 @@ void setup() {
 void loop() {
   
   // NEW GAME PHASE //
-  if(gameStart){
+  if(gameStart==0){
    blink();
+  }else if(gameStart==1){
+    init_rnd_led();
+    gameStart++;
+  }else{
+    
   }
   
   level = choose_level(analogRead(POTENTIOMETER));

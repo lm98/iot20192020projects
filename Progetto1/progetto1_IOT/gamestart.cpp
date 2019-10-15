@@ -2,7 +2,7 @@
 #include "macros.h"
 #include "gamestart.h"
 
-bool gameStart;
+int gameStart;
 
 void blink_and_delay(int pin){ 
   digitalWrite(pin,HIGH);
@@ -28,10 +28,11 @@ void blink(){
  */
  void start_game(){
   Serial.println("Go!\n");
-  gameStart = false;
-  digitalWrite(LED_VERDE_1,LOW);
+  gameStart = 1;
+  /*digitalWrite(LED_VERDE_1,LOW);
   digitalWrite(LED_VERDE_2,LOW);
   digitalWrite(LED_VERDE_3,LOW);
-  digitalWrite(LED_BIANCO,HIGH);
+  digitalWrite(LED_BIANCO,HIGH);*/
+  
   
  }
