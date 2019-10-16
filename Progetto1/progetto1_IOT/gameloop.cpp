@@ -2,8 +2,9 @@
 #include "macros.h"
 #include "gameloop.h"
 
-int pin;
-
+int pin_to_led[5] = {LED_VERDE_1,LED_VERDE_2,LED_VERDE_3, LED_BIANCO,LED_ROSSO};
+int led;
+//int current_i=0;
 int choose_level(int value){
   return value/128;
 }
@@ -27,11 +28,14 @@ void fade_led(int led_pin){
 }
 
 void init_rnd_led(){
-  pin = random(4,7);
-  //fade_led(pin);
-  digitalWrite(pin,HIGH);
+  led= random(0,3);
+  Serial.println(led);
+  digitalWrite(pin_to_led[led],HIGH);
 }
 
 void down(){
-  pin--;
+  digitalWrite(pin_to_led[led],LOW);
+  
+  led++;
+  digitalWrite(pin_to_led[led],HIGH);
 }

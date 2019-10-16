@@ -21,7 +21,7 @@ void setup() {
   gameStart = 0;
   
   //Game Loop phase setup:
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(A5));
   level = 0;
   fade_delay = 10;
 
