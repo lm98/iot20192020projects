@@ -27,12 +27,9 @@ void blink(){
  * 
  */
  void start_game(){
-  Serial.println("Go!\n");
-  gameStart = 1;
-  /*digitalWrite(LED_VERDE_1,LOW);
-  digitalWrite(LED_VERDE_2,LOW);
-  digitalWrite(LED_VERDE_3,LOW);
-  digitalWrite(LED_BIANCO,HIGH);*/
-  
-  
+  if (gameStart==0){
+    Serial.println("Go!\n");
+    gameStart = 1;
+  }
+
  }

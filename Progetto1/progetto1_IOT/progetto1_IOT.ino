@@ -4,6 +4,8 @@
 #include "gameover.h"
 
 extern int gameStart;
+extern int current_led;
+extern int pin_to_led[5];
 
 void setup() {
   // pin setup:
@@ -41,7 +43,14 @@ void loop() {
     init_rnd_led();
     gameStart++;
   }else{
-    
+    if(current_led>=0){
+      digitalWrite(pin_to_led[current_led-1], LOW);
+    }
+    if(pin_to_led[current_led]==LED_BIANCO){
+      fade_led(current_led);
+    }else{
+      digitalWrite(pin_to_led[current_led], HIGH);
+    }
   }
   
   level = choose_level(analogRead(POTENTIOMETER));

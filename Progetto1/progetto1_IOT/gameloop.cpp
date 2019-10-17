@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include "macros.h"
 #include "gameloop.h"
+#include "gameover.h"
 
 int pin_to_led[5] = {LED_VERDE_1,LED_VERDE_2,LED_VERDE_3, LED_BIANCO,LED_ROSSO};
-int led;
-//int current_i=0;
+
+int current_led;
+
 int choose_level(int value){
   return value/128;
 }
@@ -25,17 +27,16 @@ void fade_led(int led_pin){
     analogWrite(led_pin,i);
     delay(fade_delay);
   }
+    digitalWrite(pin_to_led[current_led],LOW);
 }
 
 void init_rnd_led(){
-  led= random(0,3);
-  Serial.println(led);
-  digitalWrite(pin_to_led[led],HIGH);
+  current_led= random(0,3);
+  Serial.println(current_led);
+  digitalWrite(pin_to_led[current_led],HIGH);
 }
 
 void down(){
-  digitalWrite(pin_to_led[led],LOW);
-  
-  led++;
-  digitalWrite(pin_to_led[led],HIGH);
+  current_led++;
 }
+  
