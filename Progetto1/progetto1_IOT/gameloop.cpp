@@ -3,16 +3,21 @@
 #include "gameloop.h"
 #include "gamestart.h"
 
-int pin_to_led[5] = {LED_VERDE_1,LED_VERDE_2,LED_VERDE_3, LED_BIANCO,LED_ROSSO};
+extern int gameStart;
+int pin_to_led[5] = {LED_VERDE_1, LED_VERDE_2, LED_VERDE_3, LED_BIANCO, LED_ROSSO};
+short current_led;
+int last_score = 0;
 
-int current_led;
+int choose_level(){
+  return analogRead(POTENTIOMETER)/128;
+}
 
-int choose_level(int value){
-  return value/128;
+float calculate_dt(float dt){
+  return (dt)*(7/8);
 }
 
 void fade_led(int led_pin){
-  int i;
+  short i;
   /*
    * Turn on slowly
    */
@@ -31,13 +36,13 @@ void fade_led(int led_pin){
 }
 
 void down(){
-  current_led++;
-  if(pin_to_led[current_led]==LED_ROSSO){
-      //Gestione led rosso -> gameover
+  if (gameStart==2){
+    current_led++;
+  if(pin_to_led[current_led]==LED_ROSSO){   // Gestione led rosso -> gameover 
       game_over(pin_to_led[current_led]);
-      delay(2000);
       restart_game();
     }
+  }
 }
 
 void led_in_bag(){
@@ -46,11 +51,11 @@ void led_in_bag(){
   score++;
   Serial.print("Another object in the bag! Count: ");
   Serial.print(score);
-  Serial.print(" objects!\n");
+  Serial.println(" objects!");
 }
 
 void all_led_off(int min_led,int max_led){
-  for(int i=min_led; i<=max_led;i++)
+  for(short i=min_led; i<=max_led;i++)
     digitalWrite(pin_to_led[i],LOW);
 }
 
@@ -59,8 +64,15 @@ void game_over(int current_led){
   digitalWrite(LED_ROSSO, HIGH);
   Serial.print("Game Over - Score: ");
   Serial.println(score);
-  //delay(2000); //Questo delay non funziona
-  //Serial.println("Finito delay");
-  //digitalWrite(LED_ROSSO, LOW);
   score = 0;
+}
+
+void time_over(){
+  /*if(gameStart==2){
+     if(score==last_score){
+      game_over(current_led);
+    }
+    last_score = score;
+  }*/
+  game_over(current_led); 
 }

@@ -9,6 +9,7 @@
 #define POTENTIOMETER A0
 #define BUTTON_START 2
 #define BUTTON_DOWN 3
-#define DELAY_TIME 100
+#define DELAY_TIME 100 
+#define DELTA_T 6000000 //Micro seconds
 
 #endif
