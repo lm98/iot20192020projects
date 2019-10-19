@@ -1,11 +1,6 @@
 #ifndef _GAMESTART_H_
 #define _GAMESTART_H_
 
-/**
- * Indicates if the Leds are wether blinking in a top-down or bottom-up direction
- */
-static int currentBlinkDirection;
-
 /* 
  * Blinks the argument pin one time 
  */

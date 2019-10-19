@@ -1,8 +1,6 @@
 #ifndef _GAMELOOP_H_
 #define _GAMELOOP_H_
 
-static int fade_delay = 1;
-static int level;
 static int score;
 
 /*
@@ -33,7 +31,7 @@ void led_in_bag();
 /**
  * The Game Over event, the program displays the final score and resets itself.
  */
-void game_over(int);
+void game_over();
 
 /*
  * Time over event

@@ -3,7 +3,8 @@
 #include "gamestart.h"
 
 extern int pin_to_led[5];
-short gameStart;
+int gameStart;
+int j; //Only for cycles
 
 void blink_and_delay(int pin){ 
   digitalWrite(pin,HIGH);
@@ -13,22 +14,8 @@ void blink_and_delay(int pin){
 }
 
 void blink(){
-  /*
-   * Accendo i tre led verdi in sequenza
-   */
-//  digitalWrite(LED_ROSSO,LOW);
-//  if(currentBlinkDirection==0){
-//    blink_and_delay(LED_VERDE_1);
-//    blink_and_delay(LED_VERDE_2);
-//    blink_and_delay(LED_VERDE_3);
-//    currentBlinkDirection = 1;
-//  } else if(currentBlinkDirection==1){
-//    blink_and_delay(LED_VERDE_2);
-//    currentBlinkDirection = 0;   
-//  }
-  digitalWrite(LED_ROSSO,LOW);
-  for(int i = LED_VERDE_1; i <= LED_VERDE_3; i++){
-    blink_and_delay(i);
+  for(j = LED_VERDE_1; j <= LED_VERDE_3; j++){
+    blink_and_delay(j);
   }
   blink_and_delay(LED_VERDE_2);
 }
@@ -46,12 +33,10 @@ int init_rnd_led(){
 }
 
 int init_game(){
-  int current_led;
-  for(int i=0; i<=4;i++)
-    digitalWrite(pin_to_led[i],LOW);
-  current_led=init_rnd_led();
+  for(j=LED_VERDE_1; j<=LED_ROSSO; j++)
+    digitalWrite(j,LOW);
   gameStart=2;
-  return current_led;
+  return init_rnd_led();
 }
 
 void restart_game(){

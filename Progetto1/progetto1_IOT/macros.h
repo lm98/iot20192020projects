@@ -10,6 +10,8 @@
 #define BUTTON_START 2
 #define BUTTON_DOWN 3
 #define DELAY_TIME 100 
-#define DELTA_T 6000000 //Micro seconds
+#define DELTA_T 4000 //Milli seconds
+#define FADE_DELAY 1 //millisecond
+#define DEBOUNCE_TIME 150
 
 #endif

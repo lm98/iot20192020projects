@@ -1,37 +1,36 @@
 #include "macros.h"
 #include "gamestart.h"
 #include "gameloop.h"
-#include "TimerOne.h"
 
 extern int gameStart;
 extern int current_led;
 extern int pin_to_led[5];
-float dt = DELTA_T+(DELTA_T*1/8);
+extern boolean gameOver;
+int level;
+int y;
+
+
+extern void all_led_off(int,int);
+
+float dt = DELTA_T;
+
+unsigned long currentTime;
+unsigned long previousTime=0;
 
 void setup() {
-  
+
   // Pin Setup:
-  pinMode(LED_VERDE_1,OUTPUT);
-  pinMode(LED_VERDE_2,OUTPUT);
-  pinMode(LED_VERDE_3,OUTPUT);
-  pinMode(LED_ROSSO,OUTPUT);
-  pinMode(LED_BIANCO,OUTPUT);
+  for(y=0;y<5;y++)
+    pinMode(pin_to_led[y],OUTPUT);
   pinMode(POTENTIOMETER,INPUT);
   pinMode(BUTTON_START,INPUT);
   pinMode(BUTTON_DOWN,INPUT);
 
   // New Game phase setup:
   gameStart = 0;
-
-  // Timer event management
-  Timer1.initialize(dt);
-  //Timer1.attachInterrupt(time_over);
-  //Timer1.stop();
-  
   
   //Game Loop phase setup:
   randomSeed(analogRead(A5));
-  fade_delay = 15;
   score = 0;
   
   //Button management
@@ -45,29 +44,67 @@ void setup() {
 
 void loop() {
  
-  if(gameStart==0){// NEW GAME PHASE //
-   blink();
-   level=choose_level();
-   
-  }else if(gameStart==1){// GAME INIT PHASE //
-    //Timer1.setPeriod(calculate_dt(dt));
-    //Timer1.restart(); //Start the timeout timer
-    Timer1.attachInterrupt(time_over);
-    current_led=init_game();
-  }else if(gameStart==2){// GAME PLAY PHASE //
-    if(current_led>0 && current_led<4){
-      digitalWrite(pin_to_led[current_led-1], LOW);
-    }
-    if(pin_to_led[current_led]==LED_BIANCO){//Gestione Led in bag
-         
-      led_in_bag();
-      if(pin_to_led[current_led]!=LED_ROSSO){
-        current_led=init_game();
-      }
-    }
-    if(pin_to_led[current_led]!=LED_ROSSO){
-      digitalWrite(pin_to_led[current_led], HIGH);
-    }
-  }
+ switch(gameStart){
   
+  case 0:
+      blink();
+      //level=choose_level();
+  break;
+  
+  case 1:
+      currentTime=millis();
+      previousTime=currentTime;
+      current_led=init_game();
+  break;
+   
+  case 2:
+      currentTime=millis();
+      if(currentTime-previousTime>dt)
+      {
+        game_over();
+        Serial.println("Time Over");
+      }
+      else
+      {
+        all_led_off(0,4);
+        switch(pin_to_led[current_led]){
+          case LED_VERDE_1:
+          case LED_VERDE_2:
+          case LED_VERDE_3:
+            digitalWrite(pin_to_led[current_led], HIGH);
+          break;
+  
+          case LED_BIANCO:
+            previousTime=currentTime;
+            led_in_bag();
+            if(gameStart!=3)
+              current_led=init_game();       
+          break;
+  
+          case LED_ROSSO:
+            game_over();
+          break;
+  
+          default:
+            //Do nothing  
+          break;
+      }
+     } 
+    break;
+    
+    case 3:
+        all_led_off(0,3);
+        score = 0;
+        digitalWrite(LED_ROSSO, HIGH);
+        Serial.print("Game Over - Score: ");
+        Serial.println(score);    
+        delay(2000);
+        digitalWrite(LED_ROSSO, LOW);
+        restart_game();
+    break;
+    
+    default:
+      //Default
+    break;  
+  }
 }
