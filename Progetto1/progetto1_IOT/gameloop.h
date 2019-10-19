@@ -43,4 +43,10 @@ void time_over();
  */
 float calculate_dt(float);
 
+/*
+ * Initialize the delta time from the level
+ */
+void dt_init(int);
+
+
 #endif

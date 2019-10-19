@@ -5,6 +5,7 @@
 extern int pin_to_led[5];
 int gameStart;
 int j; //Only for cycles
+int level;
 
 void blink_and_delay(int pin){ 
   digitalWrite(pin,HIGH);
@@ -14,10 +15,10 @@ void blink_and_delay(int pin){
 }
 
 void blink(){
-  for(j = LED_VERDE_1; j <= LED_VERDE_3; j++){
+  for(j = GREEN_LED_1; j <= GREEN_LED_3; j++){
     blink_and_delay(j);
   }
-  blink_and_delay(LED_VERDE_2);
+  blink_and_delay(GREEN_LED_2);
 }
 
 void start_game(){
@@ -33,7 +34,7 @@ int init_rnd_led(){
 }
 
 int init_game(){
-  for(j=LED_VERDE_1; j<=LED_ROSSO; j++)
+  for(j=GREEN_LED_1; j<=RED_LED; j++)
     digitalWrite(j,LOW);
   gameStart=2;
   return init_rnd_led();

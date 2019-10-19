@@ -6,13 +6,13 @@ extern int gameStart;
 extern int current_led;
 extern int pin_to_led[5];
 extern boolean gameOver;
-int level;
+extern int level;
 int y;
 
 
 extern void all_led_off(int,int);
 
-float dt = DELTA_T;
+extern float dt;
 
 unsigned long currentTime;
 unsigned long previousTime=0;
@@ -48,7 +48,8 @@ void loop() {
   
   case 0:
       blink();
-      //level=choose_level();
+      level=choose_level();
+      dt_init(level);
   break;
   
   case 1:
@@ -68,25 +69,20 @@ void loop() {
       {
         all_led_off(0,4);
         switch(pin_to_led[current_led]){
-          case LED_VERDE_1:
-          case LED_VERDE_2:
-          case LED_VERDE_3:
-            digitalWrite(pin_to_led[current_led], HIGH);
-          break;
-  
-          case LED_BIANCO:
+          
+          case WHITE_LED:
             previousTime=currentTime;
             led_in_bag();
             if(gameStart!=3)
               current_led=init_game();       
           break;
   
-          case LED_ROSSO:
+          case RED_LED:
             game_over();
           break;
   
           default:
-            //Do nothing  
+            digitalWrite(pin_to_led[current_led], HIGH);  
           break;
       }
      } 
@@ -95,16 +91,13 @@ void loop() {
     case 3:
         all_led_off(0,3);
         score = 0;
-        digitalWrite(LED_ROSSO, HIGH);
+        digitalWrite(RED_LED, HIGH);
         Serial.print("Game Over - Score: ");
         Serial.println(score);    
         delay(2000);
-        digitalWrite(LED_ROSSO, LOW);
+        digitalWrite(RED_LED, LOW);
         restart_game();
     break;
     
-    default:
-      //Default
-    break;  
   }
 }

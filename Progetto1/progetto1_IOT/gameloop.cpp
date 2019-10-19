@@ -7,10 +7,12 @@ boolean gameOver = false;
 boolean isFading = false;
 extern int gameStart;
 
-int pin_to_led[5] = { LED_VERDE_1, LED_VERDE_2, LED_VERDE_3, LED_BIANCO, LED_ROSSO};
+int pin_to_led[5] = { GREEN_LED_1, GREEN_LED_2, GREEN_LED_3, WHITE_LED, RED_LED};
 volatile int current_led;
 int last_score = 0;
 int i=0; //Only for cycles
+
+float dt;
 
 volatile unsigned long last_interrupt_time;
 volatile unsigned long interrupt_time;
@@ -19,8 +21,13 @@ int choose_level(){
   return analogRead(POTENTIOMETER)/128;
 }
 
-float calculate_dt(float dt){
-  return (dt)*(7/8);
+void dt_init(int level){
+  float penalty_factor = level/10;
+  dt = DELTA_T - penalty_factor;
+}
+
+void calculate_dt(){
+  dt = dt * 7/8;
 }
 
 void fade_led(int led_pin){
@@ -55,10 +62,10 @@ void down(){
 void led_in_bag(){ //todo fare in modo che aumenti solo se non si perde
   fade_led(pin_to_led[current_led]);
   score++;
+  calculate_dt();
   Serial.print("Another object in the bag! Count: ");
   Serial.print(score);
   Serial.println(" objects!");
-  
 }
 
 void all_led_off(int min_led,int max_led){
