@@ -9,8 +9,11 @@ extern boolean gameOver;
 extern int level;
 int y;
 
-
-extern void all_led_off(int,int);
+/*
+ * Si usa questa notazione : 
+ * diocane come punto e virgola
+ */
+void all_led_off(int,int);
 
 extern float dt;
 
@@ -50,19 +53,17 @@ void loop() {
       blink();
       level=choose_level();
       dt_init(level);
-        Serial.println(dt);
-  break;
+      break;
   
   case 1:
       currentTime=millis();
       previousTime=currentTime;
       current_led=init_game();
-  break;
+      break;
    
   case 2:
       currentTime=millis();
-      if(currentTime-previousTime>dt)
-      {
+      if(currentTime-previousTime>dt){
         game_over();
         Serial.println("Time Over");
       }
@@ -72,22 +73,23 @@ void loop() {
         switch(pin_to_led[current_led]){
           
           case WHITE_LED:
-            previousTime=currentTime;
             led_in_bag();
-            if(gameStart!=3)
+            previousTime=millis();
+            if(gameStart!=3){
               current_led=init_game();
-          break;
+            }
+            break;
   
           case RED_LED:digitalWrite(pin_to_led[current_led], HIGH);
             game_over();
-          break;
+            break;
   
           default:
             digitalWrite(pin_to_led[current_led], HIGH);
-          break;
-      }
-     } 
-    break;
+            break;
+       }
+      } 
+      break;
     
     case 3:
         all_led_off(0,3);
@@ -98,7 +100,7 @@ void loop() {
         delay(2000);
         digitalWrite(RED_LED, LOW);
         restart_game();
-    break;
+        break;
     
   }
 }

@@ -11,7 +11,8 @@
 #define BUTTON_DOWN 3
 #define DELAY_TIME 100 
 #define DELTA_T 4000 //milliseconds
-#define FADE_DELAY 1 //millisecond
-#define DEBOUNCE_TIME 150 
+#define FADE_DELAY 2 //millisecond
+#define DEBOUNCE_TIME 150
+#define PENALTY 400
 
 #endif

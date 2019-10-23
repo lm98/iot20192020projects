@@ -48,5 +48,5 @@ float calculate_dt(float);
  */
 void dt_init(int);
 
-
+void all_led_off(int,int);
 #endif
