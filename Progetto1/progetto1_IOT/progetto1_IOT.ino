@@ -20,12 +20,12 @@ unsigned long previousTime=0;
 void setup() {
 
   // Pin Setup:
-  for(y=0;y<5;y++)
+  for(y=0;y<5;y++){
     pinMode(pin_to_led[y],OUTPUT);
+  }
   pinMode(POTENTIOMETER,INPUT);
   pinMode(BUTTON_START,INPUT);
   pinMode(BUTTON_DOWN,INPUT);
-
   // New Game phase setup:
   gameStart = 0;
   
@@ -50,6 +50,7 @@ void loop() {
       blink();
       level=choose_level();
       dt_init(level);
+        Serial.println(dt);
   break;
   
   case 1:
@@ -74,15 +75,15 @@ void loop() {
             previousTime=currentTime;
             led_in_bag();
             if(gameStart!=3)
-              current_led=init_game();       
+              current_led=init_game();
           break;
   
-          case RED_LED:
+          case RED_LED:digitalWrite(pin_to_led[current_led], HIGH);
             game_over();
           break;
   
           default:
-            digitalWrite(pin_to_led[current_led], HIGH);  
+            digitalWrite(pin_to_led[current_led], HIGH);
           break;
       }
      } 

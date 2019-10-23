@@ -22,7 +22,7 @@ int choose_level(){
 }
 
 void dt_init(int level){
-  float penalty_factor = level/10;
+  float penalty_factor = level*100;
   dt = DELTA_T - penalty_factor;
 }
 
@@ -66,6 +66,7 @@ void led_in_bag(){ //todo fare in modo che aumenti solo se non si perde
   Serial.print("Another object in the bag! Count: ");
   Serial.print(score);
   Serial.println(" objects!");
+  Serial.println(dt);
 }
 
 void all_led_off(int min_led,int max_led){
