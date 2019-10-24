@@ -1,8 +1,6 @@
 #ifndef _GAMELOOP_H_
 #define _GAMELOOP_H_
 
-static int score;
-
 /*
  * Read the pot. value and translate it in a value between 1 and 8
  */

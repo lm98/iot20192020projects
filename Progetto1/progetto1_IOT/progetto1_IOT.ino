@@ -4,6 +4,7 @@
 
 // Global variables to be accessed
 extern int game_state;
+extern int score;
 extern int current_led;
 extern int pin_to_led[5];
 extern boolean is_game_over;
@@ -27,7 +28,7 @@ void setup() {
   
   //Game Loop phase setup:
   randomSeed(analogRead(A5));
-  score = 0;
+  score =0;
   
   //Button management
   attachInterrupt(digitalPinToInterrupt(BUTTON_START), start_game, RISING);
@@ -73,9 +74,10 @@ void loop() {
             }
             break;
   
-          case RED_LED:digitalWrite(pin_to_led[current_led], HIGH);
+          /*case RED_LED:digitalWrite(pin_to_led[current_led], HIGH);
+            score--;
             game_over();
-            break;
+            break;*/
   
           default:
             digitalWrite(pin_to_led[current_led], HIGH);
@@ -85,14 +87,8 @@ void loop() {
       break;
     
     case 3:
-        all_led_off(0,3);
-        score = 0;
-        digitalWrite(RED_LED, HIGH);
-        Serial.print("Game Over - Score: ");
-        Serial.println(score);    
-        delay(2000);
-        digitalWrite(RED_LED, LOW);
-        restart_game();
+        score--;
+        game_over();
         break;
     
   }

@@ -6,6 +6,7 @@
 boolean is_game_over = false;
 volatile boolean is_fading = true;
 extern int game_state;
+int score;
 
 int pin_to_led[5] = { GREEN_LED_1, GREEN_LED_2, GREEN_LED_3, WHITE_LED, RED_LED};
 volatile int current_led;
@@ -69,5 +70,12 @@ void all_led_off(int min_led,int max_led){
 }
 
 void game_over(){
-  game_state=3;
+   game_state=3;
+   all_led_off(0,3);
+   digitalWrite(RED_LED, HIGH);
+   Serial.print("Game Over - Score: ");
+   Serial.println(score);    
+   delay(2000);
+   digitalWrite(RED_LED, LOW);
+   restart_game();
 }

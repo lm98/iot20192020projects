@@ -3,6 +3,7 @@
 #include "gamestart.h"
 
 extern int pin_to_led[5];
+extern int score;
 int game_state;
 int level;
 
@@ -42,5 +43,6 @@ int init_game(){
 void restart_game(){
   if(game_state>0){
     game_state=0;
+    score = 0;
   }
 }
