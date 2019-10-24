@@ -7,7 +7,7 @@
 #define GREEN_LED_3 6
 #define WHITE_LED 9
 #define RED_LED 8
-
+#define N_LEDS 5
 //INPUT
 #define POTENTIOMETER A0
 #define BUTTON_START 2

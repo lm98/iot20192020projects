@@ -4,20 +4,20 @@
 
 // Global variables to be accessed
 extern int game_state;
-extern int score;
 extern int current_led;
 extern int pin_to_led[5];
 extern boolean is_game_over;
 extern int level;
 extern float dt;
+extern int score;
 
 unsigned long current_time;
 unsigned long previous_time=0;
 
 void setup() {
   // Pin Setup:
-  for(int y=0;y<5;y++){
-    pinMode(pin_to_led[y],OUTPUT);
+  for(int led=0;led<N_LEDS;led++){
+    pinMode(pin_to_led[led],OUTPUT);
   }
   pinMode(POTENTIOMETER,INPUT);
   pinMode(BUTTON_START,INPUT);
@@ -44,7 +44,7 @@ void loop() {
  // Game state management (with game_state variable)
  switch(game_state){
   case 0:
-      blink();
+      blink_and_delay(GREEN_LED_1, GREEN_LED_3);
       level=choose_level();
       dt_init(level);
       break;
@@ -60,31 +60,24 @@ void loop() {
       if(current_time-previous_time>dt){
         game_over();
         Serial.println("Time Over");
-      }
-      else
-      {
-        all_led_off(0,4);
-        switch(pin_to_led[current_led]){
+      } else {
+          all_led_off(0,4);
+          switch(pin_to_led[current_led]){
           
-          case WHITE_LED:
-            led_in_bag();
-            previous_time=millis();
-            if(game_state!=3){
-              current_led=init_game();
-            }
-            break;
-  
-          /*case RED_LED:digitalWrite(pin_to_led[current_led], HIGH);
-            score--;
-            game_over();
-            break;*/
-  
-          default:
-            digitalWrite(pin_to_led[current_led], HIGH);
-            break;
-       }
-      } 
-      break;
+            case WHITE_LED:
+              led_in_bag();
+              previous_time=millis();
+              if(game_state!=3){
+                 current_led=init_game();
+              }
+              break;
+
+            default:
+              digitalWrite(pin_to_led[current_led], HIGH);
+              break;
+          }
+       } 
+       break;
     
     case 3:
         score--;

@@ -6,19 +6,20 @@ extern int pin_to_led[5];
 extern int score;
 int game_state;
 int level;
+volatile int pin = GREEN_LED_1;
+volatile bool up = false;
 
-void blink_and_delay(int pin){ 
+void blink_and_delay(int first_pin,int last_pin){ 
   digitalWrite(pin,HIGH);
   delay(DELAY_TIME);
   digitalWrite(pin,LOW);
   delay(DELAY_TIME);
-}
-
-void blink(){
-  for(int j = GREEN_LED_1; j <= GREEN_LED_3; j++){
-    blink_and_delay(j);
+  if (pin == last_pin){
+    up = true;
+  } else if(pin == first_pin){
+    up = false;
   }
-  blink_and_delay(GREEN_LED_2);
+  up ? pin--: pin++;
 }
 
 void start_game(){
@@ -27,7 +28,6 @@ void start_game(){
    game_state = 1;
  }
 }
-
 
 int init_rnd_led(){
   return random(0, 3); 

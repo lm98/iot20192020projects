@@ -10,7 +10,6 @@ int score;
 
 int pin_to_led[5] = { GREEN_LED_1, GREEN_LED_2, GREEN_LED_3, WHITE_LED, RED_LED};
 volatile int current_led;
-int last_score = 0;
 
 float dt;
 unsigned long last_debounce_time = 0;
@@ -42,6 +41,15 @@ void fade_led(int led_pin){
   is_fading=false;
 }
 
+void led_in_bag(){
+  fade_led(pin_to_led[current_led]);
+  score++;
+  calculate_dt();
+  Serial.print("Another object in the bag! Count: ");
+  Serial.print(score);
+  Serial.println(" objects!");
+}
+
 void down(){
  unsigned long current_time = millis();
  if ((current_time - last_debounce_time > DEBOUNCE_TIME) && game_state == 2){
@@ -54,15 +62,7 @@ void down(){
  }
 }
 
-void led_in_bag(){
-  fade_led(pin_to_led[current_led]);
-  score++;
-  calculate_dt();
-  Serial.print("Another object in the bag! Count: ");
-  Serial.print(score);
-  Serial.println(" objects!");
-  Serial.println(dt);
-}
+
 
 void all_led_off(int min_led,int max_led){
   for(int i=min_led; i<=max_led;i++)

@@ -2,14 +2,9 @@
 #define _GAMESTART_H_
 
 /* 
- * Blinks the argument pin one time 
+ * Blinks the argument pin one time , manages all the scearios
  */
-void blink_and_delay(int);
-
-/*
- * Blink three leds in one way or another
- */
-void blink();
+void blink_and_delay(int, int);
 
 /*
  * Moves from the initial Welcome game state to the Play game state
