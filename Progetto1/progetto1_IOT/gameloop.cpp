@@ -3,9 +3,9 @@
 #include "gameloop.h"
 #include "gamestart.h"
 
-boolean gameOver = false;
-volatile boolean isFading = true;
-extern int gameStart;
+boolean is_game_over = false;
+volatile boolean is_fading = true;
+extern int game_state;
 
 int pin_to_led[5] = { GREEN_LED_1, GREEN_LED_2, GREEN_LED_3, WHITE_LED, RED_LED};
 volatile int current_led;
@@ -28,29 +28,27 @@ void calculate_dt(){
 }
 
 void fade_led(int led_pin){
-  isFading=true;
+  is_fading=true;
   int i;
-  for(i=0; (isFading==true && i<255) ;i++){
+  for(i=0; (is_fading==true && i<255) ;i++){
     analogWrite(led_pin,i);
     delay(FADE_DELAY);
   }
-  for(i=255; (isFading==true && i>=0) ;i--){
+  for(i=255; (is_fading==true && i>=0) ;i--){
     analogWrite(led_pin,i);
     delay(FADE_DELAY);
   }
-  isFading=false;
+  is_fading=false;
 }
 
 void down(){
-  
  unsigned long current_time = millis();
-
- if ((current_time - last_debounce_time > DEBOUNCE_TIME) && gameStart == 2){
+ if ((current_time - last_debounce_time > DEBOUNCE_TIME) && game_state == 2){
     last_debounce_time = current_time;
     current_led++;
     if(current_led==4){
-      gameStart=3;
-      isFading=false;
+      game_state=3;
+      is_fading=false;
     }
  }
 }
@@ -71,5 +69,5 @@ void all_led_off(int min_led,int max_led){
 }
 
 void game_over(){
-  gameStart=3;
+  game_state=3;
 }

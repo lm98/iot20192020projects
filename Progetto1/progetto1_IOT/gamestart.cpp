@@ -3,8 +3,7 @@
 #include "gamestart.h"
 
 extern int pin_to_led[5];
-int gameStart;
-int j; //Only for cycles
+int game_state;
 int level;
 
 void blink_and_delay(int pin){ 
@@ -15,16 +14,16 @@ void blink_and_delay(int pin){
 }
 
 void blink(){
-  for(j = GREEN_LED_1; j <= GREEN_LED_3; j++){
+  for(int j = GREEN_LED_1; j <= GREEN_LED_3; j++){
     blink_and_delay(j);
   }
   blink_and_delay(GREEN_LED_2);
 }
 
 void start_game(){
- if(gameStart==0){
+ if(game_state==0){
    Serial.println("Go!\n");
-   gameStart = 1;
+   game_state = 1;
  }
 }
 
@@ -34,14 +33,14 @@ int init_rnd_led(){
 }
 
 int init_game(){
-  for(j=GREEN_LED_1; j<=RED_LED; j++)
+  for(int j=GREEN_LED_1; j<=RED_LED; j++)
     digitalWrite(j,LOW);
-  gameStart=2;
+  game_state=2;
   return init_rnd_led();
 }
 
 void restart_game(){
-  if(gameStart>0){
-    gameStart=0;
+  if(game_state>0){
+    game_state=0;
   }
 }

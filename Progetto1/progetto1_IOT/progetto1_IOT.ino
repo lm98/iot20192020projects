@@ -2,35 +2,28 @@
 #include "gamestart.h"
 #include "gameloop.h"
 
-extern int gameStart;
+// Global variables to be accessed
+extern int game_state;
 extern int current_led;
 extern int pin_to_led[5];
-extern boolean gameOver;
+extern boolean is_game_over;
 extern int level;
-int y;
-
-/*
- * Si usa questa notazione : 
- * diocane come punto e virgola
- */
-void all_led_off(int,int);
-
 extern float dt;
 
-unsigned long currentTime;
-unsigned long previousTime=0;
+unsigned long current_time;
+unsigned long previous_time=0;
 
 void setup() {
-
   // Pin Setup:
-  for(y=0;y<5;y++){
+  for(int y=0;y<5;y++){
     pinMode(pin_to_led[y],OUTPUT);
   }
   pinMode(POTENTIOMETER,INPUT);
   pinMode(BUTTON_START,INPUT);
   pinMode(BUTTON_DOWN,INPUT);
+  
   // New Game phase setup:
-  gameStart = 0;
+  game_state = 0;
   
   //Game Loop phase setup:
   randomSeed(analogRead(A5));
@@ -46,9 +39,9 @@ void setup() {
 }
 
 void loop() {
- 
- switch(gameStart){
-  
+
+ // Game state management (with game_state variable)
+ switch(game_state){
   case 0:
       blink();
       level=choose_level();
@@ -56,14 +49,14 @@ void loop() {
       break;
   
   case 1:
-      currentTime=millis();
-      previousTime=currentTime;
+      current_time=millis();
+      previous_time=current_time;
       current_led=init_game();
       break;
    
   case 2:
-      currentTime=millis();
-      if(currentTime-previousTime>dt){
+      current_time=millis();
+      if(current_time-previous_time>dt){
         game_over();
         Serial.println("Time Over");
       }
@@ -74,8 +67,8 @@ void loop() {
           
           case WHITE_LED:
             led_in_bag();
-            previousTime=millis();
-            if(gameStart!=3){
+            previous_time=millis();
+            if(game_state!=3){
               current_led=init_game();
             }
             break;

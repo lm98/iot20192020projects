@@ -13,22 +13,22 @@ int choose_level();
  */
 void fade_led(int);
 
-/**
+/*
  * Turns on a random led
  */
 void init_rnd_led();
 
-/**
+/*
  * "Moves down" the current led
  */
 void down();
 
-/**
+/*
  * Performs the bag routine
  */
 void led_in_bag();
 
-/**
+/*
  * The Game Over event, the program displays the final score and resets itself.
  */
 void game_over();
@@ -48,5 +48,8 @@ float calculate_dt(float);
  */
 void dt_init(int);
 
+/*
+ * Turns off every led in pin range
+ */
 void all_led_off(int,int);
 #endif
