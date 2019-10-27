@@ -60,8 +60,17 @@ void loop() {
       if(current_time-previous_time>dt){
         game_over();
         Serial.println("Time Over");
-      } else {
+      } else  {
           all_led_off(0,4);
+          if(pin_to_led[current_led]==WHITE_LED){
+            led_in_bag();
+              previous_time=millis();
+              if(game_state!=3){
+                 current_led=init_game();
+              }
+          }else{
+            digitalWrite(pin_to_led[current_led], HIGH);
+          }/*
           switch(pin_to_led[current_led]){
           
             case WHITE_LED:
@@ -76,6 +85,7 @@ void loop() {
               digitalWrite(pin_to_led[current_led], HIGH);
               break;
           }
+          */
        } 
        break;
     
