@@ -1,12 +1,19 @@
 #include "Led.h"
 #include "ButtonImpl.h"
 
+/*
+ * Defines of constant, like pins and maths value
+ */
 #define LED_PIN 13
 #define BUTTON_PIN 2
 
 
+/*
+ * Class instances
+ */
 Light* light;
 Button* button;
+
 boolean lightOn;
 
 void setup() {
