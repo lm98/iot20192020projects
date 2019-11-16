@@ -1,6 +1,10 @@
 #include "Scheduler.h"
 #include "SlowBlink.h"
 
+
+#define RX 0
+#define TX 1
+
 Scheduler scheduler;
 
 void setup() {
@@ -13,5 +17,8 @@ void setup() {
 }
 
 void loop() {
-	scheduler.schedule();
+  if (Serial.available() > 0){
+    scheduler.schedule();  
+  }
+	
 }
