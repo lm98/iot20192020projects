@@ -13,36 +13,26 @@ public class Controller{
 	@FXML 
 	private TextArea text;
 	
-	public Controller() {
-		try {
-			/*this.channel  = new SerialCommChannel("dev/ttyACM0",9600);
-			System.out.println("Waiting Arduino for rebooting...");	
-			Thread.sleep(4000);
-			System.out.println("Ready.");
-			*/
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public Controller() throws Exception {
+		//this.channel  = new SerialCommChannel("dev/ttyACM0",9600);
+	}
+	
+	private void sync() throws InterruptedException {
+		System.out.println("Waiting Arduino for rebooting...");	
+		Thread.sleep(4000);
+		System.out.println("Ready.");
 	}
 	
 	public void run() throws Exception {
+		this.sync();
 		while (true){
-			//text.setText("Sending ping");
-			//System.out.println("Sending ping");
+			text.setText("Sending ping");
+			System.out.println("Sending ping");
 			channel.sendMsg("ping");
 			String msg = channel.receiveMsg();
-			//text.setText("Received: "+msg);		
+			text.setText("Received: "+msg);		
 			Thread.sleep(500);
 		}
-	}
-	
-	@FXML
-	private void getTab(ActionEvent event) {
-	}
-	
-	public void initialize() {
-	    
 	}
 	
 }
