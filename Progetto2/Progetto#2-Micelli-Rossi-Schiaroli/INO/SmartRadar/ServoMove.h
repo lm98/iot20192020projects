@@ -4,7 +4,7 @@
 #include "ServoMotorImpl.h"
 #include "Task.h"
 
-class ServoMove : public Task {
+class ServoMove: public Task {
   int pin;
   int pos = 0;
   int newPos;
@@ -16,7 +16,7 @@ class ServoMove : public Task {
     ServoMove(int pin, int newPos, int delta);
     void init(int period);
     void tick();
-}
+};
 
 
 #endif

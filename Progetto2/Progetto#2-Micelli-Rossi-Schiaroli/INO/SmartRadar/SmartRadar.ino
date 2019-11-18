@@ -1,9 +1,8 @@
 #include "Scheduler.h"
 #include "SlowBlink.h"
-#include "MsgService.h"
 
-#define RX 0
-#define TX 1
+#define RX 0 //Receiving
+#define TX 1 //Transmitting
 
 Scheduler scheduler;
 
@@ -26,7 +25,6 @@ void setup()
   // reserve 200 bytes for the inputString:
   inputString.reserve(200);
 
-  MsgService.init();
   Task *t0 = new SlowBlink(13);
   t0->init(100);
   scheduler.addTask(t0);
@@ -120,7 +118,7 @@ void serialEvent()
       stringComplete = true;
       break;
     default: // Every digit is a byte
-      param = Serial.parseInt(' '))
+      param = Serial.parseInt(' ');
       if(param==0)
       {
         Serial.print("Error reading from stream");

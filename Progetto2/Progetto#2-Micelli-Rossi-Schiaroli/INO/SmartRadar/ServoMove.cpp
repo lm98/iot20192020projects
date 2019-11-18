@@ -6,13 +6,13 @@ ServoMove::ServoMove(int pin, int newPos, int delta){
   this->delta = delta;
 }
 
-ServoMove::init(int period){
+void ServoMove::init(int period){
   Task::init(period);
   servo = new ServoMotorImpl(pin);
   servo->on();
 }
 
-ServoMove::tick(){
+void ServoMove::tick(){
   servo->setPosition(pos);
   pos+=delta;
 }
