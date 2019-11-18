@@ -1,5 +1,6 @@
 #include "Scheduler.h"
 #include "SlowBlink.h"
+#include "MsgService.h"
 
 #define RX 0
 #define TX 1
@@ -16,7 +17,7 @@ enum service_type
   SINGLE,
   MANUAL,
   AUTO
-};
+} state;
 
 void setup()
 {
@@ -34,7 +35,7 @@ void setup()
 void loop()
 {
   scheduler.schedule();
-  service_type state = MANUAL;
+  state = MANUAL;
 
   if (stringComplete)
   {
