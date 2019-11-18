@@ -6,20 +6,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="462.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
-fx:controller="application.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="462.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <bottom>
       <TextArea fx:id="text" editable="false" prefHeight="98.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Manual">
+          <Tab id="manualTab" text="Manual">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button disable="true" layoutX="159.0" layoutY="52.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
-                        <Slider layoutX="123.0" layoutY="188.0" max="180.0" prefHeight="16.0" prefWidth="218.0" />
+                        <Button id="manualButton" disable="true" layoutX="159.0" layoutY="52.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
+                        <Slider id="manualSlider" layoutX="123.0" layoutY="188.0" max="180.0" prefHeight="16.0" prefWidth="218.0" />
                         <Text layoutX="14.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AD: Angle and distance from the object" />
                         <Text layoutX="213.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angle" />
                         <Text layoutX="123.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
@@ -28,28 +27,28 @@ fx:controller="application.Controller">
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Single">
+            <Tab id="singleTab" text="Single">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="159.0" layoutY="51.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
-                        <Slider disable="true" layoutX="161.0" layoutY="199.0" max="1023.0" />
+                        <Button id="singleButton" layoutX="159.0" layoutY="51.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
+                        <Slider id="singleSlider" disable="true" layoutX="161.0" layoutY="199.0" max="1023.0" />
                         <Text layoutX="185.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Radar's speed" />
                         <Text layoutX="14.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AD: Angle and distance from the object" />
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="Auto">
+            <Tab id="autoTab" text="Auto">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="43.0" layoutY="43.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
-                        <Slider disable="true" layoutX="46.0" layoutY="202.0" max="1023.0" />
+                        <Button id="autoButton" layoutX="43.0" layoutY="43.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
+                        <Slider id="autoSlider" disable="true" layoutX="46.0" layoutY="202.0" max="1023.0" />
                         <Text layoutX="46.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Radar's speed" />
                         <Text layoutX="14.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AD: Angle and distance from the object" />
-                        <RadioButton disable="true" layoutX="275.0" layoutY="59.0" mnemonicParsing="false" />
-                        <RadioButton disable="true" layoutX="275.0" layoutY="87.0" mnemonicParsing="false" />
+                        <RadioButton id="alarm" disable="true" layoutX="275.0" layoutY="59.0" mnemonicParsing="false" />
+                        <RadioButton id="tracking" disable="true" layoutX="275.0" layoutY="87.0" mnemonicParsing="false" />
                         <Text layoutX="308.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alarm" />
                         <Text layoutX="308.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tracking" />
                      </children>
