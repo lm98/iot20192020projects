@@ -31,7 +31,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button id="singleButton" layoutX="159.0" layoutY="51.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
+                        <Button id="singleButton" layoutX="159.0" layoutY="51.0" mnemonicParsing="false" onAction="#run" prefHeight="68.0" prefWidth="145.0" text="Active" />
                         <Slider id="singleSlider" disable="true" layoutX="161.0" layoutY="199.0" max="1023.0" />
                         <Text layoutX="185.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Radar's speed" />
                         <Text layoutX="14.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AD: Angle and distance from the object" />

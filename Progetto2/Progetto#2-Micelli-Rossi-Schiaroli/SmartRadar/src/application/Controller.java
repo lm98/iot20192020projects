@@ -28,16 +28,43 @@ public class Controller implements Initializable{
 			e.printStackTrace();
 		}
 	}
-	private void update() {
+	
+	private void update(String s) {
 		text.appendText("\n");
-		text.appendText("ADLEDEF");
+		text.appendText(s);
 	}
 
+	private void sync() {
+		this.update("Waiting Arduino for rebooting...");		
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.update("Ready.");	
+	}
+	
+	public void run() {
+			try {
+			this.update("Sending ping");
+			channel.sendMsg("ping");
+			String msg;	
+			msg = channel.receiveMsg();	
+			this.update("Received: "+msg);		
+			Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		text.setText("Funziona?");
 		this.connect();
-		
+		this.sync();
+
 	}
 }
