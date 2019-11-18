@@ -1,8 +1,7 @@
 #include "Scheduler.h"
 #include "SlowBlink.h"
+#include "MsgService.h"
 
-#define RX 0 //Receiving
-#define TX 1 //Transmitting
 
 Scheduler scheduler;
 
@@ -24,9 +23,7 @@ void setup()
   scheduler.init(100);
   // reserve 200 bytes for the inputString:
   inputString.reserve(200);
-
-  state = MANUAL;
-
+  MsgService.init();
   Task *t0 = new SlowBlink(13);
   t0->init(100);
   scheduler.addTask(t0);
@@ -34,6 +31,29 @@ void setup()
 
 void loop()
 {
+  if (MsgService.isMsgAvailable()) {
+    Msg* msg = MsgService.receiveMsg();
+    /*    
+    if (msg->getContent() == "ping"){
+       delay(500);
+       MsgService.sendMsg("pang");
+    }*/
+    if(msg->getContent()=='s'){
+      state = SINGLE;
+    }
+    else if(msg->getContent()=='m'){
+      state = MANUAL;
+    }
+    else if(msg->getContent()=='a'){
+      state = AUTO;
+    }  
+      MsgService.sendMsg("Autodistruzione avviata, madonna imbalsamata"); 
+    /* NOT TO FORGET: message deallocation */
+    delete msg;
+  }
+  scheduler.schedule();
+  state = MANUAL;
+
   if (stringComplete)
   {
     //Serial.println(inputString);
@@ -41,38 +61,7 @@ void loop()
     stringComplete = false;
   }
 
-  //Leo non piangere quando vedrai questo:
-  switch (state)
-  {
-
-  case SINGLE:
-    scheduler.shutDownAllTasks();
-    /*
-      scheduler.activateTask(giustoTask);
-      ...
-    */
-    break;
-
-  case MANUAL:
-     scheduler.shutDownAllTasks();
-    /*
-      scheduler.activateTask(giustoTask);
-      ...
-    */
-    break;
-
-  case AUTO:
-     scheduler.shutDownAllTasks();
-    /*
-      scheduler.activateTask(giustoTask);
-      ...
-    */
-    break;
-
-  default:
-    break;
-  }
-  scheduler.schedule();
+  
 }
 /* 
   Serial communication rules:
@@ -105,6 +94,7 @@ void loop()
   routine is run between each time loop() runs, so using delay inside loop can
   delay response. Multiple bytes of data may be available.
 */
+/*
 void serialEvent()
 {
   while (Serial.available())
@@ -114,7 +104,7 @@ void serialEvent()
     // add it to the inputString:
     inputString += inChar;
     Serial.println("Ho ricevuto");
-    Serial.println(inChar);
+    Serial.println("Ok campione");
     switch (inChar)
     {
     case 's':
@@ -130,12 +120,7 @@ void serialEvent()
       stringComplete = true;
       break;
     default: // Every digit is a byte
-      /*param = Serial.parseInt(' ');
-      if(param==0)
-      {
-        Serial.print("Error reading from stream");
-      }*/
       break;
     }
   }
-}
+}*/
