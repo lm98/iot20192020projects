@@ -6,7 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="462.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.UIController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="462.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+fx:controller="application.Controller">
    <bottom>
       <TextArea fx:id="text" editable="false" prefHeight="98.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
