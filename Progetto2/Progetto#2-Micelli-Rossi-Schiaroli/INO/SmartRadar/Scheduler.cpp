@@ -36,3 +36,20 @@ void Scheduler::schedule(){
     }
   }
 }
+
+void Scheduler::activateTask(Task* task){
+  for(int i = 0; i < nTasks; i++){
+    if((taskList[i]==task)&&(!taskList[i]->isActive())){
+      task->setActive(true);
+      return;
+    }
+  }
+}
+
+void Scheduler::shutDownAllTasks(){
+  for(int i = 0; i < nTasks; i++){
+    if(taskList[i]->isActive()){
+      taskList[i]->setActive(false);
+    }
+  }
+}

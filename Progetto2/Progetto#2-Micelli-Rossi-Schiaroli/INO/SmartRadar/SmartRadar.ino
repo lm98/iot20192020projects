@@ -25,6 +25,8 @@ void setup()
   // reserve 200 bytes for the inputString:
   inputString.reserve(200);
 
+  state = MANUAL;
+
   Task *t0 = new SlowBlink(13);
   t0->init(100);
   scheduler.addTask(t0);
@@ -32,9 +34,6 @@ void setup()
 
 void loop()
 {
-  scheduler.schedule();
-  state = MANUAL;
-
   if (stringComplete)
   {
     //Serial.println(inputString);
@@ -47,21 +46,33 @@ void loop()
   {
 
   case SINGLE:
-    servoSpeed = param;
+    scheduler.shutDownAllTasks();
+    /*
+      scheduler.activateTask(giustoTask);
+      ...
+    */
     break;
 
   case MANUAL:
-    //Move to direction <param>
+     scheduler.shutDownAllTasks();
+    /*
+      scheduler.activateTask(giustoTask);
+      ...
+    */
     break;
 
   case AUTO:
-    servoSpeed = param;
+     scheduler.shutDownAllTasks();
+    /*
+      scheduler.activateTask(giustoTask);
+      ...
+    */
     break;
 
   default:
-
     break;
   }
+  scheduler.schedule();
 }
 /* 
   Serial communication rules:
