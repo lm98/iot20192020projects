@@ -102,7 +102,8 @@ void serialEvent()
     char inChar = (char)Serial.read();
     // add it to the inputString:
     inputString += inChar;
-
+    Serial.println("Ho ricevuto");
+    Serial.println(inChar);
     switch (inChar)
     {
     case 's':
@@ -114,15 +115,15 @@ void serialEvent()
     case 'a':
       state = AUTO;
       break;
-    case '/n':
+    case '\n':
       stringComplete = true;
       break;
     default: // Every digit is a byte
-      param = Serial.parseInt(' ');
+      /*param = Serial.parseInt(' ');
       if(param==0)
       {
         Serial.print("Error reading from stream");
-      }
+      }*/
       break;
     }
   }
