@@ -18,11 +18,17 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Button id="manualButton" disable="true" layoutX="159.0" layoutY="52.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="145.0" text="Active" />
-                        <Slider id="manualSlider" layoutX="123.0" layoutY="188.0" max="180.0" prefHeight="16.0" prefWidth="218.0" />
+                        <Slider id="manualSlider" layoutX="43.0" layoutY="168.0" majorTickUnit="10.0" max="180.0" minorTickCount="2" onMouseClicked="#showAngle" prefHeight="16.0" prefWidth="378.0" showTickLabels="true" showTickMarks="true" />
                         <Text layoutX="14.0" layoutY="260.0" strokeType="OUTSIDE" strokeWidth="0.0" text="AD: Angle and distance from the object" />
-                        <Text layoutX="213.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angle" />
-                        <Text layoutX="123.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-                        <Text layoutX="319.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="180" />
+                        <Text layoutX="213.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Angle" />
+                        <Label id="angle" layoutX="169.0" layoutY="204.0" text="0" />
+                        <Button id="sndAngle" layoutX="258.0" layoutY="199.0" mnemonicParsing="false" onAction="#send" text="send" />
+                        <TextField id="temp" layoutX="7.0" layoutY="14.0" onKeyTyped="#register" />
+                        <Button id="b1" layoutX="200.0" layoutY="14.0" mnemonicParsing="false" onAction="#s0" text="0" />
+                        <Button id="b2" layoutX="292.0" layoutY="14.0" mnemonicParsing="false" onAction="#s90" text="90" />
+                        <Button id="b3" layoutX="376.0" layoutY="14.0" mnemonicParsing="false" onAction="#s180" text="180" />
+                        <Button id="b4" layoutX="323.0" layoutY="61.0" mnemonicParsing="false" onAction="#s360" text="360" />
+                        <Button id="b5" layoutX="323.0" layoutY="95.0" mnemonicParsing="false" onAction="#s2000" text="2000" />
                      </children>
                   </AnchorPane>
             </content>
