@@ -6,8 +6,8 @@
 
 class ServoMove: public Task {
   int pin;
-  int pos = 0;
-  int newPos = 0;
+  int pos;
+  int newPos;
   int delta;
   ServoMotor* servo;
   

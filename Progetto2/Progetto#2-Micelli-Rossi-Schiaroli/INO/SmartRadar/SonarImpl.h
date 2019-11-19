@@ -5,15 +5,14 @@
 
 class SonarImpl : public Sonar {
 
+  const float vs = 331.45 + 0.62*20;
+  int triggerPin;
+  int echoPin;
+
   public:
     SonarImpl(int triggerPin, int echoPin);
     void init();
     float scan(); //ping and return the distance from the object
-
-  private:
-    const float vs = 331.45 + 0.62*20;
-    int triggerPin;
-    int echoPin;
 };
 
 #endif

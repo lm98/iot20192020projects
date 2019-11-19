@@ -10,7 +10,9 @@ void ServoMove::init(int period){
   Task::init(period);
   servo = new ServoMotorImpl(pin);
   servo->on();
-  servo->setPosition(pos);
+  pos = 0;
+  newPos = 0;
+  //servo->setPosition(pos);
   //Serial.println(pos);
 }
 
@@ -27,11 +29,13 @@ void ServoMove::tick(){
   }else if(pos<newPos){
     pos+=delta;
     servo->setPosition(pos);
-  }else if(pos==newPos){
+  }
+  /*else if(pos==newPos){
     pos=0;
     //servo->setPosition(pos);
   }
   //Serial.println(pos);
+  */
 }
 
 void ServoMove::setNewPosition(int newPos){

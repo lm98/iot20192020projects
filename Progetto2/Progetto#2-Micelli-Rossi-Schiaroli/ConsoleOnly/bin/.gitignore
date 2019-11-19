@@ -1,9 +1,6 @@
 /CommChannel.class
 /SerialCommChannel.class
+/State.class
 /TestPingPong.class
 /TestRemoteBlinking.class
 /TestRemoteBlinkingWithStates.class
-/States.class
-/States$state.class
-/States$State.class
-/State.class

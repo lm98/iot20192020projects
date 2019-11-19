@@ -2,7 +2,8 @@
 #define _SONAR_
 
   class Sonar {
-    virtual float scan() = 0;
+    public:
+      virtual float scan() = 0;
   };
 
 #endif

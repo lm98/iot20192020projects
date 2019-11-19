@@ -18,7 +18,7 @@ public class TestPingPong {
     public static State s = State.valueOf("MANUAL");
 
     public static void main(String[] args) throws Exception {
-        CommChannel channel = new SerialCommChannel("/dev/ttyACM0",9600);
+        CommChannel channel = new SerialCommChannel("COM5",9600);
 
         /* attesa necessaria per fare in modo che Arduino completi il reboot */
         System.out.println("Waiting Arduino for rebooting...");		
@@ -90,7 +90,7 @@ public class TestPingPong {
 
                 //Parse the answer from Arduino
                 //MANUAL DIRECTION DISTANCE
-                String[] tokens = msg.split("  ");
+                String[] tokens = msg.split(" ");
                 System.out.println("Modality: " + tokens[0]);
                 System.out.println("Direction: " + tokens[1]);
                 int dist = Integer.parseInt(tokens[2]);

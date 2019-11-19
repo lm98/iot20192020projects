@@ -1,6 +1,7 @@
 #include "Scheduler.h"
 #include "ServoMove.h"
 #include "MsgService.h"
+#include "SonarScan.h"
 
 Scheduler scheduler;
 
@@ -27,6 +28,7 @@ int distance=0;
 
 String statement;
 
+ServoMove *t0;
 
 enum service_type
 {
@@ -46,11 +48,10 @@ void setup()
   pinMode(buttonSingle,INPUT);
   pinMode(buttonManual,INPUT);
   pinMode(buttonAuto,INPUT);
-  ServoMove *t0 = new ServoMove(6, 1);
-  t0->setNewPosition(180); 
+  t0 = new ServoMove(6, 1);
   t0->init(1000);
+  t0->setActive(false);
   scheduler.addTask(t0);
-
 }
 
 void loop()
@@ -110,7 +111,7 @@ void loop()
     stateEnabled = true;
   }
     
-    
+
   switch(state){
     case SINGLE:
         //Setto velocità in base a param
@@ -128,15 +129,16 @@ void loop()
          * ...
          */
          //Direziono in base al valore ricevuto
-
-
+         scheduler.activateTask(t0);
          //Elaboro risposta
          if (!dirRecv && MsgService.isMsgAvailable()) {
-            Msg* msg = MsgService.receiveMsg();
+            Msg* msg = MsgService.receiveMsg();                                                                                                                                                                             
             int value = msg->getContent().toInt();
             MsgService.sendMsg("OK");
             dirRecv=false;
             //Avvio movimento verso direzione value
+            t0->setNewPosition(value*10);
+            
             //Quando ho finito
             MsgService.sendMsg(String("MANUAL") + " " + String(value) + " " + String(distance));
          }
