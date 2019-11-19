@@ -2,8 +2,6 @@ package application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
@@ -22,10 +20,11 @@ public class Controller implements Initializable{
 
 	private void connect() {
 		try {
-			this.channel  = new SerialCommChannel("dev/ttyUSB0",9600);
+			this.channel  = new SerialCommChannel("/dev/ttyACM1",9600);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("Qua non funziona niente");
 		}
 	}
 	
@@ -49,6 +48,7 @@ public class Controller implements Initializable{
 			try {
 			this.update("Sending ping");
 			channel.sendMsg("ping");
+			
 			String msg;	
 			msg = channel.receiveMsg();	
 			this.update("Received: "+msg);		
@@ -56,6 +56,7 @@ public class Controller implements Initializable{
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.out.println("Qua non funziona niente");
 			}
 		}
 	
