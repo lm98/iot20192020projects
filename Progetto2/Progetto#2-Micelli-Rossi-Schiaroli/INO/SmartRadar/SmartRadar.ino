@@ -6,6 +6,7 @@ Scheduler scheduler;
 
 int param;
 int servoSpeed = 0;
+String result;
 
 enum service_type
 {
@@ -16,10 +17,10 @@ enum service_type
 
 void setup()
 {
-  Serial.begin(9600);
-  scheduler.init(100);
-
-  MsgService.init();
+  Serial.begin(9600); //Begin serial communication with 9600 baud
+  scheduler.init(100); //Scheduler initialize
+  state = MANUAL; // Starting mode
+  MsgService.init(); 
   Task *t0 = new SlowBlink(13);
   t0->init(100);
   scheduler.addTask(t0);
@@ -29,12 +30,7 @@ void loop()
 {
   if (MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg();
-    /*    
-    if (msg->getContent() == "ping"){
-       delay(500);
-       MsgService.sendMsg("pang");
-    }*/
-    String result = msg->getContent();
+    result = msg->getContent();
     if(result=="s"){
       state = SINGLE;
     }
@@ -44,31 +40,42 @@ void loop()
     else if(result=="a"){
       state = AUTO;
     }else{
-      int valueRcv= result.toInt();
+      param = result.toInt();
     }
+
+    delay(200);
     
     //INVIO DATI 
-    MsgService.sendMsg("Autodistruzione avviata, madonna imbalsamata"); 
+    MsgService.sendMsg("Pong"); 
     /* NOT TO FORGET: message deallocation */
     delete msg;
   }
   scheduler.schedule();
   switch(state){
     case SINGLE:
+        //Setto velocità in base a param
         digitalWrite(13,LOW);
         digitalWrite(12,HIGH);
       break;
       case MANUAL:
+        //Setto direction in base a param
       digitalWrite(13,HIGH);
       digitalWrite(12,HIGH);
       break;
       case AUTO:
+        //Setto velocità in base a param
         digitalWrite(12,LOW);
         digitalWrite(13,HIGH);
       default:
       break;
   }
 
+}
+
+
+void setSpeed(int param){
+  //TODO 
+  servoSpeed = param;
 }
 /* 
   Serial communication rules:
