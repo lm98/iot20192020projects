@@ -4,8 +4,17 @@
 
 Scheduler scheduler;
 
+#define POT A0
+#define speedMin 3
+#define speedMax 8
+
+#define buttonSingle 3;
+#define buttonSingle 4;
+#define buttonSingle 5;
+
 int param;
 int servoSpeed = 0;
+int currentSpeed = speedMin;
 String result;
 boolean connEnabled = false;
 boolean stateEnabled = false;
@@ -34,14 +43,25 @@ void setup()
   ServoMove *t0 = new ServoMove(6, 1);
   t0->setNewPosition(180); 
   t0->init(1000);
- // t1->setNewPosition(0);
- // t1->init(3000);
   scheduler.addTask(t0);
-//  scheduler.addTask(t1);
+
 }
 
 void loop()
 {
+  if(currentSpeed!=getSpeed()){
+    currentSpeed=getSpeed();
+  }
+  //Controllo eventuale pressione pulsanti -> mettere su task
+  if(buttonSingle == HIGH){
+    state = SINGLE;
+  }
+  if(buttonManual == HIGH){
+    state = MANUAL;
+  }
+  if(buttonAuto == HIGH){
+    state = AUTO;
+  }
   //Se non è ancora settata la connessione, controllo se
   //ho messaggi in arrivo TODO in inglese
   if (!connEnabled && MsgService.isMsgAvailable()) {
@@ -123,6 +143,10 @@ void loop()
 void setSpeed(int param){
   //TODO 
   servoSpeed = param;
+}
+
+int getSpeed(){
+  return map(analogRead(POT),0,1023,3,8);
 }
 /* 
   Serial communication rules:
