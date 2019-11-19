@@ -7,6 +7,15 @@ Scheduler scheduler;
 int param;
 int servoSpeed = 0;
 String result;
+boolean connEnabled = false;
+boolean stateEnabled = false;
+boolean dirRecv=false;
+boolean messageSent=false;
+Msg* msg;
+int distance=0;
+
+String statement;
+
 
 enum service_type
 {
@@ -33,29 +42,40 @@ void setup()
 
 void loop()
 {
-  if (MsgService.isMsgAvailable()) {
+  //Se non è ancora settata la connessione, controllo se
+  //ho messaggi in arrivo TODO in inglese
+  if (!connEnabled && MsgService.isMsgAvailable()) {
     Msg* msg = MsgService.receiveMsg();
-    result = msg->getContent();
+    if(msg->getContent()=="ping"){
+      delay(200);
+      MsgService.sendMsg("pong");
+    }
+    connEnabled = true;
+  }
+  if(!stateEnabled && MsgService.isMsgAvailable()){
     if(result=="s"){
       state = SINGLE;
+      MsgService.sendMsg("State setted");
     }
     else if(result=="m"){
       state = MANUAL;
+      MsgService.sendMsg("State setted");
     }
     else if(result=="a"){
       state = AUTO;
+      MsgService.sendMsg("State setted");
     }else{
+      //Code here should not be reached!!
+      //Maybe yes i should think about it
       param = result.toInt();
+      MsgService.sendMsg("Value received");
     }
-
-    //delay(200);
-    
-    //INVIO DATI 
-    MsgService.sendMsg("Pong"); 
     /* NOT TO FORGET: message deallocation */
     delete msg;
+    stateEnabled = true;
   }
-  
+    
+    
   switch(state){
     case SINGLE:
         //Setto velocità in base a param
@@ -72,6 +92,19 @@ void loop()
          * scheduler.activateTask(giustoTask);
          * ...
          */
+         //Direziono in base al valore ricevuto
+
+
+         //Elaboro risposta
+         if (!dirRecv && MsgService.isMsgAvailable()) {
+            Msg* msg = MsgService.receiveMsg();
+            int value = msg->getContent().toInt();
+            MsgService.sendMsg("OK");
+            dirRecv=false;
+            //Avvio movimento verso direzione value
+            //Quando ho finito
+            MsgService.sendMsg(String("MANUAL") + " " + String(value) + " " + String(distance));
+         }
       break;
       case AUTO:
         //Setto velocità in base a param

@@ -11,7 +11,7 @@ void ServoMove::init(int period){
   servo = new ServoMotorImpl(pin);
   servo->on();
   servo->setPosition(pos);
-  Serial.println(pos);
+  //Serial.println(pos);
 }
 
 void ServoMove::tick(){ 
@@ -31,7 +31,7 @@ void ServoMove::tick(){
     pos=0;
     //servo->setPosition(pos);
   }
-  Serial.println(pos);
+  //Serial.println(pos);
 }
 
 void ServoMove::setNewPosition(int newPos){

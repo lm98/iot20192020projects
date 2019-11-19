@@ -29,7 +29,7 @@ public class Controller implements Initializable{
 
 	private void connect() {
 		try {
-			this.channel  = new SerialCommChannel("/dev/ttyACM1",9600);
+			this.channel  = new SerialCommChannel("/dev/ttyACM0",9600);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,11 +55,12 @@ public class Controller implements Initializable{
 	
 	public void run() {
 			try {
-			this.update("Sending ping");
-			channel.sendMsg("ping");
+			this.update("Sending modality");
+			channel.sendMsg("s");
 			
 			String msg;	
-			msg = channel.receiveMsg();	
+			msg = channel.receiveMsg();
+			System.out.println(msg);
 			this.update("Received: "+msg);		
 			Thread.sleep(500);
 			} catch (InterruptedException e) {
