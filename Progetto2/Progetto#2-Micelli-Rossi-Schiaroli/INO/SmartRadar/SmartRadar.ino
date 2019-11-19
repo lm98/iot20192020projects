@@ -5,12 +5,14 @@
 Scheduler scheduler;
 
 #define POT A0
+#define servo 6
 #define speedMin 3
 #define speedMax 8
-
-#define buttonSingle 3;
-#define buttonSingle 4;
-#define buttonSingle 5;
+#define PIR_PIN 2
+#define CALIBRATION_TIME_SEC 10
+#define buttonSingle 3
+#define buttonManual 4
+#define buttonAuto 5
 
 int param;
 int servoSpeed = 0;
@@ -39,7 +41,11 @@ void setup()
   scheduler.init(100); //Scheduler initialize
   state = MANUAL; // Starting mode
   MsgService.init(); 
-  
+  pinMode(PIR_PIN,INPUT);
+  pinMode(POT,INPUT);
+  pinMode(buttonSingle,INPUT);
+  pinMode(buttonManual,INPUT);
+  pinMode(buttonAuto,INPUT);
   ServoMove *t0 = new ServoMove(6, 1);
   t0->setNewPosition(180); 
   t0->init(1000);
@@ -53,15 +59,24 @@ void loop()
     currentSpeed=getSpeed();
   }
   //Controllo eventuale pressione pulsanti -> mettere su task
-  if(buttonSingle == HIGH){
+  if(digitalRead(buttonSingle) == HIGH){
     state = SINGLE;
   }
-  if(buttonManual == HIGH){
+  if(digitalRead(buttonManual) == HIGH){
     state = MANUAL;
   }
-  if(buttonAuto == HIGH){
+  if(digitalRead(buttonAuto)== HIGH){
     state = AUTO;
   }
+
+  //Controllo presenza con pir -> mettere su task
+  if (digitalRead(PIR_PIN) == HIGH){
+    //Serial.println("detected!");
+    //Segnalo presenza in qualche modo  
+  }
+
+
+  
   //Se non è ancora settata la connessione, controllo se
   //ho messaggi in arrivo TODO in inglese
   if (!connEnabled && MsgService.isMsgAvailable()) {
