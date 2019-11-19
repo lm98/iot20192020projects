@@ -1,5 +1,5 @@
 #include "Scheduler.h"
-#include "SlowBlink.h"
+#include "ServoMove.h"
 #include "MsgService.h"
 
 Scheduler scheduler;
@@ -21,9 +21,14 @@ void setup()
   scheduler.init(100); //Scheduler initialize
   state = MANUAL; // Starting mode
   MsgService.init(); 
-  Task *t0 = new SlowBlink(13);
-  t0->init(100);
+  
+  ServoMove *t0 = new ServoMove(6, 1);
+  t0->setNewPosition(180); 
+  t0->init(1000);
+ // t1->setNewPosition(0);
+ // t1->init(3000);
   scheduler.addTask(t0);
+//  scheduler.addTask(t1);
 }
 
 void loop()
@@ -43,33 +48,42 @@ void loop()
       param = result.toInt();
     }
 
-    delay(200);
+    //delay(200);
     
     //INVIO DATI 
     MsgService.sendMsg("Pong"); 
     /* NOT TO FORGET: message deallocation */
     delete msg;
   }
-  scheduler.schedule();
+  
   switch(state){
     case SINGLE:
         //Setto velocità in base a param
-        digitalWrite(13,LOW);
-        digitalWrite(12,HIGH);
+        /**
+         * scheduler.shutDownAllTasks();
+         * scheduler.activateTask(giustoTask);
+         * ...
+         */
       break;
       case MANUAL:
         //Setto direction in base a param
-      digitalWrite(13,HIGH);
-      digitalWrite(12,HIGH);
+        /**
+         * scheduler.shutDownAllTasks();
+         * scheduler.activateTask(giustoTask);
+         * ...
+         */
       break;
       case AUTO:
         //Setto velocità in base a param
-        digitalWrite(12,LOW);
-        digitalWrite(13,HIGH);
+        /**
+         * scheduler.shutDownAllTasks();
+         * scheduler.activateTask(giustoTask);
+         * ...
+         */
       default:
       break;
   }
-
+  scheduler.schedule();
 }
 
 

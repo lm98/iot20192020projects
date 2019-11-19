@@ -1,8 +1,8 @@
 #include "ServoMove.h"
+#include <Arduino.h>
 
-ServoMove::ServoMove(int pin, int newPos, int delta){
+ServoMove::ServoMove(int pin, int delta){
   this->pin = pin;
-  this->newPos = newPos;
   this->delta = delta;
 }
 
@@ -10,9 +10,27 @@ void ServoMove::init(int period){
   Task::init(period);
   servo = new ServoMotorImpl(pin);
   servo->on();
+  servo->setPosition(pos);
+   Serial.println(pos);
 }
 
-void ServoMove::tick(){
-  servo->setPosition(pos);
-  pos+=delta;
+void ServoMove::tick(){ 
+  /*
+  if(pos!=newPos){
+    pos+=delta;
+    servo->setPosition(pos);
+  }
+  */
+  if(pos>newPos){
+    pos-=delta;
+    servo->setPosition(pos);
+  }else if(pos<newPos){
+    pos+=delta;
+    servo->setPosition(pos);
+  }
+  Serial.println(pos);
+}
+
+void ServoMove::setNewPosition(int newPos){
+  this->newPos = newPos;
 }

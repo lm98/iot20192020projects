@@ -7,15 +7,16 @@
 class ServoMove: public Task {
   int pin;
   int pos = 0;
-  int newPos;
+  int newPos = 0;
   int delta;
   ServoMotor* servo;
   
   public:
 
-    ServoMove(int pin, int newPos, int delta);
+    ServoMove(int pin, int delta);
     void init(int period);
     void tick();
+    void setNewPosition(int newPos);
 };
 
 

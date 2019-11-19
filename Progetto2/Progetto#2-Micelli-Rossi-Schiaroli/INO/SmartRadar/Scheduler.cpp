@@ -26,8 +26,10 @@ bool Scheduler::addTask(Task* task){
   }
 }
   
-void Scheduler::schedule(){   
+void Scheduler::schedule(){ 
+  Serial.println("prima del while");  
   while (!timerFlag){}
+  Serial.println("dopo il while");  
   timerFlag = false;
 
   for (int i = 0; i < nTasks; i++){
