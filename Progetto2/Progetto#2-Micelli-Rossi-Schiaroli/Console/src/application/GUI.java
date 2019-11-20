@@ -146,15 +146,5 @@ public class GUI {
 		
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 	}
-
-	/*
-	 * public void update(String msg) { this.textArea.append("\n");
-	 * this.textArea.append(msg); }
-	 */
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		
-	}
+	
 }
