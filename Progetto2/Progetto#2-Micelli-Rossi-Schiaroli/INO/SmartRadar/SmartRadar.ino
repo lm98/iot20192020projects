@@ -1,30 +1,29 @@
- 
 #include "Scheduler.h"
 #include "ServoMove.h"
 #include "MsgService.h"
 
-Scheduler scheduler;
-
 #define POT A0
-#define servo 6
-#define speedMin 3
-#define speedMax 8
+#define SERVO 6
+#define SPEED_MIN 3
+#define SPEED_MAX 8
 #define PIR_PIN 2
 #define CALIBRATION_TIME_SEC 10
-#define buttonSingle 3
-#define buttonManual 4
-#define buttonAuto 5
+#define BUTTON_SINGLE 3
+#define BUTTON_MANUAL 4
+#define BUTTON_AUTO 5
 
+
+Scheduler scheduler;
 int param;
 int servoSpeed = 0;
-int currentSpeed = speedMin;
+int currentSpeed = SPEED_MIN;
+int distance=0;
 String result;
 boolean connEnabled = false;
 boolean stateEnabled = false;
-boolean dirRecv=false;
-boolean messageSent=false;
+boolean dirRecv = false;
+boolean messageSent = false;
 Msg* msg;
-int distance=0;
 
 String statement;
 
@@ -44,27 +43,26 @@ void setup()
   MsgService.init(); 
   pinMode(PIR_PIN,INPUT);
   pinMode(POT,INPUT);
-  pinMode(buttonSingle,INPUT);
-  pinMode(buttonManual,INPUT);
-  pinMode(buttonAuto,INPUT);
-  ServoMove *t0 = new ServoMove(6, 1);
+  pinMode(BUTTON_SINGLE,INPUT);
+  pinMode(BUTTON_MANUAL,INPUT);
+  pinMode(BUTTON_AUTO,INPUT);
+  ServoMove *t0 = new ServoMove(SERVO, 1);
   t0->setNewPosition(180); 
   t0->init(1000);
   scheduler.addTask(t0);
-
 }
 
 void loop()
 {
 
   //Controllo eventuale pressione pulsanti -> mettere su task
-  if(digitalRead(buttonSingle) == HIGH){
+  if(digitalRead(BUTTON_SINGLE) == HIGH){
     state = SINGLE;
   }
-  if(digitalRead(buttonManual) == HIGH){
+  if(digitalRead(BUTTON_MANUAL) == HIGH){
     state = MANUAL;
   }
-  if(digitalRead(buttonAuto)== HIGH){
+  if(digitalRead(BUTTON_AUTO)== HIGH){
     state = AUTO;
   }
 
@@ -85,31 +83,9 @@ void loop()
 
   if(stateEnabled == false){
     setState();
-    stateEnabled = true;
+    stateEnabled = true; //Devo eseguire questa porzione di codice una sola volta all'avvio
   }
   
-  void setState(){
-    if(MsgService.isMsgAvailable()){
-    if(msg->getContent()=="s"){
-      state = SINGLE;
-      MsgService.sendMsg("State setted");
-    }
-    else if(msg->getContent()=="m"){
-      state = MANUAL;
-      MsgService.sendMsg("State setted");
-    }
-    else if(msg->getContent()=="a"){
-      state = AUTO;
-      MsgService.sendMsg("State setted");
-    }else{
-      MsgService.sendMsg("Error");
-    }
-    /* NOT TO FORGET: message deallocation */
-    delete msg;
-    }
-  }
-    
-    
   switch(state){
     case SINGLE:
         //Setto velocità in base a param
@@ -167,6 +143,27 @@ void syncronize(){
       delay(200);
       MsgService.sendMsg("pong");
     }
+  }
+}
+
+void setState(){
+  if(MsgService.isMsgAvailable()){
+    if(msg->getContent()=="s"){
+      state = SINGLE;
+      MsgService.sendMsg("OK");
+    }
+    else if(msg->getContent()=="m"){
+      state = MANUAL;
+      MsgService.sendMsg("OK");
+    }
+    else if(msg->getContent()=="a"){
+      state = AUTO;
+      MsgService.sendMsg("OK");
+    }else{
+      MsgService.sendMsg("Error");
+    }
+    /* NOT TO FORGET: message deallocation */
+    delete msg;
   }
 }
 /* 
