@@ -1,6 +1,4 @@
-package seiot.modulo_lab_2_2.serial;
-
-import java.io.IOException;
+package serial;
 
 import jssc.*;
 

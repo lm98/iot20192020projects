@@ -89,15 +89,17 @@ void loop()
     connEnabled = true;
   }
   if(!stateEnabled && MsgService.isMsgAvailable()){
-    if(result=="s"){
+    //serial.println(result);
+    msg = MsgService.receiveMsg();
+    if(msg->getContent()=="s"){
       state = SINGLE;
       MsgService.sendMsg("State setted");
     }
-    else if(result=="m"){
+    else if(msg->getContent()=="m"){
       state = MANUAL;
-      MsgService.sendMsg("State setted");
+      MsgService.sendMsg("OK");
     }
-    else if(result=="a"){
+    else if(msg->getContent()=="a"){
       state = AUTO;
       MsgService.sendMsg("State setted");
     }else{

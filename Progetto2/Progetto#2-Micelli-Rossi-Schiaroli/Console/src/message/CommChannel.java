@@ -1,3 +1,4 @@
+package message;
 
 /**
  * Simple interface for an async msg communication channel
