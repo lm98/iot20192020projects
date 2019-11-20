@@ -76,12 +76,14 @@ void loop()
 
 
   
-  //Se non è ancora settata la connessione, controllo se
-  //ho messaggi in arrivo TODO in inglese
+  //If connenction is not already setted,ì
+  //I control if a connection message is  arrived
   if (connEnabled == false) {
     syncronize();
   }
 
+  //If setting is not already setted, and connection is already made
+  //I control if a setting message is  arrived
   if(stateEnabled == false && connEnabled == true){
     setState();
   }
