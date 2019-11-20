@@ -2,6 +2,7 @@
 #include "ServoMove.h"
 #include "SonarScan.h"
 #include "MsgService.h"
+#include "EventCheck.h"
 
 //Macros
 #define POT A0
@@ -20,8 +21,9 @@
 Scheduler scheduler;
 
 //Define Tasks
-ServoMove *t0;
-SonarScan *t1;
+ServoMove *servoTask;
+SonarScan *sonarTask;
+EventCheck *eventTask;
 
 //Define variables
 int servoSpeed = 0;
@@ -64,71 +66,69 @@ void setup()
   pinMode(ECHO_PIN,OUTPUT);
   pinMode(SERVO,OUTPUT);
   
-  
+  //Setting event checker task
+  eventTask = new EventCheck();
+  eventTask->init(250);
+  eventTask->setActive(true);
+  scheduler.addTask(eventTask);
+
   //Setting servo movement task
-  t0 = new ServoMove(SERVO, 1);
-  t0->init(200);
-  t0->setActive(false);
-  scheduler.addTask(t0);
+  servoTask = new ServoMove(SERVO, 1);
+  servoTask->init(200);
+  servoTask->setActive(false);
+  scheduler.addTask(servoTask);
   
   //Setting sonar scanning scan
-  t1 = new SonarScan(TRIG_PIN,ECHO_PIN);
-  t1->init(250);
-  t1->setActive(false);
-  scheduler.addTask(t1);
-}
+  sonarTask = new SonarScan(TRIG_PIN,ECHO_PIN);
+  sonarTask->init(250);
+  sonarTask->setActive(false);
+  scheduler.addTask(sonarTask);
+  
+  }
 
 void loop(){
-  
-  //If connenction is not already setted
-  if (connEnabled == false) {
-    syncronize(); // Setup ?
+  if(connEnabled==false){
+    syncronize();
   }
-
-  //If setting is not already setted, and connection is already made
-  if(stateEnabled == false && connEnabled == true){
-    setState(); // Setup ?
-  }
-  
-  switch(state){
-    case SINGLE:
-        //Setto velocità in base a param
-        /**
-         * scheduler.shutDownAllTasks();
-         * scheduler.activateTask(giustoTask);
-         */
-      break;
-      case MANUAL:
-         
-         //Move to the last setted position
-         if(stateEnabled  && connEnabled){
-            moveToPosition();
-            if(t0->getReached()==true){
-              rightPosition=true;
-            }
-         }
-         
-         //Send console object distance
-         if(rightPosition){       
-                setScan(true);//Start scan
-                precValue = 0;
-                distance = t1->getDistance();
-                if(precValue != distance){
-                  MsgService.sendMsg(String("MANUAL") + " " + String(value) + " " + String(distance));  
-                  precValue = t1->getDistance();
-                }
-         }
-      break;
-      case AUTO:
-        //Setto velocità in base a param
-        /**
-         * scheduler.shutDownAllTasks();
-         * scheduler.activateTask(giustoTask);
-         * ...
-         */
-      default:
-      break;
-  }
+//  switch(state){
+//    case SINGLE:
+//        //Setto velocità in base a param
+//        /**
+//         * scheduler.shutDownAllTasks();
+//         * scheduler.activateTask(giustoTask);
+//         */
+//      break;
+//      case MANUAL:
+//         
+//         //Move to the last setted position
+//         if(stateEnabled  && connEnabled){
+//            moveToPosition();
+//            if(t0->getReached()==true){
+//              rightPosition=true;
+//            }
+//         }
+//         
+//         //Send console object distance
+//         if(rightPosition){       
+//                setScan(true);//Start scan
+//                precValue = 0;
+//                distance = t1->getDistance();
+//                if(precValue != distance){
+//                  MsgService.sendMsg(String("MANUAL") + " " + String(value) + " " + String(distance));  
+//                  precValue = t1->getDistance();
+//                }
+//         }
+//      break;
+//      case AUTO:
+//        //Setto velocità in base a param
+//        /**
+//         * scheduler.shutDownAllTasks();
+//         * scheduler.activateTask(giustoTask);
+//         * ...
+//         */
+//      default:
+//      break;
+//  }
   scheduler.schedule();
 }
 
@@ -140,7 +140,7 @@ void setSpeed(int current){
 }
 
 void setScan(bool value){
-  t1->setActive(value);
+  sonarTask->setActive(value);
 }
 
 void syncronize(){
@@ -159,43 +159,12 @@ void moveToPosition(){
     Msg* msg = MsgService.receiveMsg();
     value = msg->getContent().toInt();
     MsgService.sendMsg("OK");
-    t0->setActive(true);
-    t0->setNewPosition(value);
+    servoTask->setActive(true);
+    servoTask->setNewPosition(value);
   }
 }
-         
-void setState(){
-  if(MsgService.isMsgAvailable()){
-    Msg* msg = MsgService.receiveMsg();
-    if(msg->getContent()=="s"){
-      state = SINGLE;
-      MsgService.sendMsg("OK");
-    }
-    else if(msg->getContent()=="m"){
-      state = MANUAL;
-      MsgService.sendMsg("OK");
-    }
-    else if(msg->getContent()=="a"){
-      state = AUTO;
-      MsgService.sendMsg("OK");
-    }else{
-      MsgService.sendMsg("Error");
-    }
-    /* NOT TO FORGET: message deallocation */
-    delete msg;
-    stateEnabled = true;
-  }
-}
-//  //Controllo eventuale pressione pulsanti -> mettere su task
-//  if(digitalRead(BUTTON_SINGLE) == HIGH){
-//    state = SINGLE;
-//  }
-//  if(digitalRead(BUTTON_MANUAL) == HIGH){
-//    state = MANUAL;
-//  }
-//  if(digitalRead(BUTTON_AUTO)== HIGH){
-//    state = AUTO;
-//  }
+
+
 //
 //  //Controllo presenza con pir -> mettere su task
 //  if (digitalRead(PIR_PIN) == HIGH){
