@@ -15,3 +15,7 @@ void SonarScan::init(int period){
 void SonarScan::tick(){
   this->lastDetected = sonar->scan();
 }
+
+float SonarScan::getDistance(){
+  return this->lastDetected;
+}

@@ -14,6 +14,7 @@
       SonarScan(int triggerPin, int echoPin);
       void init(int period);
       void tick();
+      float getDistance();
   };
 
 #endif
