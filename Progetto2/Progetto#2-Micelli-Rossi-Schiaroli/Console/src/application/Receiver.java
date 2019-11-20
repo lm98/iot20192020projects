@@ -29,13 +29,12 @@ public class Receiver implements Runnable {
 		while (!stop) {
 			try {
 				this.msg = channel.receiveMsg();
-				System.out.println(msg);
-				System.out.println("recieved " + msg);
+				update("recieved " + msg);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Thread Stopped");
+		update("Thread Stopped");
 	}
 
 	public void stop() {
