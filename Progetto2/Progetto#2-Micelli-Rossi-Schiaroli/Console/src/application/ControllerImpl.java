@@ -3,9 +3,13 @@ package application;
 import jssc.SerialPortList;
 
 import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
+
 import message.SerialCommChannel;
 
 public class ControllerImpl {
+	
+	final int SCROLL_BUFFER_SIZE = 3;
 
 	private SerialCommChannel channel;
 	private String response;
@@ -13,6 +17,7 @@ public class ControllerImpl {
 	private Receiver receiver;
 	private Thread thread;
 	private JTextArea textArea;
+	
 	public ControllerImpl() {
 		String[] portNames = SerialPortList.getPortNames();
 		try {
@@ -23,6 +28,7 @@ public class ControllerImpl {
 	}
 	
 	public void sync(JTextArea textArea) {
+		///THIS initialize also textArea, if we remove we have to initialize it somewhere else
 		this.textArea = textArea;
 		update("Waiting Arduino for rebooting...");		
 		try {
@@ -54,6 +60,16 @@ public class ControllerImpl {
 	}
 	
 	private void update(String msg) {
+		int numLinesToTrunk = textArea.getLineCount() - SCROLL_BUFFER_SIZE;
+	    if(numLinesToTrunk > 0) {
+	        try {
+	            int posOfLastLineToTrunk = textArea.getLineEndOffset(numLinesToTrunk - 1);
+	            textArea.replaceRange("",0,posOfLastLineToTrunk);
+	        }
+	        catch (BadLocationException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
 		textArea.append("\n");
 		textArea.append(msg);
 	}

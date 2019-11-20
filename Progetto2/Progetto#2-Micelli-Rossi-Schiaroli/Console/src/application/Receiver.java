@@ -1,11 +1,14 @@
 package application;
 
 import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
 
 import message.SerialCommChannel;
 
 //Thread who recieves every message
 public class Receiver implements Runnable {
+
+	final int SCROLL_BUFFER_SIZE = 3;
 
 	private SerialCommChannel channel;
 	private String msg;
@@ -13,6 +16,16 @@ public class Receiver implements Runnable {
 	private JTextArea textArea;
 
 	public Receiver(SerialCommChannel channel, JTextArea textArea) {
+		int numLinesToTrunk = textArea.getLineCount() - SCROLL_BUFFER_SIZE;
+	    if(numLinesToTrunk > 0) {
+	        try {
+	            int posOfLastLineToTrunk = textArea.getLineEndOffset(numLinesToTrunk - 1);
+	            textArea.replaceRange("",0,posOfLastLineToTrunk);
+	        }
+	        catch (BadLocationException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
 		this.channel = channel;
 		this.textArea = textArea;
 	}
@@ -25,7 +38,7 @@ public class Receiver implements Runnable {
 	 
 	@Override
 	public void run() {
-		update("Thread started");
+		System.out.println("Thread started");
 		while (!stop) {
 			try {
 				this.msg = channel.receiveMsg();
@@ -34,7 +47,7 @@ public class Receiver implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		update("Thread Stopped");
+		System.out.println("Thread Stopped");
 	}
 
 	public void stop() {

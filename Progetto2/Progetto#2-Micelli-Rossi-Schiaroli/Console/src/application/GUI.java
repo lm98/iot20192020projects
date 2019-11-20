@@ -8,6 +8,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
@@ -20,8 +22,6 @@ public class GUI {
 	private JTextField speedFieldAuto;
 	private JTextArea textArea;
 
-	
-	
 	/**
 	 * Launch the application.
 	 */
