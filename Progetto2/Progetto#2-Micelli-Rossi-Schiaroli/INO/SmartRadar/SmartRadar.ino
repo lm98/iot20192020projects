@@ -1,7 +1,7 @@
+ 
 #include "Scheduler.h"
 #include "ServoMove.h"
 #include "MsgService.h"
-#include "SonarScan.h"
 
 Scheduler scheduler;
 
@@ -28,7 +28,6 @@ int distance=0;
 
 String statement;
 
-ServoMove *t0;
 
 enum service_type
 {
@@ -48,17 +47,16 @@ void setup()
   pinMode(buttonSingle,INPUT);
   pinMode(buttonManual,INPUT);
   pinMode(buttonAuto,INPUT);
-  t0 = new ServoMove(6, 1);
+  ServoMove *t0 = new ServoMove(6, 1);
+  t0->setNewPosition(180); 
   t0->init(1000);
-  t0->setActive(false);
   scheduler.addTask(t0);
+
 }
 
 void loop()
 {
-  if(currentSpeed!=getSpeed()){
-    currentSpeed=getSpeed();
-  }
+
   //Controllo eventuale pressione pulsanti -> mettere su task
   if(digitalRead(buttonSingle) == HIGH){
     state = SINGLE;
@@ -80,40 +78,38 @@ void loop()
   
   //Se non è ancora settata la connessione, controllo se
   //ho messaggi in arrivo TODO in inglese
-  if (!connEnabled && MsgService.isMsgAvailable()) {
-    Msg* msg = MsgService.receiveMsg();
-    if(msg->getContent()=="ping"){
-      delay(200);
-      MsgService.sendMsg("pong");
-    }
-    connEnabled = true;
+  if (connEnabled == false) {
+    syncronize();
+    connEnabled = true; //Devo eseguire questa porzione di codice una sola volta all'avvio
   }
-  if(!stateEnabled && MsgService.isMsgAvailable()){
-    //serial.println(result);
-    msg = MsgService.receiveMsg();
+
+  if(stateEnabled == false){
+    setState();
+    stateEnabled = true;
+  }
+  
+  void setState(){
+    if(MsgService.isMsgAvailable()){
     if(msg->getContent()=="s"){
       state = SINGLE;
       MsgService.sendMsg("State setted");
     }
     else if(msg->getContent()=="m"){
       state = MANUAL;
-      MsgService.sendMsg("OK");
+      MsgService.sendMsg("State setted");
     }
     else if(msg->getContent()=="a"){
       state = AUTO;
       MsgService.sendMsg("State setted");
     }else{
-      //Code here should not be reached!!
-      //Maybe yes i should think about it
-      param = result.toInt();
-      MsgService.sendMsg("Value received");
+      MsgService.sendMsg("Error");
     }
     /* NOT TO FORGET: message deallocation */
     delete msg;
-    stateEnabled = true;
+    }
   }
     
-
+    
   switch(state){
     case SINGLE:
         //Setto velocità in base a param
@@ -131,16 +127,15 @@ void loop()
          * ...
          */
          //Direziono in base al valore ricevuto
-         scheduler.activateTask(t0);
+
+
          //Elaboro risposta
          if (!dirRecv && MsgService.isMsgAvailable()) {
-            Msg* msg = MsgService.receiveMsg();                                                                                                                                                                             
+            Msg* msg = MsgService.receiveMsg();
             int value = msg->getContent().toInt();
             MsgService.sendMsg("OK");
             dirRecv=false;
             //Avvio movimento verso direzione value
-            t0->setNewPosition(value*10);
-            
             //Quando ho finito
             MsgService.sendMsg(String("MANUAL") + " " + String(value) + " " + String(distance));
          }
@@ -158,14 +153,21 @@ void loop()
   scheduler.schedule();
 }
 
-
-void setSpeed(int param){
-  //TODO 
-  servoSpeed = param;
+void setSpeed(int current){
+  int newer = map(analogRead(POT),0,1023,3,8);
+  if(current!=newer){
+    current=newer;
+  }
 }
 
-int getSpeed(){
-  return map(analogRead(POT),0,1023,3,8);
+void syncronize(){
+  if (MsgService.isMsgAvailable()){
+  Msg* msg = MsgService.receiveMsg();
+    if(msg->getContent() == "ping"){
+      delay(200);
+      MsgService.sendMsg("pong");
+    }
+  }
 }
 /* 
   Serial communication rules:
