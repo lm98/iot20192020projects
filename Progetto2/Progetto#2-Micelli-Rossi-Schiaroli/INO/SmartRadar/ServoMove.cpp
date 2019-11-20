@@ -4,6 +4,7 @@
 ServoMove::ServoMove(int pin, int delta){
   this->pin = pin;
   this->delta = delta;
+  this->reached=false;
 }
 
 void ServoMove::init(int period){
@@ -23,12 +24,19 @@ void ServoMove::tick(){
     servo->setPosition(pos);
   }
   */
-  if(pos>newPos){
-    pos-=delta;
-    servo->setPosition(pos);
-  }else if(pos<newPos){
-    pos+=delta;
-    servo->setPosition(pos);
+  if(pos == newPos){
+    reached= true;
+  }
+  else{
+    
+    if(pos>newPos){
+      pos-=delta;
+      servo->setPosition(pos);
+    }
+    else if(pos<newPos){
+      pos+=delta;
+      servo->setPosition(pos);
+    }
   }
   /*else if(pos==newPos){
     pos=0;
@@ -40,4 +48,8 @@ void ServoMove::tick(){
 
 void ServoMove::setNewPosition(int newPos){
   this->newPos = newPos;
+}
+
+bool ServoMove::getReached(){
+  return reached;
 }
