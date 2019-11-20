@@ -23,7 +23,6 @@ public class ControllerImpl {
 			e.printStackTrace();
 			}
 		this.sync();
-		scanner = new Scanner(System.in);
 	}
 
 	private void sync() {
@@ -89,26 +88,15 @@ public class ControllerImpl {
 			e.printStackTrace();
 		}
 	}
-	
-	private void listen() {
-		this.input = scanner.nextLine();
-		while(true) {
-			checkSpeed();
-			try {
-				System.out.println(channel.receiveMsg());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 
 	private void wornTheIdiots() {
 		System.out.println("Press q to exit manual mode");
 	}
+	
 	//come back to change mode if input == q
 	private void checkExitCond(String input) {
-		if (this.angle.equals(input)){
+		if (input.equals("q")){
+			input = null;
 			this.chooseMode();
 		}
 	}
@@ -122,29 +110,53 @@ public class ControllerImpl {
 			Integer intAngle = Integer.parseInt(angle);
 			if(intAngle <= 180 || intAngle >= 0) {
 				channel.sendMsg(this.angle);
-				this.listen();
+				this.listenM();
 			}else {
 				System.out.println("Try agin pal ;)");
 			}
 		}
 	}
 	
+	private void listenM() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void singleMode() {
 		this.wornTheIdiots();
-		//this.input = scanner.nextLine();
-		System.out.println("you can change the speed with a number from 3 to 8: ");
-		this.listen();
+		this.listenS();
 	}
 
 	private void checkSpeed() {
 		//if input is not null check if user wants to change mode else send that message 
 		//and reset input to null
-		this.checkExitCond(input);
 		if(!this.input.equals(null)) {
+			this.checkExitCond(input);
 			this.channel.sendMsg(input);
+			Integer intInput = Integer.parseInt(input);
+			if(intInput <= 10 || intInput >= 3) {
+				channel.sendMsg(this.input);
+			}
 			this.input = null;
 			this.input=scanner.nextLine();
 		}
 	}
 
+		private void listenS() {
+			this.input = scanner.nextLine();
+			while(true) {
+				checkSpeed();
+				try {
+					System.out.println(channel.receiveMsg());
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		public void send() {
+			// TODO Auto-generated method stub
+			
+		}
 }
