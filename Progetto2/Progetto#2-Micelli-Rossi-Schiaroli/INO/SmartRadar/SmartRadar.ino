@@ -7,6 +7,8 @@
 #define SPEED_MIN 3
 #define SPEED_MAX 8
 #define PIR_PIN 2
+#define ECHO_PIN 3
+#define TRIG_PIN 4
 #define CALIBRATION_TIME_SEC 10
 #define BUTTON_SINGLE 3
 #define BUTTON_MANUAL 4
@@ -55,22 +57,22 @@ void setup()
 void loop()
 {
 
-  //Controllo eventuale pressione pulsanti -> mettere su task
-  if(digitalRead(BUTTON_SINGLE) == HIGH){
-    state = SINGLE;
-  }
-  if(digitalRead(BUTTON_MANUAL) == HIGH){
-    state = MANUAL;
-  }
-  if(digitalRead(BUTTON_AUTO)== HIGH){
-    state = AUTO;
-  }
-
-  //Controllo presenza con pir -> mettere su task
-  if (digitalRead(PIR_PIN) == HIGH){
-    //Serial.println("detected!");
-    //Segnalo presenza in qualche modo  
-  }
+//  //Controllo eventuale pressione pulsanti -> mettere su task
+//  if(digitalRead(BUTTON_SINGLE) == HIGH){
+//    state = SINGLE;
+//  }
+//  if(digitalRead(BUTTON_MANUAL) == HIGH){
+//    state = MANUAL;
+//  }
+//  if(digitalRead(BUTTON_AUTO)== HIGH){
+//    state = AUTO;
+//  }
+//
+//  //Controllo presenza con pir -> mettere su task
+//  if (digitalRead(PIR_PIN) == HIGH){
+//    //Serial.println("detected!");
+//    //Segnalo presenza in qualche modo  
+//  }
 
 
   
@@ -78,12 +80,10 @@ void loop()
   //ho messaggi in arrivo TODO in inglese
   if (connEnabled == false) {
     syncronize();
-    connEnabled = true; //Devo eseguire questa porzione di codice una sola volta all'avvio
   }
 
-  if(stateEnabled == false){
+  if(stateEnabled == false && connEnabled == true){
     setState();
-    stateEnabled = true; //Devo eseguire questa porzione di codice una sola volta all'avvio
   }
   
   switch(state){
@@ -140,9 +140,10 @@ void syncronize(){
   if (MsgService.isMsgAvailable()){
   Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "ping"){
-      delay(200);
+      delay(2000);
       MsgService.sendMsg("pong");
     }
+    connEnabled = true;
   }
 }
 
@@ -164,6 +165,7 @@ void setState(){
     }
     /* NOT TO FORGET: message deallocation */
     delete msg;
+    stateEnabled = true;
   }
 }
 /* 
