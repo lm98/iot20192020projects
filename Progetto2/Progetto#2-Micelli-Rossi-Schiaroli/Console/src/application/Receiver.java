@@ -2,6 +2,7 @@ package application;
 
 import message.SerialCommChannel;
 
+//Thread who recieves every message
 public class Receiver implements Runnable {
 
 	private SerialCommChannel channel;
@@ -15,6 +16,7 @@ public class Receiver implements Runnable {
 	
 	@Override
 	public void run() {
+		System.out.println("Thread started");
 		while(!stop) {
 			try {
 				this.msg = channel.receiveMsg();
@@ -24,6 +26,7 @@ public class Receiver implements Runnable {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Thread Stopped");
 	}
 	
 	public void stop() {

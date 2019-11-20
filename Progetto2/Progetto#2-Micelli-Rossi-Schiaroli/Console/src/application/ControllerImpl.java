@@ -1,17 +1,19 @@
 package application;
 
 import jssc.SerialPortList;
+
+import javax.swing.JTextArea;
 import message.SerialCommChannel;
 
-public class ControllerImpl2 {
+public class ControllerImpl {
 
 	private SerialCommChannel channel;
 	private String response;
-	private boolean threadRunning;
+	private volatile boolean threadRunning;
 	private Receiver receiver;
 	private Thread thread;
 	
-	public ControllerImpl2() {
+	public ControllerImpl() {
 		String[] portNames = SerialPortList.getPortNames();
 		try {
 			this.channel = new SerialCommChannel(portNames[0],9600);
@@ -19,29 +21,29 @@ public class ControllerImpl2 {
 			e.printStackTrace();
 			}
 		this.receiver = new Receiver(channel);
-		this.sync();
+		thread = new Thread(receiver);
 	}
 	
-	private void sync() {
-		System.out.println("Waiting Arduino for rebooting...");		
+	public void sync(JTextArea textArea) {
+		update("Waiting Arduino for rebooting...",textArea);		
 		try {
 			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Ready.");	
-		System.out.println("Sending ping");
+		update("Ready.", textArea);	
+		update("Sending ping", textArea);
 		channel.sendMsg("ping");
 		String msg;
 		try {
 			msg = channel.receiveMsg();
-			System.out.println("Received: "+msg);		
+			update("Received: "+msg,textArea);		
 			Thread.sleep(500);
 			if (msg.equals("pong")) {
-				System.out.println("System connected"); 
+				update("System connected",textArea); 
 	        }
 	        else {
-	            System.out.println(msg);
+	        	update(msg,textArea);
 	            System.exit(1);
 			}
 		} catch (InterruptedException e) {
@@ -51,28 +53,37 @@ public class ControllerImpl2 {
 		
 	}
 	
+	private void update(String msg, JTextArea  textArea) {
+		textArea.append("\n");
+		textArea.append(msg);
+	}
 	
 	
-	public void send(String msg) {
+	public void send(String msg, JTextArea textArea) {
 		if (threadRunning) {
 			this.receiver.stop();
+			this.update(msg, textArea);
 			this.threadRunning = false;
 		}
 		if(!msg.equals(null)|| !msg.equals("")) {
 			channel.sendMsg(msg);
 			System.out.println("sending " +msg);
+			this.update(msg, textArea);
+
 			try {
 				this.response = channel.receiveMsg();
-				System.out.println(response);
+				this.update(response, textArea);
+
 				if(!this.response.equals("OK")) {
 					System.exit(1);
 				}
+				System.out.println("starting thread");
 				thread = new Thread(receiver);
 				thread.start();
+				threadRunning=true;
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-		}
+		}	
 	}
 }

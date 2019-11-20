@@ -1,7 +1,5 @@
 package application;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -16,8 +14,7 @@ import javax.swing.JRadioButton;
 
 public class GUI {
     //sostituire con interfaccia
-	private ControllerImpl2 controller;
-	private JFrame frame;
+	JFrame frame;
 	private JTextField angleField;
 	private JTextField speedFieldSingle;
 	private JTextField speedFieldAuto;
@@ -28,31 +25,15 @@ public class GUI {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GUI window = new GUI();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
+	public JTextArea getTextArea() {
+		return this.textArea;
+	}
 	/**
 	 * Create the application.
 	 */
-	public GUI() {
-		controller= new ControllerImpl2();
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
+	public GUI(ControllerImpl controller) {
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,7 +56,7 @@ public class GUI {
 		JButton activeManual = new JButton("Active");
 		activeManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("m");
+				controller.send("m",textArea);
 				angleField.setText("");
 			}
 		});
@@ -90,7 +71,7 @@ public class GUI {
 		sendAngle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(angleField.getText());
-				controller.send(angleField.getText());
+				controller.send(angleField.getText(),textArea);
 				angleField.setText("");
 			}
 		});
@@ -104,7 +85,7 @@ public class GUI {
 		JButton activeSingle = new JButton("Active");
 		activeSingle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("s");
+				controller.send("s",textArea);
 			}
 		});
 		activeSingle.setBounds(139, 12, 117, 25);
@@ -119,7 +100,7 @@ public class GUI {
 		sendSpeedS.setBounds(249, 76, 117, 25);
 		sendSpeedS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send(speedFieldSingle.getText());
+				controller.send(speedFieldSingle.getText(),textArea);
 				speedFieldSingle.setText("");
 			}
 		});
@@ -132,7 +113,7 @@ public class GUI {
 		JButton activeAuto = new JButton("Active");
 		activeAuto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("a");
+				controller.send("a",textArea);
 			}
 		});
 		activeAuto.setBounds(149, 12, 117, 25);
@@ -147,7 +128,7 @@ public class GUI {
 		sendSpeedA.setBounds(25, 90, 117, 25);
 		sendSpeedA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send(speedFieldAuto.getText());
+				controller.send(speedFieldAuto.getText(),textArea);
 				speedFieldAuto.setText("");
 			}
 		});
@@ -164,5 +145,16 @@ public class GUI {
 		autoPanel.add(tracking);
 		
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+	}
+
+	/*
+	 * public void update(String msg) { this.textArea.append("\n");
+	 * this.textArea.append(msg); }
+	 */
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		
 	}
 }
