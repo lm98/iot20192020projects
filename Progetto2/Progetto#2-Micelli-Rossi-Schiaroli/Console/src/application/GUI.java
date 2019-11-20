@@ -21,7 +21,10 @@ public class GUI {
 	private JTextField angleField;
 	private JTextField speedFieldSingle;
 	private JTextField speedFieldAuto;
+	private JTextArea textArea;
 
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -55,9 +58,11 @@ public class GUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JTextArea textArea = new JTextArea();
+		textArea= new JTextArea();
 		textArea.setRows(5);
 		frame.getContentPane().add(textArea, BorderLayout.SOUTH);
+		
+		textArea.setText("Welcome");
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		JPanel manualPanel = new JPanel();
@@ -100,7 +105,6 @@ public class GUI {
 		activeSingle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send("s");
-				angleField.setText("");
 			}
 		});
 		activeSingle.setBounds(139, 12, 117, 25);
@@ -116,7 +120,7 @@ public class GUI {
 		sendSpeedS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send(speedFieldSingle.getText());
-				angleField.setText("");
+				speedFieldSingle.setText("");
 			}
 		});
 		singlePanel.add(sendSpeedS);
@@ -129,7 +133,6 @@ public class GUI {
 		activeAuto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send("a");
-				angleField.setText("");
 			}
 		});
 		activeAuto.setBounds(149, 12, 117, 25);
@@ -145,7 +148,7 @@ public class GUI {
 		sendSpeedA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send(speedFieldAuto.getText());
-				angleField.setText("");
+				speedFieldAuto.setText("");
 			}
 		});
 		autoPanel.add(sendSpeedA);
