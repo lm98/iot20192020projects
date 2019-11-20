@@ -10,10 +10,10 @@ public class ControllerImpl {
 	
 	private CommChannel channel;
 	private Scanner scanner;
-	private String input;
 	private String mode;
 	private String angle;
 	private String response;
+	private String input;
 	
 	public ControllerImpl() {
 		String[] portNames = SerialPortList.getPortNames();
@@ -23,6 +23,7 @@ public class ControllerImpl {
 			e.printStackTrace();
 			}
 		this.sync();
+		scanner = new Scanner(System.in);
 	}
 
 	private void sync() {
@@ -59,7 +60,6 @@ public class ControllerImpl {
 		System.out.println("Write m to choose Manual mode");
 		System.out.println("Write s to choose Single mode");
 		System.out.println("Write a to choose Auto mode");
-		scanner = new Scanner(System.in);
 		mode = scanner.nextLine();
 		if (mode.equals("m") || mode.equals("M")){
 			channel.sendMsg(mode);
@@ -91,16 +91,24 @@ public class ControllerImpl {
 	}
 	
 	private void listen() {
-		// TODO Auto-generated method stub
-		
+		this.input = scanner.nextLine();
+		while(true) {
+			checkSpeed();
+			try {
+				System.out.println(channel.receiveMsg());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void wornTheIdiots() {
 		System.out.println("Press q to exit manual mode");
 	}
-	
-	private void checkExitCond() {
-		if (this.angle.equals("q")){
+	//come back to change mode if input == q
+	private void checkExitCond(String input) {
+		if (this.angle.equals(input)){
 			this.chooseMode();
 		}
 	}
@@ -109,12 +117,12 @@ public class ControllerImpl {
 		this.wornTheIdiots();
 		while (true){
 			System.out.println("write the angle between 0 and 180: ");
-			scanner = new Scanner(System.in);
 			this.angle = scanner.nextLine();
-			this.checkExitCond(); 
+			this.checkExitCond(this.angle); 
 			Integer intAngle = Integer.parseInt(angle);
 			if(intAngle <= 180 || intAngle >= 0) {
 				channel.sendMsg(this.angle);
+				this.listen();
 			}else {
 				System.out.println("Try agin pal ;)");
 			}
@@ -123,7 +131,20 @@ public class ControllerImpl {
 	
 	private void singleMode() {
 		this.wornTheIdiots();
-		
+		//this.input = scanner.nextLine();
+		System.out.println("you can change the speed with a number from 3 to 8: ");
+		this.listen();
+	}
+
+	private void checkSpeed() {
+		//if input is not null check if user wants to change mode else send that message 
+		//and reset input to null
+		this.checkExitCond(input);
+		if(!this.input.equals(null)) {
+			this.channel.sendMsg(input);
+			this.input = null;
+			this.input=scanner.nextLine();
+		}
 	}
 
 }
