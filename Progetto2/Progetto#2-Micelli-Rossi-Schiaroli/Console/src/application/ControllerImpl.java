@@ -17,6 +17,8 @@ public class ControllerImpl {
 	private Receiver receiver;
 	private Thread thread;
 	private JTextArea textArea;
+	private boolean threadStarted = false;
+	private Receiver2laVendetta rec;
 	
 	public ControllerImpl() {
 		String[] portNames = SerialPortList.getPortNames();
@@ -30,6 +32,7 @@ public class ControllerImpl {
 	public void sync(JTextArea textArea) {
 		///THIS initialize also textArea, if we remove we have to initialize it somewhere else
 		this.textArea = textArea;
+		rec=new Receiver2laVendetta(channel, textArea);
 		update("Waiting Arduino for rebooting...");		
 		try {
 			Thread.sleep(4000);
@@ -74,10 +77,49 @@ public class ControllerImpl {
 		textArea.append(msg);
 	}
 	
-	
+	/*
 	public void send(String msg) {
 		if (threadRunning) {
-			this.receiver.stop();
+			try {
+				this.thread.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			this.update(msg);
+			this.threadRunning = false;
+		}
+		if(!msg.equals(null)|| !msg.equals("")) {
+			channel.sendMsg(msg);
+			System.out.println("sending " +msg);
+			this.update(msg);
+
+			try {
+				this.response = channel.receiveMsg();
+				this.update(response);
+				if(!this.response.equals("OK")) {
+					System.exit(1);
+				}
+				System.out.println("starting thread");
+				if (!threadStarted) {
+					thread = new Thread(receiver);
+					this.threadStarted = true;
+					this.threadRunning = true;
+					thread.start();
+				}
+			if (!threadRunning) {
+				this.thread.notify();
+				threadRunning=true;
+			}	
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+	}*/
+	
+	
+	/*public void send(String msg) {
+		if (threadRunning) {
+			this.thread.destroy();
 			this.update(msg);
 			this.threadRunning = false;
 		}
@@ -96,6 +138,32 @@ public class ControllerImpl {
 				System.out.println("starting thread");
 				thread = new Thread(receiver);
 				thread.start();
+				threadRunning=true;
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+	}*/
+	public void send(String msg) {
+		if (threadRunning) {
+			rec.stopT();
+			this.update(msg);
+			this.threadRunning = false;
+		}
+		if(!msg.equals(null)|| !msg.equals("")) {
+			channel.sendMsg(msg);
+			System.out.println("sending " +msg);
+			this.update(msg);
+
+			try {
+				this.response = channel.receiveMsg();
+				this.update(response);
+
+				if(!this.response.equals("OK")) {
+					System.exit(1);
+				}
+				System.out.println("starting thread");
+				rec.start();
 				threadRunning=true;
 			}catch (Exception e) {
 				e.printStackTrace();

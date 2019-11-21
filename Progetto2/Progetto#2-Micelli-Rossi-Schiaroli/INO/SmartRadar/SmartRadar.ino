@@ -147,7 +147,6 @@ void syncronize(){
   if (MsgService.isMsgAvailable()){
   Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "ping"){
-      delay(2000);
       MsgService.sendMsg("pong");
     }
     connEnabled = true;
