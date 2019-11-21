@@ -1,10 +1,17 @@
 #include "EventCheck.h"
 #include "MsgService.h"
+#include "ManualMode.h"
+#include "SingleMode.h"
+#include "AutoMode.h"
 
+extern ManualMode *manualTask;
+extern SingleMode *singleTask;
+extern AutoMode *autoTask;
 
 void EventCheck::init(int period){
   Task::init(period);
-  this -> value=0;
+  this -> value = 0;
+  this -> valueReceived = false;
 }
 
 void EventCheck::tick(){
@@ -17,13 +24,15 @@ void EventCheck::tick(){
     else if(msg->getContent()=="m"){
       state = MANUAL;
       MsgService.sendMsg("OK");
+      manualTask->setActive(true);
     }
     else if(msg->getContent()=="a"){
       state = AUTO;
-      MsgService.sendMsg("OK");
-      //auto->isActice(true);
+      MsgService.sendMsg("OK");    
     }else{
       value = msg->getContent().toInt();
+      valueReceived = true;
+      MsgService.sendMsg("OK");
     }
     /* NOT TO FORGET: message deallocation */
     delete msg;
@@ -41,5 +50,10 @@ void EventCheck::tick(){
 }
 
 int EventCheck::getValue(){
+  valueReceived = false;
   return this -> value;
 }
+
+bool EventCheck::isValueAvailable(){
+  return this -> valueReceived;
+} 

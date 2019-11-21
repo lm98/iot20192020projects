@@ -2,17 +2,29 @@
 #include "Scheduler.h"
 #include "ServoMove.h"
 #include "SonarScan.h"
+#include "EventCheck.h"
+#include <Arduino.h>
 
-extern Scheduler *scheduler;
 extern ServoMove *servoTask;
 extern SonarScan *sonarTask;
+extern EventCheck *eventTask;
 
 void ManualMode::init(int period){
     Task::init(period);
 }
 
 void ManualMode::tick(){
-    scheduler->shutDownAllTasks();
-    servoTask->setActive(true);
-    sonarTask->setActive(true);
+    /*
+    if(eventTask->isValueAvailable()){
+        servoTask->setActive(true);
+        int val = eventTask->getValue(); //map(eventTask->getValue(),0,180,0,16));
+        servoTask->setNewPosition(val);
+    }
+    */
+   /*
+        int val = eventTask->getValue(); //map(eventTask->getValue(),0,180,0,16));
+        servoTask->setNewPosition(val);
+        servoTask->setActive(true);
+        //*/
+        sonarTask->setActive(true);
 }

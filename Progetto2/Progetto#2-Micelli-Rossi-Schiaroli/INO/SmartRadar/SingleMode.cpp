@@ -3,7 +3,7 @@
 #include "ServoMove.h"
 #include "SonarScan.h"
 
-extern Scheduler *scheduler;
+//extern Scheduler *scheduler;
 extern ServoMove *servoTask;
 extern SonarScan *sonarTask;
 
@@ -12,5 +12,5 @@ void SingleMode::init(int period){
 }
 
 void SingleMode::tick(){
-    scheduler->shutDownAllTasks();
+    //scheduler->shutDownAllTasks();
 }

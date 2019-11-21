@@ -1,7 +1,7 @@
 #ifndef __MANUALMODE
 #define __MANUALMODE___
 
-#include    "Task.h"
+#include "Task.h"
 
 
 class ManualMode : public Task{
