@@ -15,24 +15,25 @@ public class Receiver2laVendetta extends Thread{
 	private volatile boolean stop = false;
 	private JTextArea textArea;
 
-	public Receiver2laVendetta(SerialCommChannel channel, JTextArea textArea) {
-		
-		int numLinesToTrunk = textArea.getLineCount() - SCROLL_BUFFER_SIZE;
-	    if(numLinesToTrunk > 0) {
-	        try {
-	            int posOfLastLineToTrunk = textArea.getLineEndOffset(numLinesToTrunk - 1);
-	            textArea.replaceRange("",0,posOfLastLineToTrunk);
-	        }
-	        catch (BadLocationException ex) {
-	            ex.printStackTrace();
-	        }
-	    }
+	public Receiver2laVendetta(SerialCommChannel channel, JTextArea textArea) {	
 		this.channel = channel;
 		this.textArea = textArea;
 	}
 
 	
 	  private void update(String msg) {
+		  //
+		  int numLinesToTrunk = textArea.getLineCount() - SCROLL_BUFFER_SIZE;
+		    if(numLinesToTrunk > 0) {
+		        try {
+		            int posOfLastLineToTrunk = textArea.getLineEndOffset(numLinesToTrunk - 1);
+		            textArea.replaceRange("",0,posOfLastLineToTrunk);
+		        }
+		        catch (BadLocationException ex) {
+		            ex.printStackTrace();
+		        }
+		    }
+		    /// fino a qui gestisco la cancellazione delle righe extra
 		  textArea.append("\n");
 		  textArea.append(msg); 
 	  }

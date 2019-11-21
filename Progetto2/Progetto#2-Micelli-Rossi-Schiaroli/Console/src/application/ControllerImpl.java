@@ -13,11 +13,11 @@ public class ControllerImpl {
 
 	private SerialCommChannel channel;
 	private String response;
-	private volatile boolean threadRunning;
+	private volatile boolean threadRunning = false;
 	private Receiver receiver;
 	private Thread thread;
 	private JTextArea textArea;
-	private boolean threadStarted = false;
+	private volatile boolean threadExist = false;
 	private Receiver2laVendetta rec;
 	
 	public ControllerImpl() {
@@ -32,7 +32,7 @@ public class ControllerImpl {
 	public void sync(JTextArea textArea) {
 		///THIS initialize also textArea, if we remove we have to initialize it somewhere else
 		this.textArea = textArea;
-		rec=new Receiver2laVendetta(channel, textArea);
+		rec = new Receiver2laVendetta(channel, textArea);
 		update("Waiting Arduino for rebooting...");		
 		try {
 			Thread.sleep(4000);
@@ -145,29 +145,46 @@ public class ControllerImpl {
 		}	
 	}*/
 	public void send(String msg) {
+		///SE STA ANDANDO FERMO IL THREAD
 		if (threadRunning) {
-			rec.stopT();
+			try {
+				//rec.wait();
+				rec.sleep(150);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			this.update(msg);
 			this.threadRunning = false;
 		}
+		//MANDO MESSAGGIO
+		//LA PRIMA VOLTA CHE PASSO MANDO IL MESSAGGIO E STARTO IL THREAD
 		if(!msg.equals(null)|| !msg.equals("")) {
 			channel.sendMsg(msg);
 			System.out.println("sending " +msg);
 			this.update(msg);
-
 			try {
 				this.response = channel.receiveMsg();
-				this.update(response);
-
-				if(!this.response.equals("OK")) {
-					System.exit(1);
-				}
-				System.out.println("starting thread");
-				rec.start();
-				threadRunning=true;
+				System.out.println(response);
+				
+			//	if(!this.response.equals("OK")) {
+			//	System.exit(1);
+			//}
 			}catch (Exception e) {
 				e.printStackTrace();
+			}	
+		}
+		
+		//ALTRIMENTI MANDO LA NOTIFY
+		if(!threadRunning) {
+			//SE IL THREAD NON E' CREATO LO CREO,
+			if(!threadExist) {
+				//rec.start();
+				threadExist = true;
+			}else {
+				//rec.notify();
 			}
-		}	
+			threadRunning = true;			
+		}
+		
 	}
 }

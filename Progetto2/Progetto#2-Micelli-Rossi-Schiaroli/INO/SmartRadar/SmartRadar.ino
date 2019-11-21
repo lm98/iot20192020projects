@@ -111,11 +111,11 @@ void setup()
   }
 
 void loop(){
-  /*
+  
   if(connEnabled==false){
     syncronize();
   }
-  */
+
 //  switch(state){
 //    case SINGLE:
 //        //Setto velocità in base a param
@@ -169,6 +169,7 @@ void syncronize(){
   if (MsgService.isMsgAvailable()){
   Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "ping"){
+      delay(200);
       MsgService.sendMsg("pong");
     }
     connEnabled = true;
