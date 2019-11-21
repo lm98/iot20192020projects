@@ -32,7 +32,7 @@ void AutoMode::tick(){
 /* Activate sonar every delta movement, otherwise we don't scan. */
     if((((servoTask->getPos())%(servoTask->getDelta()))==0)){
         sonarTask->setActive(true);
-        if((sonarTask->getLastDetected() > dNear)&&(sonarTask->getLastDetected() < dFar)){
+        if(sonarTask->getLastDetected() < dFar){
             ledTask->setActive(true);
         } else {
             ledTask->setActive(false);
@@ -47,6 +47,7 @@ void AutoMode::shutDown(){
         servoTask->restart();
         servoTask->setActive(false);
         sonarTask->setActive(false);
+        ledTask->setActive(false);
         this->setActive(false);
     }   
 }

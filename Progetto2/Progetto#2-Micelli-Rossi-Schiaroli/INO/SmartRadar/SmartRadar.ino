@@ -12,6 +12,7 @@
 
 //Macros
 #define POT A0
+#define LED_PIN 8
 #define SERVO 6
 #define SPEED_MIN 3
 #define SPEED_MAX 8
@@ -112,9 +113,10 @@ void setup()
   scheduler.addTask(sonarTask);
 
   //Setting alarm led task
-  ledTask = new SlowBlink(8);
-  ledTask->init(150);
+  ledTask = new SlowBlink(LED_PIN);
+  ledTask->init(450);
   ledTask->setActive(false);
+  scheduler.addTask(ledTask);
   }
 
 void loop(){
