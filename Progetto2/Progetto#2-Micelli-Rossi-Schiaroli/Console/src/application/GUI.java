@@ -8,6 +8,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.text.BadLocationException;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
@@ -20,8 +22,6 @@ public class GUI {
 	private JTextField speedFieldAuto;
 	private JTextArea textArea;
 
-	
-	
 	/**
 	 * Launch the application.
 	 */
@@ -56,7 +56,7 @@ public class GUI {
 		JButton activeManual = new JButton("Active");
 		activeManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("m",textArea);
+				controller.send("m");
 				angleField.setText("");
 			}
 		});
@@ -71,7 +71,7 @@ public class GUI {
 		sendAngle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(angleField.getText());
-				controller.send(angleField.getText(),textArea);
+				controller.send(angleField.getText());
 				angleField.setText("");
 			}
 		});
@@ -85,7 +85,7 @@ public class GUI {
 		JButton activeSingle = new JButton("Active");
 		activeSingle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("s",textArea);
+				controller.send("s");
 			}
 		});
 		activeSingle.setBounds(139, 12, 117, 25);
@@ -100,7 +100,7 @@ public class GUI {
 		sendSpeedS.setBounds(249, 76, 117, 25);
 		sendSpeedS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send(speedFieldSingle.getText(),textArea);
+				controller.send(speedFieldSingle.getText());
 				speedFieldSingle.setText("");
 			}
 		});
@@ -113,7 +113,7 @@ public class GUI {
 		JButton activeAuto = new JButton("Active");
 		activeAuto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("a",textArea);
+				controller.send("a");
 			}
 		});
 		activeAuto.setBounds(149, 12, 117, 25);
@@ -128,7 +128,7 @@ public class GUI {
 		sendSpeedA.setBounds(25, 90, 117, 25);
 		sendSpeedA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send(speedFieldAuto.getText(),textArea);
+				controller.send(speedFieldAuto.getText());
 				speedFieldAuto.setText("");
 			}
 		});
@@ -146,15 +146,5 @@ public class GUI {
 		
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 	}
-
-	/*
-	 * public void update(String msg) { this.textArea.append("\n");
-	 * this.textArea.append(msg); }
-	 */
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		
-	}
+	
 }

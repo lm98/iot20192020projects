@@ -7,6 +7,5 @@ public class Main {
 		GUI window = new GUI(controller);
 		window.frame.setVisible(true);	
 		controller.sync(window.getTextArea());
-
 	}
 }
