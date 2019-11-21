@@ -3,6 +3,11 @@
 #include "SonarScan.h"
 #include "MsgService.h"
 #include "EventCheck.h"
+#include "SingleMode.h"
+#include "ManualMode.h"
+#include "AutoMode.h"
+
+//NB VALUTARE DI CANCELLARE LE CLASSI DI SONAR (BASTA IL TASK)
 
 //Macros
 #define POT A0
@@ -13,9 +18,9 @@
 #define ECHO_PIN 3
 #define TRIG_PIN 4
 #define CALIBRATION_TIME_SEC 10
-#define BUTTON_SINGLE 3
-#define BUTTON_MANUAL 4
-#define BUTTON_AUTO 5
+#define BUTTON_SINGLE 9
+#define BUTTON_MANUAL 10
+#define BUTTON_AUTO 11
 
 //Define scheduler
 Scheduler scheduler;
@@ -24,6 +29,9 @@ Scheduler scheduler;
 ServoMove *servoTask;
 SonarScan *sonarTask;
 EventCheck *eventTask;
+ManualMode *manualTask;
+AutoMode *autoTask;
+SingleMode *singleTask;
 
 //Define variables
 int servoSpeed = 0;
@@ -50,46 +58,64 @@ enum modality {
 void setup()
 {
   Serial.begin(9600); //Begin serial communication with 9600 baud
-  scheduler.init(100); //Scheduler initialize
+  scheduler.init(150); //Scheduler initialize
   state = MANUAL; // Starting modality
   MsgService.init(); //Initialize message receiving from serial
 
   //Pin Input
   pinMode(PIR_PIN,INPUT);
   pinMode(POT,INPUT);
-  pinMode(BUTTON_SINGLE,INPUT);
-  pinMode(BUTTON_MANUAL,INPUT);
+  //pinMode(BUTTON_SINGLE,INPUT);
+  //pinMode(BUTTON_MANUAL,INPUT);
   pinMode(BUTTON_AUTO,INPUT);
-  pinMode(TRIG_PIN,INPUT);
 
   //Pin output
-  pinMode(ECHO_PIN,OUTPUT);
   pinMode(SERVO,OUTPUT);
   
   //Setting event checker task
   eventTask = new EventCheck();
-  eventTask->init(250);
-  eventTask->setActive(true);
+  eventTask->init(300);
+  eventTask->setActive(false);
   scheduler.addTask(eventTask);
 
   //Setting servo movement task
   servoTask = new ServoMove(SERVO, 1);
-  servoTask->init(200);
+  servoTask->init(450);
   servoTask->setActive(false);
   scheduler.addTask(servoTask);
   
   //Setting sonar scanning scan
   sonarTask = new SonarScan(TRIG_PIN,ECHO_PIN);
-  sonarTask->init(250);
+  sonarTask->init(1500);
   sonarTask->setActive(false);
   scheduler.addTask(sonarTask);
+
+  //Setting manual mode task
+  manualTask = new ManualMode();
+  manualTask->init(1500);
+  manualTask->setActive(true);
+  scheduler.addTask(manualTask);
+
+  //Setting single mode task
+  autoTask = new AutoMode();
+  autoTask->init(1500);
+  autoTask->setActive(false);
+  scheduler.addTask(autoTask);
+
+  //Setting auto mode task
+  singleTask = new SingleMode();
+  singleTask->init(1500);
+  singleTask->setActive(false);
+  scheduler.addTask(singleTask);
   
   }
 
 void loop(){
+  /*
   if(connEnabled==false){
     syncronize();
   }
+  */
 //  switch(state){
 //    case SINGLE:
 //        //Setto velocità in base a param
@@ -139,31 +165,15 @@ void setSpeed(int current){
   }
 }
 
-void setScan(bool value){
-  sonarTask->setActive(value);
-}
-
 void syncronize(){
   if (MsgService.isMsgAvailable()){
   Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "ping"){
-      delay(2000);
       MsgService.sendMsg("pong");
     }
     connEnabled = true;
   }
 }
-
-void moveToPosition(){
-  if(MsgService.isMsgAvailable()) {
-    Msg* msg = MsgService.receiveMsg();
-    value = msg->getContent().toInt();
-    MsgService.sendMsg("OK");
-    servoTask->setActive(true);
-    servoTask->setNewPosition(value);
-  }
-}
-
 
 //
 //  //Controllo presenza con pir -> mettere su task

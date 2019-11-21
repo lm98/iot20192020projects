@@ -2,12 +2,10 @@
 #define _SONAR_SCAN_
 
 #include "Task.h"
-#include "Sonar.h"
 
   class SonarScan : public Task {
     int triggerPin;
     int echoPin;
-    Sonar* sonar;
     
     public:
       float lastDetected;

@@ -1,21 +1,35 @@
 #include "SonarScan.h"
-#include "SonarImpl.h"
+#include <Arduino.h>
 
 SonarScan::SonarScan(int triggerPin, int echoPin){
   this->triggerPin = triggerPin;
   this->echoPin = echoPin;
-  this->lastDetected = 0;
+  
 }
 
 void SonarScan::init(int period){
   Task::init(period);
-  Sonar* sonar = new SonarImpl(triggerPin, echoPin);
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 void SonarScan::tick(){
-  this->lastDetected = sonar->scan();
+    
+    digitalWrite(triggerPin,LOW);
+    delayMicroseconds(3);
+    digitalWrite(triggerPin,HIGH);
+    delayMicroseconds(5);
+    digitalWrite(triggerPin,LOW);
+       
+    float tUS = pulseIn(echoPin, HIGH);
+    float t = tUS / 1000.0 / 1000.0 / 2;
+    float d = t* (331.45 + 0.62*20);
+
+    Serial.println(d);
 }
 
+/*
 float SonarScan::getDistance(){
   return this->lastDetected;
 }
+*/
