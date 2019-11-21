@@ -13,37 +13,21 @@ public class Receiver2laVendetta extends Thread{
 	private SerialCommChannel channel;
 	private String msg;
 	private volatile boolean stop = false;
+	private ModelImpl model;
 	private JTextArea textArea;
-
-	public Receiver2laVendetta(SerialCommChannel channel, JTextArea textArea) {	
-		this.channel = channel;
-		this.textArea = textArea;
-	}
-
 	
-	  private void update(String msg) {
-		  //
-		  int numLinesToTrunk = textArea.getLineCount() - SCROLL_BUFFER_SIZE;
-		    if(numLinesToTrunk > 0) {
-		        try {
-		            int posOfLastLineToTrunk = textArea.getLineEndOffset(numLinesToTrunk - 1);
-		            textArea.replaceRange("",0,posOfLastLineToTrunk);
-		        }
-		        catch (BadLocationException ex) {
-		            ex.printStackTrace();
-		        }
-		    }
-		    /// fino a qui gestisco la cancellazione delle righe extra
-		  textArea.append("\n");
-		  textArea.append(msg); 
-	  }
+	public Receiver2laVendetta(SerialCommChannel channel, ModelImpl model) {	
+		this.channel = channel;
+		this.model = model;
+		this.textArea = model.getTextArea();
+	}
 	 
 	public void run() {
 		System.out.println("Thread started");
 		while (!stop) {
 			try {
 				this.msg = channel.receiveMsg();
-				update("recieved " + msg);
+				model.update("recieved " + msg);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
