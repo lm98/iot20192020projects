@@ -8,7 +8,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.text.BadLocationException;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -38,7 +37,7 @@ public class GUI {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
-		
+		frame.setResizable(false);
 		textArea= new JTextArea();
 		textArea.setRows(5);
 		frame.getContentPane().add(textArea, BorderLayout.SOUTH);
@@ -92,12 +91,12 @@ public class GUI {
 		singlePanel.add(activeSingle);
 		
 		speedFieldSingle = new JTextField();
-		speedFieldSingle.setBounds(60, 79, 114, 19);
+		speedFieldSingle.setBounds(25, 59, 114, 19);
 		singlePanel.add(speedFieldSingle);
 		speedFieldSingle.setColumns(10);
 		JButton sendSpeedS = new JButton("send speed");
 		sendSpeedS.setName("sendS");
-		sendSpeedS.setBounds(249, 76, 117, 25);
+		sendSpeedS.setBounds(25, 90, 117, 25);
 		sendSpeedS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send(speedFieldSingle.getText());
@@ -105,6 +104,11 @@ public class GUI {
 			}
 		});
 		singlePanel.add(sendSpeedS);
+		
+		JRadioButton blink = new JRadioButton("find");
+		blink.setEnabled(false);
+		blink.setBounds(243, 45, 149, 23);
+		singlePanel.add(blink);
 		
 		//AUTO PANEL
 		tabbedPane.addTab("Auto", autoPanel);

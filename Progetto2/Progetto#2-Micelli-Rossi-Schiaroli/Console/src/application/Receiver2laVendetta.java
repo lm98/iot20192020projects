@@ -5,10 +5,9 @@ import javax.swing.text.BadLocationException;
 
 import message.SerialCommChannel;
 
-//Thread who recieves every message
-public class Receiver implements Runnable {
+public class Receiver2laVendetta extends Thread{
 
-	
+
 	final int SCROLL_BUFFER_SIZE = 3;
 
 	private SerialCommChannel channel;
@@ -16,7 +15,7 @@ public class Receiver implements Runnable {
 	private volatile boolean stop = false;
 	private JTextArea textArea;
 
-	public Receiver(SerialCommChannel channel, JTextArea textArea) {
+	public Receiver2laVendetta(SerialCommChannel channel, JTextArea textArea) {
 		
 		int numLinesToTrunk = textArea.getLineCount() - SCROLL_BUFFER_SIZE;
 	    if(numLinesToTrunk > 0) {
@@ -38,7 +37,6 @@ public class Receiver implements Runnable {
 		  textArea.append(msg); 
 	  }
 	 
-	@Override
 	public void run() {
 		System.out.println("Thread started");
 		while (!stop) {
@@ -52,7 +50,7 @@ public class Receiver implements Runnable {
 		System.out.println("Thread Stopped");
 	}
 
-	public void stop() {
+	public void stopT() {
 		this.stop = true;
 	}
 }
