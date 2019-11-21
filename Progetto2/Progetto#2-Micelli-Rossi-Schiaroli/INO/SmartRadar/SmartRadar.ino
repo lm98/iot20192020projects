@@ -6,6 +6,7 @@
 #include "SingleMode.h"
 #include "ManualMode.h"
 #include "AutoMode.h"
+#include "SlowBlink.h"
 
 //NB VALUTARE DI CANCELLARE LE CLASSI DI SONAR (BASTA IL TASK)
 
@@ -21,17 +22,20 @@
 #define BUTTON_SINGLE 9
 #define BUTTON_MANUAL 10
 #define BUTTON_AUTO 11
+#define D_NEAR 0.5
+#define D_FAR 1
 
 //Define scheduler
 Scheduler scheduler;
 
 //Define Tasks
-ServoMove *servoTask;
-SonarScan *sonarTask;
 EventCheck *eventTask;
 ManualMode *manualTask;
 AutoMode *autoTask;
 SingleMode *singleTask;
+ServoMove *servoTask;
+SonarScan *sonarTask;
+SlowBlink *ledTask;
 
 //Define variables
 int servoSpeed = 0;
@@ -84,7 +88,7 @@ void setup()
   scheduler.addTask(manualTask);
 
   //Setting single mode task
-  autoTask = new AutoMode();
+  autoTask = new AutoMode(D_NEAR, D_FAR);
   autoTask->init(1500);
   autoTask->setActive(false);
   scheduler.addTask(autoTask);
@@ -107,7 +111,10 @@ void setup()
   sonarTask->setActive(false);
   scheduler.addTask(sonarTask);
 
-  
+  //Setting alarm led task
+  ledTask = new SlowBlink(8);
+  ledTask->init(150);
+  ledTask->setActive(false);
   }
 
 void loop(){
@@ -115,46 +122,7 @@ void loop(){
   if(connEnabled==false){
     syncronize();
   }
-
-//  switch(state){
-//    case SINGLE:
-//        //Setto velocità in base a param
-//        /**
-//         * scheduler.shutDownAllTasks();
-//         * scheduler.activateTask(giustoTask);
-//         */
-//      break;
-//      case MANUAL:
-//         
-//         //Move to the last setted position
-//         if(stateEnabled  && connEnabled){
-//            moveToPosition();
-//            if(t0->getReached()==true){
-//              rightPosition=true;
-//            }
-//         }
-//         
-//         //Send console object distance
-//         if(rightPosition){       
-//                setScan(true);//Start scan
-//                precValue = 0;
-//                distance = t1->getDistance();
-//                if(precValue != distance){
-//                  MsgService.sendMsg(String("MANUAL") + " " + String(value) + " " + String(distance));  
-//                  precValue = t1->getDistance();
-//                }
-//         }
-//      break;
-//      case AUTO:
-//        //Setto velocità in base a param
-//        /**
-//         * scheduler.shutDownAllTasks();
-//         * scheduler.activateTask(giustoTask);
-//         * ...
-//         */
-//      default:
-//      break;
-//  }
+  
   scheduler.schedule();
 }
 
@@ -167,7 +135,8 @@ void setSpeed(int current){
 
 void syncronize(){
   if (MsgService.isMsgAvailable()){
-  Msg* msg = MsgService.receiveMsg();
+
+    Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "ping"){
       delay(200);
       MsgService.sendMsg("pong");
@@ -175,13 +144,6 @@ void syncronize(){
     connEnabled = true;
   }
 }
-
-//
-//  //Controllo presenza con pir -> mettere su task
-//  if (digitalRead(PIR_PIN) == HIGH){
-//    //Serial.println("detected!");
-//    //Segnalo presenza in qualche modo  
-//  }
 
 /*
   Serial communication rules:

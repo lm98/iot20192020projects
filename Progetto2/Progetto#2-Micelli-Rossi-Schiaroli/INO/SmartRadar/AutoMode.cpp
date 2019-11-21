@@ -2,9 +2,16 @@
 #include "Scheduler.h"
 #include "ServoMove.h"
 #include "SonarScan.h"
+#include "SlowBlink.h"
 
 extern ServoMove *servoTask;
 extern SonarScan *sonarTask;
+extern SlowBlink *ledTask;
+
+AutoMode::AutoMode(float dNear, float dFar){
+    this->dNear = dNear;
+    this->dFar = dFar;
+}
 
 void AutoMode::init(int period){
     Task::init(period);
@@ -12,17 +19,34 @@ void AutoMode::init(int period){
 }
 
 void AutoMode::tick(){
-    servoTask -> setActive(true);
-    if(servoTask->pos>170){
+
+    servoTask->setActive(true);
+
+/* Tell the servo to make a double sweep: from 0 to 180 and reverse */
+    if(servoTask->getPos()==180){
         servoTask->setNewPosition(0);
-    }else if(servoTask->pos<10){
+    }else if(servoTask->getPos()==0){
         servoTask->setNewPosition(180);
     }
-    sonarTask -> setActive(true);
+
+/* Activate sonar every delta movement, otherwise we don't scan. */
+    if((((servoTask->getPos())%(servoTask->getDelta()))==0)){
+        sonarTask->setActive(true);
+        if((sonarTask->getLastDetected() > dNear)&&(sonarTask->getLastDetected() < dFar)){
+            ledTask->setActive(true);
+        } else {
+            ledTask->setActive(false);
+        }
+    } else {
+        sonarTask->setActive(false);
+    }
 }
 
 void AutoMode::shutDown(){
-    servoTask->setActive(false);
-    sonarTask->setActive(false);
-    this->setActive(false);
+    if(this->isActive()){
+        servoTask->restart();
+        servoTask->setActive(false);
+        sonarTask->setActive(false);
+        this->setActive(false);
+    }   
 }

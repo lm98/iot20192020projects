@@ -14,23 +14,29 @@ void ManualMode::init(int period){
 }
 
 void ManualMode::tick(){
-    /*
+    
+/* Check if there's a value from Serial, if so, move */
     if(eventTask->isValueAvailable()){
         servoTask->setActive(true);
         int val = eventTask->getValue(); //map(eventTask->getValue(),0,180,0,16));
         servoTask->setNewPosition(val);
     }
-    */
-   /*
-        int val = eventTask->getValue(); //map(eventTask->getValue(),0,180,0,16));
-        servoTask->setNewPosition(val);
-        servoTask->setActive(true);
-        //*/
-        sonarTask->setActive(true);
+   
+/* When servo reaches it's destination, sonar starts scanning */
+    if(servoTask->getPos() == servoTask->getNewPos()) {
+        sonarTask-> setActive(true);
+    } else {
+        sonarTask->setActive(false);
+    }
+
 }
 
 void ManualMode::shutDown(){
-    //servoTask->setActive(false);
-    sonarTask->setActive(false);
-    this->setActive(false);
+    if(this->isActive()){
+        servoTask->restart();
+        servoTask->setActive(false);
+        sonarTask->setActive(false);
+        this->setActive(false);
+    }
+
 }

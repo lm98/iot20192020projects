@@ -4,7 +4,7 @@
 SonarScan::SonarScan(int triggerPin, int echoPin){
   this->triggerPin = triggerPin;
   this->echoPin = echoPin;
-  
+  lastDetected = 0;
 }
 
 void SonarScan::init(int period){
@@ -23,13 +23,14 @@ void SonarScan::tick(){
        
     float tUS = pulseIn(echoPin, HIGH);
     float t = tUS / 1000.0 / 1000.0 / 2;
-    float d = t* (331.45 + 0.62*20);
-    Serial.print("Sonar: ");
-    Serial.println(d);
+    lastDetected = t* (331.45 + 0.62*20);
+    if(lastDetected > 1.50){
+      Serial.println("Out of range");
+    } else {
+      Serial.println(lastDetected);
+    }
 }
 
-/*
-float SonarScan::getDistance(){
-  return this->lastDetected;
+float SonarScan::getLastDetected(){
+  return lastDetected;
 }
-*/

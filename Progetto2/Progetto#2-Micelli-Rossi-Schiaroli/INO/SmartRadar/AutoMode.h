@@ -5,8 +5,11 @@
 
 class AutoMode : public Task{
     
+    float dNear, dFar;
+
     public:
     
+    AutoMode(float dNear, float dFar);
     void tick();
     void init(int period);
     void shutDown();

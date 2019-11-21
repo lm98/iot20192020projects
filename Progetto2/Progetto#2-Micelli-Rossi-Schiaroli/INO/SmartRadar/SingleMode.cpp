@@ -19,22 +19,23 @@ void SingleMode::init(int period){
 }
 
 void SingleMode::tick(){
+
+/* When pir detects a movement, servo makes a complete sweep */
     int detected = digitalRead(pirPin);
-    if (detected == HIGH){
+    if ((detected == HIGH)&&(servoTask->getPos()==0)){
         servoTask->setNewPosition(180);
         servoTask->setActive(true);
-       // sonarTask->setActive(true);
     } 
 
-  //  sonarTask->setActive(false);
-
-    if(servoTask->pos>170){
-        servoTask->setNewPosition(0);
+/* When servo makes a full sweep, return immediately in position 0 */
+    if(servoTask->getPos()==180){
+        servoTask->restart();
         servoTask->setActive(true);
         sonarTask->setActive(false);
     } 
 
-    if((((servoTask->pos)%(servoTask->delta))==0) && (servoTask->newPos != 0)){
+/* Activate sonar every delta movement, otherwise we don't scan. */
+    if((((servoTask->getPos())%(servoTask->getDelta()))==0) && (servoTask->getNewPos() != 0)){
         sonarTask->setActive(true);
     } else {
         sonarTask->setActive(false);
@@ -42,7 +43,10 @@ void SingleMode::tick(){
 }
 
 void SingleMode::shutDown(){
-    servoTask->setActive(false);
-    sonarTask->setActive(false);
-    this->setActive(false);
+    if(this->isActive()){
+        servoTask->restart();
+        servoTask->setActive(false);
+        sonarTask->setActive(false);
+        this->setActive(false);
+    }
 }

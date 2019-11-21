@@ -15,6 +15,7 @@ void ServoMove::init(int period){
 }
 
 void ServoMove::tick(){ 
+
   if(pos == newPos){
     this -> setActive(false);
   }
@@ -29,14 +30,26 @@ void ServoMove::tick(){
       servo->setPosition(pos);
     }
   }
- // Serial.print("Auto Pos: ");
- // Serial.println(pos);
 }
 
 void ServoMove::setNewPosition(int newPos){
   this->newPos = newPos;
 }
 
-bool ServoMove::getReached(){
-  return reached;
+void ServoMove::restart(){
+  pos = 0;
+  newPos = 0;
+  servo->setPosition(pos);
+}
+
+int ServoMove::getPos(){
+  return pos;
+}
+
+int ServoMove::getNewPos(){
+  return newPos;
+}
+
+int ServoMove::getDelta(){
+  return delta;
 }

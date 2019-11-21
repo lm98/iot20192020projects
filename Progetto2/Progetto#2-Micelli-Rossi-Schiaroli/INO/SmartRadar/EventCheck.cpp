@@ -21,43 +21,52 @@ void EventCheck::tick(){
     Msg* msg = MsgService.receiveMsg();
     if(msg->getContent()=="s"){
       state = SINGLE;
-      MsgService.sendMsg("OK");
     }
     else if(msg->getContent()=="m"){
-      state = MANUAL;
-      MsgService.sendMsg("OK");
-      manualTask->setActive(true);
+     state = MANUAL;
     }
     else if(msg->getContent()=="a"){
-      state = AUTO;
-      MsgService.sendMsg("OK");    
+      state = AUTO;  
     }else{
       value = msg->getContent().toInt();
       valueReceived = true;
-      MsgService.sendMsg("OK");
+      MsgService.sendMsg("val");
     }
     /* NOT TO FORGET: message deallocation */
     delete msg;
+    
   }else{
     if(digitalRead(BUTTON_SINGLE) == HIGH){
-      Serial.println("sm");
-      manualTask->shutDown();
-      autoTask->shutDown();
-      singleTask->setActive(true);
+      state = SINGLE;
     }
     if(digitalRead(BUTTON_MANUAL) == HIGH){
-      Serial.println("mm");
-      singleTask->shutDown();
-      autoTask->shutDown();
-      manualTask->setActive(true);
+      state = MANUAL;
     }
     if(digitalRead(BUTTON_AUTO)== HIGH){
-      Serial.println("am");
-      manualTask->shutDown();
-      singleTask->shutDown();
-      autoTask->setActive(true);
+      state = AUTO;
     }
   }
+
+    switch(state){
+      case SINGLE:
+        manualTask->shutDown();
+        autoTask->shutDown();
+        singleTask->setActive(true);
+      break;
+
+      case MANUAL:
+        singleTask->shutDown();
+        autoTask->shutDown();
+        manualTask->setActive(true); 
+      break;
+
+      case AUTO:
+        manualTask->shutDown();
+        singleTask->shutDown();
+        autoTask->setActive(true);
+      break;    
+    }
+
 }
 
 int EventCheck::getValue(){

@@ -6,13 +6,14 @@
   class SonarScan : public Task {
     int triggerPin;
     int echoPin;
-    
+    float lastDetected;
+
     public:
-      float lastDetected;
+
       SonarScan(int triggerPin, int echoPin);
       void init(int period);
       void tick();
-      float getDistance();
+      float getLastDetected();
   };
 
 #endif
