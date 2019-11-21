@@ -24,7 +24,7 @@ void SonarScan::tick(){
     float tUS = pulseIn(echoPin, HIGH);
     float t = tUS / 1000.0 / 1000.0 / 2;
     float d = t* (331.45 + 0.62*20);
-
+    Serial.print("Sonar: ");
     Serial.println(d);
 }
 

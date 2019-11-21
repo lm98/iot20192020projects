@@ -5,10 +5,13 @@
 
 class SingleMode : public Task{
 
+    int pirPin;
+
     public:
+    SingleMode(int pirPin);
     void tick();
     void init(int period);
-    
+    void shutDown();
 };
 
 #endif 

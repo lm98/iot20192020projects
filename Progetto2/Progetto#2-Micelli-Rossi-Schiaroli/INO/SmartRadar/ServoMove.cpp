@@ -29,6 +29,8 @@ void ServoMove::tick(){
       servo->setPosition(pos);
     }
   }
+ // Serial.print("Auto Pos: ");
+ // Serial.println(pos);
 }
 
 void ServoMove::setNewPosition(int newPos){

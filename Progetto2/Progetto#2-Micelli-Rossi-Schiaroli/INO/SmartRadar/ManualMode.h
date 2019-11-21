@@ -9,7 +9,7 @@ class ManualMode : public Task{
     public:
     void tick();
     void init(int period);
-    
+    void shutDown();
 };
 
 #endif 

@@ -9,7 +9,7 @@ SonarImpl::SonarImpl(int triggerPin, int echoPin){
 void SonarImpl::init(){
   pinMode(triggerPin, OUTPUT);
   pinMode(echoPin, INPUT);  
-}GIT 
+}
 
 float SonarImpl::scan(){
     /* invio impulso */

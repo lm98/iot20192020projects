@@ -3,10 +3,12 @@
 #include "ManualMode.h"
 #include "SingleMode.h"
 #include "AutoMode.h"
+#include "Scheduler.h"
 
 extern ManualMode *manualTask;
 extern SingleMode *singleTask;
 extern AutoMode *autoTask;
+extern Scheduler* scheduler;
 
 void EventCheck::init(int period){
   Task::init(period);
@@ -38,13 +40,22 @@ void EventCheck::tick(){
     delete msg;
   }else{
     if(digitalRead(BUTTON_SINGLE) == HIGH){
-      state = SINGLE;
+      Serial.println("sm");
+      manualTask->shutDown();
+      autoTask->shutDown();
+      singleTask->setActive(true);
     }
     if(digitalRead(BUTTON_MANUAL) == HIGH){
-      state = MANUAL;
+      Serial.println("mm");
+      singleTask->shutDown();
+      autoTask->shutDown();
+      manualTask->setActive(true);
     }
     if(digitalRead(BUTTON_AUTO)== HIGH){
-      state = AUTO;
+      Serial.println("am");
+      manualTask->shutDown();
+      singleTask->shutDown();
+      autoTask->setActive(true);
     }
   }
 }

@@ -63,10 +63,9 @@ void setup()
   MsgService.init(); //Initialize message receiving from serial
 
   //Pin Input
-  pinMode(PIR_PIN,INPUT);
   pinMode(POT,INPUT);
-  //pinMode(BUTTON_SINGLE,INPUT);
-  //pinMode(BUTTON_MANUAL,INPUT);
+  pinMode(BUTTON_SINGLE,INPUT);
+  pinMode(BUTTON_MANUAL,INPUT);
   pinMode(BUTTON_AUTO,INPUT);
 
   //Pin output
@@ -74,26 +73,14 @@ void setup()
   
   //Setting event checker task
   eventTask = new EventCheck();
-  eventTask->init(300);
-  eventTask->setActive(false);
+  eventTask->init(150);
+  eventTask->setActive(true);
   scheduler.addTask(eventTask);
-
-  //Setting servo movement task
-  servoTask = new ServoMove(SERVO, 1);
-  servoTask->init(450);
-  servoTask->setActive(false);
-  scheduler.addTask(servoTask);
-  
-  //Setting sonar scanning scan
-  sonarTask = new SonarScan(TRIG_PIN,ECHO_PIN);
-  sonarTask->init(1500);
-  sonarTask->setActive(false);
-  scheduler.addTask(sonarTask);
 
   //Setting manual mode task
   manualTask = new ManualMode();
   manualTask->init(1500);
-  manualTask->setActive(true);
+  manualTask->setActive(false);
   scheduler.addTask(manualTask);
 
   //Setting single mode task
@@ -103,10 +90,23 @@ void setup()
   scheduler.addTask(autoTask);
 
   //Setting auto mode task
-  singleTask = new SingleMode();
+  singleTask = new SingleMode(PIR_PIN);
   singleTask->init(1500);
   singleTask->setActive(false);
   scheduler.addTask(singleTask);
+
+  //Setting servo movement task
+  servoTask = new ServoMove(SERVO, 18); //Second param = 1
+  servoTask->init(450);
+  servoTask->setActive(false);
+  scheduler.addTask(servoTask);
+  
+  //Setting sonar scanning scan
+  sonarTask = new SonarScan(TRIG_PIN,ECHO_PIN);
+  sonarTask->init(450);
+  sonarTask->setActive(false);
+  scheduler.addTask(sonarTask);
+
   
   }
 

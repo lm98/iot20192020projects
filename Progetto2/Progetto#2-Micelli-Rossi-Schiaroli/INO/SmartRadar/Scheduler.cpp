@@ -48,8 +48,6 @@ void Scheduler::activateTask(Task* task){
 
 void Scheduler::shutDownAllTasks(){
   for(int i = 1; i < nTasks; i++){ // i = 1 because eventCheck sould not be shutdown
-    if(taskList[i]->isActive()){
       taskList[i]->setActive(false);
-    }
   }
 }

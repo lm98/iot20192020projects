@@ -28,3 +28,9 @@ void ManualMode::tick(){
         //*/
         sonarTask->setActive(true);
 }
+
+void ManualMode::shutDown(){
+    //servoTask->setActive(false);
+    sonarTask->setActive(false);
+    this->setActive(false);
+}

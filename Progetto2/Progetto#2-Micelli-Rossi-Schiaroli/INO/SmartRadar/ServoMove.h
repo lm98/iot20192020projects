@@ -6,9 +6,6 @@
 
 class ServoMove: public Task {
   int pin;
-  int pos;
-  int newPos;
-  int delta;
   bool reached;
   ServoMotor* servo;
   
@@ -19,6 +16,9 @@ class ServoMove: public Task {
     void tick();
     void setNewPosition(int newPos);
     bool getReached();
+    int pos;
+    int newPos;
+    int delta;
 };
 
 

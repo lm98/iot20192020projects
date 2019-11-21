@@ -9,6 +9,7 @@ class AutoMode : public Task{
     
     void tick();
     void init(int period);
+    void shutDown();
 };
 
 #endif
