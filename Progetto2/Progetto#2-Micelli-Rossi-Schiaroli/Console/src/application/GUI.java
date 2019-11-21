@@ -21,12 +21,27 @@ public class GUI {
 	private JTextField speedFieldAuto;
 	private JTextArea textArea;
 
+	private JRadioButton tracking;
+	private JRadioButton alarm;
+	private JRadioButton blink;
 	/**
 	 * Launch the application.
 	 */
 
 	public JTextArea getTextArea() {
 		return this.textArea;
+	}
+		
+	public JRadioButton getTracking() {
+		return this.tracking;
+	}
+	
+	public JRadioButton getAlarm() {
+		return this.alarm;
+	}
+	
+	public JRadioButton getBlink() {
+		return this.blink;
 	}
 	/**
 	 * Create the application.
@@ -105,7 +120,7 @@ public class GUI {
 		});
 		singlePanel.add(sendSpeedS);
 		
-		JRadioButton blink = new JRadioButton("find");
+		blink = new JRadioButton("object found");
 		blink.setEnabled(false);
 		blink.setBounds(243, 45, 149, 23);
 		singlePanel.add(blink);
@@ -138,12 +153,12 @@ public class GUI {
 		});
 		autoPanel.add(sendSpeedA);
 		
-		JRadioButton alarm = new JRadioButton("Alarm");
+		alarm = new JRadioButton("Alarm");
 		alarm.setEnabled(false);
 		alarm.setBounds(243, 45, 149, 23);
 		autoPanel.add(alarm);
 		
-		JRadioButton tracking = new JRadioButton("Tracking");
+		tracking = new JRadioButton("Tracking");
 		tracking.setEnabled(false);
 		tracking.setBounds(243, 91, 149, 23);
 		autoPanel.add(tracking);

@@ -7,7 +7,7 @@ public class Main {
 		ControllerImpl controller= new ControllerImpl(model);
 		GUI window = new GUI(controller);
 		window.frame.setVisible(true);	
-		model.init(window.getTextArea());
+		model.init(window);
 		controller.sync();
 
 	}

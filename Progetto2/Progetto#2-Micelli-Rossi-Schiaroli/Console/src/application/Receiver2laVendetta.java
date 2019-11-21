@@ -15,6 +15,7 @@ public class Receiver2laVendetta extends Thread{
 	private volatile boolean stop = false;
 	private ModelImpl model;
 	private JTextArea textArea;
+	private String[] words;
 	
 	public Receiver2laVendetta(SerialCommChannel channel, ModelImpl model) {	
 		this.channel = channel;
@@ -31,6 +32,7 @@ public class Receiver2laVendetta extends Thread{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			words = msg.split(" ");
 		}
 		System.out.println("Thread Stopped");
 	}
