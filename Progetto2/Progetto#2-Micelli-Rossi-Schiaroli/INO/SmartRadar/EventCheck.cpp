@@ -38,12 +38,21 @@ void EventCheck::tick(){
   }else{
     if(digitalRead(BUTTON_SINGLE) == HIGH){
       state = SINGLE;
+
+      /* Notify Console */
+      Serial.println("c s");
     }
     if(digitalRead(BUTTON_MANUAL) == HIGH){
       state = MANUAL;
+
+      /* Notify Console */
+      Serial.println("c m");
     }
     if(digitalRead(BUTTON_AUTO)== HIGH){
       state = AUTO;
+
+      /* Notify Console */
+      Serial.println("c a");
     }
   }
 

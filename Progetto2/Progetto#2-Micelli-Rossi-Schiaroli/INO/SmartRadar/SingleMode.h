@@ -6,9 +6,10 @@
 class SingleMode : public Task{
 
     int pirPin;
-
+    int potPin;
+    
     public:
-    SingleMode(int pirPin);
+    SingleMode(int pirPin, int potPin);
     void tick();
     void init(int period);
     void shutDown();

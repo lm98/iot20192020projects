@@ -1,5 +1,8 @@
 #include "SonarScan.h"
 #include <Arduino.h>
+#include "ServoMove.h"
+
+extern ServoMove *servoTask;
 
 SonarScan::SonarScan(int triggerPin, int echoPin){
   this->triggerPin = triggerPin;
@@ -24,10 +27,16 @@ void SonarScan::tick(){
     float tUS = pulseIn(echoPin, HIGH);
     float t = tUS / 1000.0 / 1000.0 / 2;
     lastDetected = t* (331.45 + 0.62*20);
-    if(lastDetected > 1.50){
-      Serial.println("Out of range");
-    } else {
-      Serial.println(lastDetected);
+
+    /* Notify Console */
+    if(lastDetected < 1.50){
+      /*
+      Serial.print("Object detected at ");
+      Serial.print(servoTask->getPos());
+      Serial.print(" ");
+      Serial.print(lastDetected);
+      Serial.println("m far"); 
+      */
     }
 }
 

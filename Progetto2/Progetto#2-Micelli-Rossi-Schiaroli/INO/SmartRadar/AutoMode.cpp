@@ -3,6 +3,7 @@
 #include "ServoMove.h"
 #include "SonarScan.h"
 #include "SlowBlink.h"
+#include <Arduino.h>
 
 extern ServoMove *servoTask;
 extern SonarScan *sonarTask;
@@ -21,6 +22,7 @@ void AutoMode::init(int period){
 void AutoMode::tick(){
 
     servoTask->setActive(true);
+    ledTask->setActive(false);
 
 /* Tell the servo to make a double sweep: from 0 to 180 and reverse */
     if(servoTask->getPos()==180){
@@ -32,8 +34,16 @@ void AutoMode::tick(){
 /* Activate sonar every delta movement, otherwise we don't scan. */
     if((((servoTask->getPos())%(servoTask->getDelta()))==0)){
         sonarTask->setActive(true);
+
         if(sonarTask->getLastDetected() < dFar){
             ledTask->setActive(true);
+            //Serial.println("alarm");
+            /* TRACKING MODE */
+            
+            if(sonarTask->getLastDetected() < dNear){
+                servoTask->setActive(false);
+                //Serial.println("tracking");
+            }
         } else {
             ledTask->setActive(false);
         }

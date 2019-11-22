@@ -53,3 +53,11 @@ int ServoMove::getNewPos(){
 int ServoMove::getDelta(){
   return delta;
 }
+
+int ServoMove::getServoSpeed(){
+  return servo->getSpeed();
+}
+
+void ServoMove::setServoSpeed(int speed){
+  servo->setSpeed(speed);
+}

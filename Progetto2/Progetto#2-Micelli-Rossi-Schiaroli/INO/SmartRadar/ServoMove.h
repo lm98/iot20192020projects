@@ -9,7 +9,7 @@ class ServoMove: public Task {
   int pos;
   int newPos;
   int delta;
-  ServoMotor* servo;
+  ServoMotorImpl* servo;
   
   public:
 
@@ -21,6 +21,8 @@ class ServoMove: public Task {
     int getPos();
     int getNewPos();
     int getDelta();
+    int getServoSpeed();
+    void setServoSpeed(int speed);
 };
 
 

@@ -2,23 +2,44 @@
 #include "Scheduler.h"
 #include "ServoMove.h"
 #include "SonarScan.h"
+#include "EventCheck.h"
 
 //extern Scheduler *scheduler;
 extern ServoMove *servoTask;
 extern SonarScan *sonarTask;
+extern EventCheck *eventTask;
 
-
-SingleMode::SingleMode(int pirPin){
+SingleMode::SingleMode(int pirPin, int potPin){
     this->pirPin = pirPin;
+    this->potPin = potPin;
 }
 
 void SingleMode::init(int period){
     Task::init(period);
     pinMode(pirPin,INPUT);
+    pinMode(potPin,INPUT);
     servoTask->setNewPosition(0);
 }
 
 void SingleMode::tick(){
+
+
+/* Read servo speed from console  */
+    if(eventTask->isValueAvailable()){
+        servoTask->setActive(true);
+        int speedCons = eventTask->getValue(); //map(eventTask->getValue(),0,180,0,16));
+        if(servoTask->getServoSpeed() != speedCons){
+            servoTask->setServoSpeed(speedCons);
+        }
+    } else {
+    
+/* Read servo speed from potentiometer */
+        int speedPot = map(analogRead(potPin),0,1023,0,500);
+        if(servoTask->getServoSpeed() != speedPot){
+            servoTask->setServoSpeed(speedPot);
+        }
+
+    }
 
 /* When pir detects a movement, servo makes a complete sweep */
     int detected = digitalRead(pirPin);

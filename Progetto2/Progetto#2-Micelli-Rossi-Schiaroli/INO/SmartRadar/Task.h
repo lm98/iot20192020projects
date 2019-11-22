@@ -10,6 +10,7 @@ public:
   virtual void init(int period){
     myPeriod = period;  
     timeElapsed = 0;
+    this->setActive(false);
   }
 
   virtual void tick() = 0;
