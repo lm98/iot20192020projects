@@ -57,14 +57,15 @@ public class ModelImpl {
 		this.update("exiting Single mode");
 		this.gui.getActiveSingle().setEnabled(true);
 		this.gui.getSendSpeedS().setEnabled(false);
-		this.gui.getDetected().setEnabled(false);
+		this.gui.getDetected().setSelected(false);
 	}
 	
 	private void exitAuto() {
 		this.update("exiting Auto mode");
-		this.gui.getActiveSingle().setEnabled(true);
-		this.gui.getSendSpeedS().setEnabled(false);
-		this.gui.getDetected().setEnabled(false);
+		this.gui.getActiveAuto().setEnabled(true);
+		this.gui.getSendSpeedA().setEnabled(false);
+		this.gui.getAlarm().setSelected(false);
+		this.gui.getTracking().setSelected(false);
 	}
 	
 	
@@ -75,11 +76,9 @@ public class ModelImpl {
 		}else if(mode.equals("s")) {
 			this.gui.getActiveSingle().setEnabled(false);
 			this.gui.getSendSpeedS().setEnabled(true);
-			this.gui.getDetected().setEnabled(true);
 		}else if(mode.equals("a")) {
-			this.gui.getActiveSingle().setEnabled(false);
-			this.gui.getSendSpeedS().setEnabled(true);
-			this.gui.getDetected().setEnabled(true);
+			this.gui.getActiveAuto().setEnabled(false);
+			this.gui.getSendSpeedA().setEnabled(true);
 		}
 	}
 

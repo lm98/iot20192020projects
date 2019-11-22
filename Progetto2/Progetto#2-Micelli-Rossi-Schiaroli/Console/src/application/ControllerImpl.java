@@ -109,7 +109,7 @@ public class ControllerImpl {
 		
 	}
 	
-	public void send(String msg) {
+	public void send1(String msg) {
 		///SE STA ANDANDO FERMO IL THREAD
 		if (threadRunning) {
 			//rec.wait();
@@ -152,6 +152,25 @@ public class ControllerImpl {
 			//}
 			threadRunning = true;			
 		}
-		
 	}
+		public void send(String msg) {
+			///SE STA ANDANDO FERMO IL THREAD
+			
+			//MANDO MESSAGGIO
+			//LA PRIMA VOLTA CHE PASSO MANDO IL MESSAGGIO E STARTO IL THREAD
+			if(!msg.equals(null)|| !msg.equals("")) {
+				model.update("sending "+msg);
+				channel.sendMsg(msg);
+				try {
+					this.response = channel.receiveMsg();
+					model.update("response "+response);	
+				//	if(!this.response.equals("OK")) {
+				//	System.exit(1);
+				//}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+			}
+		}
+		
 }
