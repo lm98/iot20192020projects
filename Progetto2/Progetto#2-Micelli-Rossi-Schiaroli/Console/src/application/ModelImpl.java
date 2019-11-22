@@ -6,10 +6,10 @@ import javax.swing.text.BadLocationException;
 
 public class ModelImpl {
 	
-	final int SCROLL_BUFFER_SIZE = 3;
+	final int SCROLL_BUFFER_SIZE = 9;
 	
 	private GUI gui;
-	
+	private String mode;
 	public void init(GUI gui) {
 		this.gui = gui;
 	}
@@ -34,4 +34,33 @@ public class ModelImpl {
 	public JTextArea getTextArea() {
 		return gui.getTextArea();
 	}
+	
+	public JRadioButton getAlarm() {
+		return this.gui.getAlarm();
+	}
+	
+	public JRadioButton getTracking() {
+		return this.gui.getTracking();
+	}
+	
+	public JRadioButton getDetected() {
+		return this.gui.getTracking();
+	}
+	
+	private void exitMan() {
+		this.gui.getActiveManual().setEnabled(true);
+		this.gui.getSendAngle().setEnabled(false);
+	}
+	
+	private void exitSingle() {
+		this.gui.getActiveSingle().setEnabled(true);
+	}
+	
+	private void exit() {
+	}
+	
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+	
 }

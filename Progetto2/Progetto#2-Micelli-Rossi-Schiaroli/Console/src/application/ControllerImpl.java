@@ -37,8 +37,8 @@ public class ControllerImpl {
 			e.printStackTrace();
 		}
 		model.update("Ready.");	
-		model.update("Sending ping");
-		channel.sendMsg("ping");
+		model.update("Sending connecting");
+		channel.sendMsg("connecting");
 		String msg;
 		try {
 			msg = channel.receiveMsg();
@@ -46,11 +46,13 @@ public class ControllerImpl {
 			Thread.sleep(500);
 			if (msg.equals("pong")) {
 				model.update("System connected"); 
+				//sets the initial mode
+				model.setMode(msg);
 	        }
-	        else {
-	        	model.update(msg);
-	            System.exit(1);
-			}
+	        //else {
+	        	//model.update(msg);
+	            //System.exit(1);
+			//}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,29 +64,29 @@ public class ControllerImpl {
 	public void send(String msg) {
 		///SE STA ANDANDO FERMO IL THREAD
 		if (threadRunning) {
+			//rec.wait();
 			try {
-				//rec.wait();
 				rec.sleep(150);
 			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//rec.stopT();
 			model.update(msg);
 			this.threadRunning = false;
 		}
 		//MANDO MESSAGGIO
 		//LA PRIMA VOLTA CHE PASSO MANDO IL MESSAGGIO E STARTO IL THREAD
 		if(!msg.equals(null)|| !msg.equals("")) {
+			model.update("sending "+msg);
 			channel.sendMsg(msg);
-			System.out.println("sending " +msg);
-			model.update(msg);
 			try {
 				this.response = channel.receiveMsg();
-				System.out.println(response);
-				
+				model.update("response "+response);	
 			//	if(!this.response.equals("OK")) {
 			//	System.exit(1);
 			//}
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}	
 		}
@@ -97,6 +99,8 @@ public class ControllerImpl {
 				threadExist = true;
 			}else {
 				//rec.notify();
+				//rec.restart();
+				//rec.run();
 			}
 			threadRunning = true;			
 		}

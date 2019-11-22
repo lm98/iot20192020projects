@@ -21,9 +21,17 @@ public class GUI {
 	private JTextField speedFieldAuto;
 	private JTextArea textArea;
 
+	private JButton activeManual;
+	private JButton activeSingle;
+	private JButton activeAuto;
+	
+	private JButton sendAngle; 
+	private JButton sendSpeedA;
+	private JButton sendSpeedS;
+	
 	private JRadioButton tracking;
 	private JRadioButton alarm;
-	private JRadioButton blink;
+	private JRadioButton detected;
 	/**
 	 * Launch the application.
 	 */
@@ -40,21 +48,42 @@ public class GUI {
 		return this.alarm;
 	}
 	
-	public JRadioButton getBlink() {
-		return this.blink;
+	public JRadioButton getDetected() {
+		return this.detected;
 	}
+	
+	
+	public JButton getActiveManual() {
+		return this.activeManual;
+	}
+	public JButton getActiveSingle() {
+		return this.activeSingle;
+	}
+	public JButton getActiveAuto() {
+		return this.activeAuto;
+	}
+	public JButton getSendAngle() {
+		return this.sendAngle;
+	}
+	public JButton getSendSpeedS() {
+		return this.sendSpeedS;
+	}
+	public JButton getSendSpeedA() {
+		return this.sendSpeedA;
+	}
+	
 	/**
 	 * Create the application.
 	 */
 	public GUI(ControllerImpl controller) {
 		
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 450, 450);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		frame.setResizable(false);
 		textArea= new JTextArea();
-		textArea.setRows(5);
+		textArea.setRows(10);
 		frame.getContentPane().add(textArea, BorderLayout.SOUTH);
 		
 		textArea.setText("Welcome");
@@ -67,7 +96,7 @@ public class GUI {
 		//MANUAL
 		tabbedPane.addTab("Manual", manualPanel);
 		manualPanel.setLayout(null);
-		JButton activeManual = new JButton("Active");
+		activeManual = new JButton("Active");
 		activeManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send("m");
@@ -81,7 +110,7 @@ public class GUI {
 		manualPanel.add(angleField);
 		angleField.setColumns(10);
 		
-		JButton sendAngle = new JButton("send angle");
+		sendAngle = new JButton("send angle");
 		sendAngle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(angleField.getText());
@@ -96,7 +125,7 @@ public class GUI {
 		tabbedPane.addTab("Single", singlePanel);
 		singlePanel.setLayout(null);
 		
-		JButton activeSingle = new JButton("Active");
+		activeSingle = new JButton("Active");
 		activeSingle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send("s");
@@ -109,7 +138,7 @@ public class GUI {
 		speedFieldSingle.setBounds(25, 59, 114, 19);
 		singlePanel.add(speedFieldSingle);
 		speedFieldSingle.setColumns(10);
-		JButton sendSpeedS = new JButton("send speed");
+		sendSpeedS = new JButton("send speed");
 		sendSpeedS.setName("sendS");
 		sendSpeedS.setBounds(25, 90, 117, 25);
 		sendSpeedS.addActionListener(new ActionListener() {
@@ -120,16 +149,16 @@ public class GUI {
 		});
 		singlePanel.add(sendSpeedS);
 		
-		blink = new JRadioButton("object found");
-		blink.setEnabled(false);
-		blink.setBounds(243, 45, 149, 23);
-		singlePanel.add(blink);
+		detected = new JRadioButton("object found");
+		detected.setEnabled(false);
+		detected.setBounds(243, 45, 149, 23);
+		singlePanel.add(detected);
 		
 		//AUTO PANEL
 		tabbedPane.addTab("Auto", autoPanel);
 		autoPanel.setLayout(null);
 		
-		JButton activeAuto = new JButton("Active");
+		activeAuto = new JButton("Active");
 		activeAuto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.send("a");
@@ -143,7 +172,7 @@ public class GUI {
 		autoPanel.add(speedFieldAuto);
 		speedFieldAuto.setColumns(10);
 		
-		JButton sendSpeedA = new JButton("send speed");
+		sendSpeedA = new JButton("send speed");
 		sendSpeedA.setBounds(25, 90, 117, 25);
 		sendSpeedA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
