@@ -99,8 +99,7 @@ public class GUI {
 		activeManual = new JButton("Active");
 		activeManual.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("m");
-				angleField.setText("");
+				controller.sendMode("m");
 			}
 		});
 		activeManual.setBounds(135, 12, 117, 25);
@@ -113,13 +112,20 @@ public class GUI {
 		sendAngle = new JButton("send angle");
 		sendAngle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(angleField.getText());
-				controller.send(angleField.getText());
-				angleField.setText("");
+				Integer angle = Integer.parseInt(angleField.getText());
+				if(angle>=0 && angle <= 180) {
+					controller.send(angleField.getText());
+					angleField.setText("");
+				}else {
+					textArea.append("\n");
+					textArea.append("send a reasonable angle btw 0 & 180");
+				}
+				
 			}
 		});
 		sendAngle.setBounds(203, 81, 117, 25);
 		manualPanel.add(sendAngle);
+		sendAngle.setEnabled(false);
 		
 		//SINGLE TAb
 		tabbedPane.addTab("Single", singlePanel);
@@ -128,7 +134,7 @@ public class GUI {
 		activeSingle = new JButton("Active");
 		activeSingle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("s");
+				controller.sendMode("s");
 			}
 		});
 		activeSingle.setBounds(139, 12, 117, 25);
@@ -139,6 +145,7 @@ public class GUI {
 		singlePanel.add(speedFieldSingle);
 		speedFieldSingle.setColumns(10);
 		sendSpeedS = new JButton("send speed");
+		sendSpeedS.setEnabled(false);
 		sendSpeedS.setName("sendS");
 		sendSpeedS.setBounds(25, 90, 117, 25);
 		sendSpeedS.addActionListener(new ActionListener() {
@@ -161,7 +168,7 @@ public class GUI {
 		activeAuto = new JButton("Active");
 		activeAuto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send("a");
+				controller.sendMode("a");
 			}
 		});
 		activeAuto.setBounds(149, 12, 117, 25);
@@ -173,6 +180,7 @@ public class GUI {
 		speedFieldAuto.setColumns(10);
 		
 		sendSpeedA = new JButton("send speed");
+		sendSpeedA.setEnabled(false);
 		sendSpeedA.setBounds(25, 90, 117, 25);
 		sendSpeedA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

@@ -14,13 +14,11 @@ public class Receiver2laVendetta extends Thread{
 	private String msg;
 	private volatile boolean stop = false;
 	private ModelImpl model;
-	private JTextArea textArea;
 	private String[] words;
 	
 	public Receiver2laVendetta(SerialCommChannel channel, ModelImpl model) {	
 		this.channel = channel;
 		this.model = model;
-		this.textArea = model.getTextArea();
 	}
 
 	public void run() {
@@ -32,9 +30,15 @@ public class Receiver2laVendetta extends Thread{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			//scompongo la stringa in parole
 			words = msg.split(" ");
-			if(words[0].equals("single")) {
-				if(words[1].equals("detected")) {
+			//CHANGING MODE?
+			if (words[0].equals("c")) {
+				model.setMode(words[1]);
+			}
+			//SINGLE MODE?
+			if(words[0].equals("s")) {
+				if(words[1].equals("dtct")) {
 					if(!model.getDetected().isSelected()) {
 						model.getDetected().setSelected(true);
 					}
@@ -42,13 +46,14 @@ public class Receiver2laVendetta extends Thread{
 					if(!model.getDetected().isSelected()) {
 						model.getDetected().setSelected(false);
 					}
-				}
-				
-			} else if(words[0].equals("auto")) {
-				if (words[1].equals("alarm")) {
+				}	
+			} 
+			//AUTO MODE?
+			if(words[0].equals("a")) {
+				if (words[1].equals("alrm")) {
 					if(!model.getAlarm().isSelected()) {
 						model.getAlarm().setSelected(true);
-						if(words[2].equals("tracking")) {
+						if(words[2].equals("trck")) {
 							if(!model.getTracking().isSelected()) {
 								model.getTracking().setSelected(true);
 							}
@@ -58,13 +63,14 @@ public class Receiver2laVendetta extends Thread{
 							model.getAlarm().setSelected(false);	
 						if(model.getTracking().isSelected()) {
 							model.getTracking().setSelected(false);
+							}
 						}
-					}
 					}
 				}	
 			}
+			//ELSE ONLY PRINT
+			model.update(msg);
 		}
-		model.update(msg);
 	System.out.println("Thread Stopped");
 	}
 
@@ -81,8 +87,8 @@ public class Receiver2laVendetta extends Thread{
 	 * tutto lettera piccola e come lo scrivo io
 	 * 
 	 * stringhe:
-	 * se la prima parola is "manual": ricevo quello che vuoi
-	 * 						"single": se il led blinka devo ricevere "detected"
+	 * se la prima parola is "m": ricevo quello che vuoi
+	 * 						"s": se il led blinka devo ricevere "dtct"
 	 * 								 come seconda parola poi quello che vuoi
 	 * 
 	 * 						"auto" se e' in alarm sec parola alarm

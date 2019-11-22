@@ -9,7 +9,7 @@ public class ModelImpl {
 	final int SCROLL_BUFFER_SIZE = 9;
 	
 	private GUI gui;
-	private String mode;
+	private String mode = "Nan";
 	public void init(GUI gui) {
 		this.gui = gui;
 	}
@@ -48,19 +48,54 @@ public class ModelImpl {
 	}
 	
 	private void exitMan() {
+		this.update("exiting Manual mode");
 		this.gui.getActiveManual().setEnabled(true);
 		this.gui.getSendAngle().setEnabled(false);
 	}
 	
 	private void exitSingle() {
+		this.update("exiting Single mode");
 		this.gui.getActiveSingle().setEnabled(true);
+		this.gui.getSendSpeedS().setEnabled(false);
+		this.gui.getDetected().setEnabled(false);
 	}
 	
-	private void exit() {
+	private void exitAuto() {
+		this.update("exiting Auto mode");
+		this.gui.getActiveSingle().setEnabled(true);
+		this.gui.getSendSpeedS().setEnabled(false);
+		this.gui.getDetected().setEnabled(false);
+	}
+	
+	
+	private void enterMode(String mode) {
+		if (mode.equals("m")) {
+			this.gui.getActiveManual().setEnabled(false);
+			this.gui.getSendAngle().setEnabled(true);
+		}else if(mode.equals("s")) {
+			this.gui.getActiveSingle().setEnabled(false);
+			this.gui.getSendSpeedS().setEnabled(true);
+			this.gui.getDetected().setEnabled(true);
+		}else if(mode.equals("a")) {
+			this.gui.getActiveSingle().setEnabled(false);
+			this.gui.getSendSpeedS().setEnabled(true);
+			this.gui.getDetected().setEnabled(true);
+		}
+	}
+
+	private void exitCurrentMode() {
+		if(this.mode.equals(mode)) {
+			
+		}
 	}
 	
 	public void setMode(String mode) {
-		this.mode = mode;
+		if(!this.mode.equals(mode)) {
+			this.exitCurrentMode();
+			this.mode = mode;
+			this.update("Entering "+mode +" mode");
+			this.enterMode(mode);
+		}
 	}
 	
 }
