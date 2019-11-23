@@ -20,7 +20,7 @@ void EventCheck::tick(){
   if(MsgService.isMsgAvailable()){
     Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "connecting"){
-      MsgService.sendMsg("s");
+      Serial.println("s");
       state = SINGLE;
     }
     else if(msg->getContent()=="s"){
@@ -40,21 +40,21 @@ void EventCheck::tick(){
     
   }else{
     if(digitalRead(BUTTON_SINGLE) == HIGH){
-      digitalWrite(BUTTON_SINGLE , LOW);
+      //digitalWrite(BUTTON_SINGLE , LOW);
       state = SINGLE;
 
       /* Notify Console */
       Serial.println("c s");
     }
     if(digitalRead(BUTTON_MANUAL) == HIGH){
-      digitalWrite(BUTTON_MANUAL , LOW);
+      //digitalWrite(BUTTON_MANUAL , LOW);
       state = MANUAL;
 
       /* Notify Console */
       Serial.println("c m");
     }
     if(digitalRead(BUTTON_AUTO)== HIGH){
-      digitalWrite(BUTTON_AUTO , LOW);
+      //digitalWrite(BUTTON_AUTO , LOW);
       state = AUTO;
 
       /* Notify Console */

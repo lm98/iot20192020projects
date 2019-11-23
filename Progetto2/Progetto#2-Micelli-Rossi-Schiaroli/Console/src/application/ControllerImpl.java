@@ -20,7 +20,7 @@ public class ControllerImpl {
 	public ControllerImpl(ModelImpl model) {
 		String[] portNames = SerialPortList.getPortNames();
 		try {
-			this.channel = new SerialCommChannel(portNames[0],9600);
+			this.channel = new SerialCommChannel("COM5",9600);
 		} catch (Exception e) {
 			e.printStackTrace();
 			}
@@ -45,14 +45,21 @@ public class ControllerImpl {
 			model.update("Received: "+msg);
 			//msg = "m";
 			Thread.sleep(500);
-			if (msg.equals("m") || msg.equals("s") || msg.equals("a")) {
+			if (msg.equals("m")) {
+				model.update("System connected"); 
+				//sets the initial mode
+				model.setMode(msg);
+				model.update("System connected"); 
+				rec.start();
+				threadExist = true;
+	        }
+	        else if(msg.equals("s") || msg.equals("a")){
 				model.update("System connected"); 
 				//sets the initial mode
 				model.setMode(msg);
 				rec.start();
 				threadExist = true;
-	        }
-	        else {
+			} else {
 	        	model.update("error receiving the message");
 	            System.exit(1);
 			}

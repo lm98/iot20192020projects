@@ -20,7 +20,7 @@ void ManualMode::tick(){
         servoTask->setActive(true);
         int val = eventTask->getValue(); //map(eventTask->getValue(),0,180,0,16));
         servoTask->setNewPosition(val);
-    }
+    } 
    
 /* When servo reaches it's destination, sonar starts scanning */
     if(servoTask->getPos() == servoTask->getNewPos()) {
