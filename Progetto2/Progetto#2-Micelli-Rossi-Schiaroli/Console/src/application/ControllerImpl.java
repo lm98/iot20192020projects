@@ -1,10 +1,6 @@
 package application;
 
 import jssc.SerialPortList;
-
-import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
-
 import message.SerialCommChannel;
 
 public class ControllerImpl {

@@ -7,7 +7,6 @@ import javax.swing.JTextArea;
 
 public class IntegerJTextField extends JTextArea{
 
-	
 	private static final long serialVersionUID = -304336001390831186L;
 
 	public IntegerJTextField(){

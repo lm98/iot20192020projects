@@ -9,7 +9,8 @@ public class ModelImpl {
 	final int SCROLL_BUFFER_SIZE = 9;
 	
 	private GUI gui;
-	private String mode = "Nan";
+	private String mode = "Not specified";
+	
 	public void init(GUI gui) {
 		this.gui = gui;
 	}
@@ -26,7 +27,7 @@ public class ModelImpl {
 		            ex.printStackTrace();
 		        }
 		    }
-		    /// fino a qui gestisco la cancellazione delle righe extra
+		    //to delete the extra lines
 		 gui.getTextArea().append("\n");
 		 gui.getTextArea().append(msg); 
 	}

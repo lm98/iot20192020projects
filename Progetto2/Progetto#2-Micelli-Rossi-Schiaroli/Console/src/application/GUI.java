@@ -2,17 +2,13 @@ package application;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
 import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
-import javax.swing.JTextField;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
-import javax.swing.JSlider;
 
 public class GUI {
     //sostituire con interfaccia
@@ -33,27 +29,42 @@ public class GUI {
 	private JRadioButton tracking;
 	private JRadioButton alarm;
 	private JRadioButton detected;
-	/**
-	 * Launch the application.
-	 */
 
+	private boolean checkAngle() {
+		Integer angle = Integer.parseInt(angleField.getText());
+		if(angle>=0 && angle <= 180) {
+			return true;
+		} 
+		textArea.append("\n");
+		textArea.append("send a reasonable angle between 0 & 180");
+		return false;
+	}
+	
+	private boolean checkSpeed() {
+		Integer speed = Integer.parseInt(angleField.getText());
+		if(speed>=0 && speed <= 185000) {
+			return true;
+		} 
+		textArea.append("\n");
+		textArea.append("send a reasonable speed between 0 & 500");
+		return false;
+	}
+	
+	//getter for JTextArea
 	public JTextArea getTextArea() {
 		return this.textArea;
-	}
-		
+	}	
+	//getter for JRadioButton
 	public JRadioButton getTracking() {
 		return this.tracking;
 	}
-	
 	public JRadioButton getAlarm() {
 		return this.alarm;
 	}
-	
 	public JRadioButton getDetected() {
 		return this.detected;
 	}
-	
-	
+	//getter for JButton
 	public JButton getActiveManual() {
 		return this.activeManual;
 	}
@@ -74,7 +85,7 @@ public class GUI {
 	}
 	
 	/**
-	 * Create the application.
+	 * Create the gui.
 	 */
 	public GUI(ControllerImpl controller) {
 		
@@ -94,7 +105,7 @@ public class GUI {
 		JPanel singlePanel = new JPanel();
 		JPanel autoPanel = new JPanel();
 		
-		//MANUAL
+		//MANUAL TAB
 		tabbedPane.addTab("Manual", manualPanel);
 		manualPanel.setLayout(null);
 		activeManual = new JButton("Active");
@@ -110,21 +121,11 @@ public class GUI {
 		manualPanel.add(angleField);
 		angleField.setColumns(10);
 		
-		/*
-		 * JSlider angle = new JSlider(JSlider.HORIZONTAL,0,180,5);
-		 * angle.setMajorTickSpacing(10); angle.setMinorTickSpacing(1);
-		 * angle.setPaintTicks(true); angle.setPaintLabels(true);
-		 * manualPanel.add(angle);
-		 */
 		sendAngle = new JButton("send angle");
 		sendAngle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Integer angle = Integer.parseInt(angleField.getText());
-				if(angle>=0 && angle <= 180) {
+				if(checkAngle()) {
 					controller.send(angleField.getText());
-				}else {
-					textArea.append("\n");
-					textArea.append("send a reasonable angle between 0 & 180");
 				}
 				angleField.setText("");
 			}
@@ -156,7 +157,9 @@ public class GUI {
 		sendSpeedS.setBounds(25, 90, 117, 25);
 		sendSpeedS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send(speedFieldSingle.getText());
+				if(checkSpeed()) {
+					controller.send(speedFieldSingle.getText());
+				}
 				speedFieldSingle.setText("");
 			}
 		});
@@ -167,7 +170,7 @@ public class GUI {
 		detected.setBounds(243, 45, 149, 23);
 		singlePanel.add(detected);
 		
-		//AUTO PANEL
+		//AUTO TAB
 		tabbedPane.addTab("Auto", autoPanel);
 		autoPanel.setLayout(null);
 		
@@ -190,8 +193,10 @@ public class GUI {
 		sendSpeedA.setBounds(25, 90, 117, 25);
 		sendSpeedA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controller.send(speedFieldAuto.getText());
-				speedFieldAuto.setText("");
+				if(checkSpeed()) {
+					controller.send(speedFieldSingle.getText());
+				}
+				speedFieldSingle.setText("");
 			}
 		});
 		autoPanel.add(sendSpeedA);
