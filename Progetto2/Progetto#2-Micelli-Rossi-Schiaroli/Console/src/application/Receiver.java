@@ -24,7 +24,7 @@ public class Receiver extends Thread{
 	public void run() {
 		System.out.println("Thread started");
 		while (!stop) {
-			if (channel.isMsgAvailable()) {
+			//if (channel.isMsgAvailable()) {
 				try {
 					this.msg = channel.receiveMsg();
 					//model.update("recieved " + msg);
@@ -71,7 +71,7 @@ public class Receiver extends Thread{
 						}
 					}	
 				}
-			}
+			//}
 			model.update(msg);
 		}
 	System.out.println("Thread Stopped");
