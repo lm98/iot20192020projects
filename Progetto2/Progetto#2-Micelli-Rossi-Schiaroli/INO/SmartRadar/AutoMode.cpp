@@ -37,12 +37,12 @@ void AutoMode::tick(){
 
         if(sonarTask->getLastDetected() < dFar){
             ledTask->setActive(true);
-            //Serial.println("alarm");
+            Serial.println("alrm");
             /* TRACKING MODE */
             
             if(sonarTask->getLastDetected() < dNear){
                 servoTask->setActive(false);
-                //Serial.println("tracking");
+                Serial.println("trck");
             }
         } else {
             ledTask->setActive(false);

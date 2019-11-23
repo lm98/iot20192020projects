@@ -13,14 +13,15 @@ void SleepMode::init(int period){
     power_timer0_disable();
     power_timer2_disable();
     power_twi_disable(); 
+    
 }
 
 void SleepMode::tick(){
     if(sleeping){
-        Serial.println("sleeping");
+        //Serial.println("sleeping");
         sleep_mode();  
     } else {
-        Serial.println("woke up");
+        //Serial.println("woke up");
         sleep_disable();
         power_all_enable();
         this->setActive(false);

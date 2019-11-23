@@ -30,7 +30,7 @@ void SingleMode::tick(){
 /* Read servo speed from console  */
     if(eventTask->isValueAvailable()){
         servoTask->setActive(true);
-        int speedCons = eventTask->getValue(); //map(eventTask->getValue(),0,180,0,16));
+        int speedCons = eventTask->getValue();
         if(servoTask->getServoSpeed() != speedCons){
             servoTask->setServoSpeed(speedCons);
         }
@@ -47,7 +47,7 @@ void SingleMode::tick(){
 /* When pir detects a movement, servo makes a complete sweep */
     int detected = digitalRead(pirPin);
     if ((detected == HIGH)&&(servoTask->getPos()==0)){
-
+        Serial.println("dtctd");
         sleepTask->setSleeping(false);
         
         servoTask->setNewPosition(180);

@@ -14,7 +14,7 @@ void ServoMotorImpl::setPosition(int angle){
   // 750 + angle*(2250-750)/180
   float coeff = (2250.0-750.0)/180;
   motor.write(750 + angle*coeff);
-  //delay(delayTime - speed);
+  delay(delayTime - speed);
 }
 
 void ServoMotorImpl::off(){

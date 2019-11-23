@@ -26,6 +26,7 @@
 #define BUTTON_AUTO 11
 #define D_NEAR 0.3
 #define D_FAR 0.8
+#define N 18
 
 //Define scheduler
 Scheduler scheduler;
@@ -57,8 +58,8 @@ Msg* msg;
 
 //Define different state enumeration
 enum modality {
-  SINGLE,
   MANUAL,
+  SINGLE,
   AUTO
 } state;
 
@@ -99,7 +100,7 @@ void setup()
   scheduler.addTask(singleTask);
 
   //Setting servo movement task
-  servoTask = new ServoMove(SERVO, 18); //Second param = 1
+  servoTask = new ServoMove(SERVO, N); //Second param = 1
   servoTask->init(450);
   scheduler.addTask(servoTask);
   
@@ -118,7 +119,9 @@ void setup()
   sleepTask->init(300);
   scheduler.addTask(sleepTask);
 
-  }
+
+  state = MANUAL;
+}
 
 void loop(){
   
@@ -134,8 +137,8 @@ void syncronize(){
 
     Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "connecting"){
-      delay(200);
-      MsgService.sendMsg("pong");
+      //delay(200);
+      MsgService.sendMsg("s");
     }
     state = MANUAL;
     connEnabled = true;
