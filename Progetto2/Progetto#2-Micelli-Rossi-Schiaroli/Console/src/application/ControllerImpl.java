@@ -14,7 +14,7 @@ public class ControllerImpl {
 	private String response;
 	private volatile boolean threadRunning = false;
 	private volatile boolean threadExist = false;
-	private Receiver2laVendetta rec;
+	private Receiver rec;
 	private ModelImpl model;
 	
 	public ControllerImpl(ModelImpl model) {
@@ -29,7 +29,7 @@ public class ControllerImpl {
 	
 	public void sync() {
 		///THIS initialize also textArea, if we remove we have to initialize it somewhere else
-		rec = new Receiver2laVendetta(channel,this.model);
+		rec = new Receiver(channel,this.model);
 		model.update("Waiting Arduino for rebooting...");		
 		try {
 			Thread.sleep(4000);
@@ -44,41 +44,35 @@ public class ControllerImpl {
 			msg = channel.receiveMsg();
 			model.update("Received: "+msg);		
 			Thread.sleep(500);
-			if (msg.equals("pong")) {
+			if (msg.equals("m") || msg.equals("s") || msg.equals("a")) {
 				model.update("System connected"); 
 				//sets the initial mode
-				
+				model.setMode(msg);
+				rec.start();
+				threadExist = true;
 	        }
-	        //else {
-	        	//model.update(msg);
-	            //System.exit(1);
-			//}
+	        else {
+	        	model.update("error receiving the message");
+	            System.exit(1);
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//solo per testare
-		model.setMode("m");
-		if(!threadExist) {
-			rec.start();
-			threadExist = true;
-		}
+		/*
+		 * model.setMode("m"); if(!threadExist) { rec.start(); threadExist = true; }
+		 */
 		//this.receiver = new Receiver(channel,textArea);
 		//thread = new Thread(receiver);
 	}
 	
 	public void sendMode(String msg) {
-		if (threadRunning) {
-			//rec.wait();
-			try {
-				rec.sleep(150);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//rec.stopT();
-			this.threadRunning = false;
-		}
+		/*
+		 * if (threadRunning) { //rec.wait(); try { rec.sleep(150); } catch
+		 * (InterruptedException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } //rec.stopT(); this.threadRunning = false; }
+		 */
 		//MANDO MESSAGGIO
 		//LA PRIMA VOLTA CHE PASSO MANDO IL MESSAGGIO E STARTO IL THREAD		
 		model.update("changing mode to "+msg);
@@ -94,18 +88,11 @@ public class ControllerImpl {
 			e.printStackTrace();
 		}	
 		//ALTRIMENTI MANDO LA NOTIFY
-		if(!threadRunning) {
-			//SE IL THREAD NON ESISTE LO CREO,
-			if(!threadExist) {
-				rec.start();
-				threadExist = true;
-			}else {
-				//rec.notify();
-				//rec.restart();
-				//rec.run();
-			}
-			threadRunning = true;			
-		}
+		/*
+		 * if(!threadRunning) { //SE IL THREAD NON ESISTE LO CREO, if(!threadExist) {
+		 * rec.start(); threadExist = true; }else { //rec.notify(); //rec.restart();
+		 * //rec.run(); } threadRunning = true; }
+		 */
 		
 	}
 	
@@ -154,8 +141,6 @@ public class ControllerImpl {
 		}
 	}
 		public void send(String msg) {
-			///SE STA ANDANDO FERMO IL THREAD
-			
 			//MANDO MESSAGGIO
 			//LA PRIMA VOLTA CHE PASSO MANDO IL MESSAGGIO E STARTO IL THREAD
 			if(!msg.equals(null)|| !msg.equals("")) {
