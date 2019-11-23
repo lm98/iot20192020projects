@@ -5,15 +5,16 @@ import message.SerialCommChannel;
 public class Receiver extends Thread{
 
 
-	final int SCROLL_BUFFER_SIZE = 3;
-
+	private final int DETECTED = 2;
+	private final int ALARM = 2;
+	private final int TRACKING = 3;
+	
 	private SerialCommChannel channel;
 	private String msg;
 	private volatile boolean stop = false;
 	private ModelImpl model;
 	private String[] words;
-	//private String[] prova = {"a", "s", "s dtct", "funziona"};
-	//int p = 0;
+	
 	public Receiver(SerialCommChannel channel, ModelImpl model) {	
 		this.channel = channel;
 		this.model = model;
@@ -23,27 +24,26 @@ public class Receiver extends Thread{
 		System.out.println("Thread started");
 		while (!stop) {
 			
-			if (/*channel.isMsgAvailable()*/ true) {
+			if (channel.isMsgAvailable()) {
 				try {
 					this.msg = channel.receiveMsg();
-					//model.update("recieved " + msg);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				//se inizia per uno di questi divido la stringa
+				//if msg begins with c, s or a divide the string in words
 				if (msg.startsWith("c")||msg.startsWith("s")||msg.startsWith("a")) {
 					words = msg.split(" ");
 					int args = words.length;
 					//CHANGING MODE?
 					if (words[0].equals("c")) {
 						model.update("changing mode");
-						//so per certo che sara' lunga 2
+						//it's 2 words for sure
 						model.setMode(words[1]);
 					}
 					
 					//SINGLE MODE?
 					if(words[0].equals("s")) {
-						if( args == 2 ) {
+						if( args == DETECTED ) {
 							if(!model.getDetected().isSelected()) {
 								model.getDetected().setSelected(true);
 							}
@@ -56,14 +56,14 @@ public class Receiver extends Thread{
 					
 					//AUTO MODE?
 					if(words[0].equals("a")) {
-						if (args == 2) {
+						if (args == ALARM) {
 							if(!model.getAlarm().isSelected()) {
 								model.getAlarm().setSelected(true);
 							}
 							if(model.getTracking().isSelected()) {
 								model.getTracking().setSelected(false);
 							}
-						}else if (args == 3) {
+						}else if (args == TRACKING) {
 							if(!model.getAlarm().isSelected()) {
 								model.getAlarm().setSelected(true);
 							}
@@ -81,6 +81,7 @@ public class Receiver extends Thread{
 						}
 					}
 				}else {
+					//else simply print on gui
 					model.update(msg);	
 				}
 			}
@@ -96,19 +97,4 @@ public class Receiver extends Thread{
 	public void restart() {
 		this.stop = false;
 	}
-	
-	/*
-	 * tutto quello che scrivo is preciso,
-	 * tutto lettera piccola e come lo scrivo io
-	 * 
-	 * stringhe:
-	 * se la prima parola is "m": ricevo quello che vuoi
-	 * 						"s": se il led blinka devo ricevere "dtct"
-	 * 								 come seconda parola poi quello che vuoi
-	 * 
-	 * 						"a" se e' in alarm sec parola "alrm"
-	 * 						se e' in track terza parola "trck"
-	 * 						poi quello che vuoi	 
-	 * 
-	 */
 }
