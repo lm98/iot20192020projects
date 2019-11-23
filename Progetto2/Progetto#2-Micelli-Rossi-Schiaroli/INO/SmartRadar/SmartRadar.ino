@@ -67,7 +67,6 @@ void setup()
 {
   Serial.begin(9600); //Begin serial communication with 9600 baud
   scheduler.init(150); //Scheduler initialize
-  state = MANUAL; // Starting modality
   MsgService.init(); //Initialize message receiving from serial
 
   //Pin Input
@@ -120,15 +119,14 @@ void setup()
   scheduler.addTask(sleepTask);
 
 
-  state = MANUAL;
 }
 
 void loop(){
-  
+  /*
   if(connEnabled==false){
     syncronize();
   }
-  
+  */
   scheduler.schedule();
 }
 
@@ -137,10 +135,9 @@ void syncronize(){
 
     Msg* msg = MsgService.receiveMsg();
     if(msg->getContent() == "connecting"){
-      //delay(200);
       MsgService.sendMsg("s");
     }
-    state = MANUAL;
+    //state = MANUAL;
     connEnabled = true;
   }
 }

@@ -19,7 +19,11 @@ void EventCheck::init(int period){
 void EventCheck::tick(){
   if(MsgService.isMsgAvailable()){
     Msg* msg = MsgService.receiveMsg();
-    if(msg->getContent()=="s"){
+    if(msg->getContent() == "connecting"){
+      MsgService.sendMsg("s");
+      state = SINGLE;
+    }
+    else if(msg->getContent()=="s"){
       state = SINGLE;
     }
     else if(msg->getContent()=="m"){
@@ -30,25 +34,27 @@ void EventCheck::tick(){
     }else{
       value = msg->getContent().toInt();
       valueReceived = true;
-      MsgService.sendMsg("val");
     }
     /* NOT TO FORGET: message deallocation */
     delete msg;
     
   }else{
     if(digitalRead(BUTTON_SINGLE) == HIGH){
+      digitalWrite(BUTTON_SINGLE , LOW);
       state = SINGLE;
 
       /* Notify Console */
       Serial.println("c s");
     }
     if(digitalRead(BUTTON_MANUAL) == HIGH){
+      digitalWrite(BUTTON_MANUAL , LOW);
       state = MANUAL;
 
       /* Notify Console */
       Serial.println("c m");
     }
     if(digitalRead(BUTTON_AUTO)== HIGH){
+      digitalWrite(BUTTON_AUTO , LOW);
       state = AUTO;
 
       /* Notify Console */
