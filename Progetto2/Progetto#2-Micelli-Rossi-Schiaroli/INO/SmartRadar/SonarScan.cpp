@@ -31,7 +31,6 @@ void SonarScan::tick(){
 
     /* Notify Console */
     if(lastDetected < 1.50){
-      Serial.print("Object detected, Position: ");
       Serial.print(servoTask->getPos());
       Serial.print("degrees, Distance: ");
       Serial.print(lastDetected);

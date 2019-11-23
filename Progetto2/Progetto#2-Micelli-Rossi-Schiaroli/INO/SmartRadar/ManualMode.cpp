@@ -24,6 +24,7 @@ void ManualMode::tick(){
    
 /* When servo reaches it's destination, sonar starts scanning */
     if(servoTask->getPos() == servoTask->getNewPos()) {
+        Serial.println("m");
         sonarTask-> setActive(true);
     } else {
         sonarTask->setActive(false);

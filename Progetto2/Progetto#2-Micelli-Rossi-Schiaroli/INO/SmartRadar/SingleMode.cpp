@@ -47,7 +47,7 @@ void SingleMode::tick(){
 /* When pir detects a movement, servo makes a complete sweep */
     int detected = digitalRead(pirPin);
     if ((detected == HIGH)&&(servoTask->getPos()==0)){
-        Serial.println("dtct");
+        Serial.println("s dtct");
         sleepTask->setSleeping(false);
         
         servoTask->setNewPosition(180);
