@@ -3,11 +3,14 @@
 #include "ServoMove.h"
 #include "SonarScan.h"
 #include "EventCheck.h"
+#include "SleepMode.h"
+
 
 //extern Scheduler *scheduler;
 extern ServoMove *servoTask;
 extern SonarScan *sonarTask;
 extern EventCheck *eventTask;
+extern SleepMode *sleepTask;
 
 SingleMode::SingleMode(int pirPin, int potPin){
     this->pirPin = pirPin;
@@ -44,9 +47,15 @@ void SingleMode::tick(){
 /* When pir detects a movement, servo makes a complete sweep */
     int detected = digitalRead(pirPin);
     if ((detected == HIGH)&&(servoTask->getPos()==0)){
+
+        sleepTask->setSleeping(false);
+        
         servoTask->setNewPosition(180);
         servoTask->setActive(true);
-    } 
+    } else if((detected == LOW)&&(servoTask->getPos()==0)){
+        sleepTask->setSleeping(true);
+        sleepTask->setActive(true);
+    }
 
 /* When servo makes a full sweep, return immediately in position 0 */
     if(servoTask->getPos()==180){

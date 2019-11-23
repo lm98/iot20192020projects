@@ -7,6 +7,7 @@
 #include "ManualMode.h"
 #include "AutoMode.h"
 #include "SlowBlink.h"
+#include "SleepMode.h"
 
 //NB VALUTARE DI CANCELLARE LE CLASSI DI SONAR (BASTA IL TASK)
 
@@ -37,6 +38,7 @@ SingleMode *singleTask;
 ServoMove *servoTask;
 SonarScan *sonarTask;
 SlowBlink *ledTask;
+SleepMode *sleepTask;
 
 //Define variables
 int servoSpeed = 0;
@@ -84,7 +86,6 @@ void setup()
   //Setting manual mode task
   manualTask = new ManualMode();
   manualTask->init(1500);
-  //manualTask->setActive(true); // On program start, it begins in manual mode
   scheduler.addTask(manualTask);
 
   //Setting auto mode task
@@ -102,7 +103,7 @@ void setup()
   servoTask->init(450);
   scheduler.addTask(servoTask);
   
-  //Setting sonar scanning scan
+  //Setting sonar scanning task
   sonarTask = new SonarScan(TRIG_PIN,ECHO_PIN);
   sonarTask->init(450);
   scheduler.addTask(sonarTask);
@@ -111,6 +112,12 @@ void setup()
   ledTask = new SlowBlink(LED_PIN);
   ledTask->init(450);
   scheduler.addTask(ledTask);
+
+  //Setting sleeping mode task
+  sleepTask = new SleepMode();
+  sleepTask->init(300);
+  scheduler.addTask(sleepTask);
+
   }
 
 void loop(){
@@ -126,7 +133,7 @@ void syncronize(){
   if (MsgService.isMsgAvailable()){
 
     Msg* msg = MsgService.receiveMsg();
-    if(msg->getContent() == "ping"){
+    if(msg->getContent() == "connecting"){
       delay(200);
       MsgService.sendMsg("pong");
     }
