@@ -17,9 +17,9 @@ import javax.swing.JSlider;
 public class GUI {
     //sostituire con interfaccia
 	JFrame frame;
-	private JTextField angleField;
-	private JTextField speedFieldSingle;
-	private JTextField speedFieldAuto;
+	private IntegerJTextField angleField;
+	private IntegerJTextField speedFieldSingle;
+	private IntegerJTextField speedFieldAuto;
 	private JTextArea textArea;
 
 	private JButton activeManual;
@@ -105,7 +105,7 @@ public class GUI {
 		});
 		activeManual.setBounds(135, 12, 117, 25);
 		manualPanel.add(activeManual);
-		angleField = new JTextField("");
+		angleField = new IntegerJTextField();
 		angleField.setBounds(40, 84, 114, 19);
 		manualPanel.add(angleField);
 		angleField.setColumns(10);
@@ -127,7 +127,6 @@ public class GUI {
 					textArea.append("send a reasonable angle between 0 & 180");
 				}
 				angleField.setText("");
-
 			}
 		});
 		sendAngle.setBounds(203, 81, 117, 25);
@@ -147,7 +146,7 @@ public class GUI {
 		activeSingle.setBounds(139, 12, 117, 25);
 		singlePanel.add(activeSingle);
 		
-		speedFieldSingle = new JTextField("");
+		speedFieldSingle = new IntegerJTextField();
 		speedFieldSingle.setBounds(25, 59, 114, 19);
 		singlePanel.add(speedFieldSingle);
 		speedFieldSingle.setColumns(10);
@@ -181,7 +180,7 @@ public class GUI {
 		activeAuto.setBounds(149, 12, 117, 25);
 		autoPanel.add(activeAuto);
 		
-		speedFieldAuto = new JTextField("");
+		speedFieldAuto = new IntegerJTextField();
 		speedFieldAuto.setBounds(25, 59, 114, 19);
 		autoPanel.add(speedFieldAuto);
 		speedFieldAuto.setColumns(10);
