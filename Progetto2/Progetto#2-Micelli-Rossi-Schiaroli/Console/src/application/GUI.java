@@ -42,7 +42,7 @@ public class GUI {
 	
 	private boolean checkSpeed() {
 		Integer speed = Integer.parseInt(angleField.getText());
-		if(speed>=0 && speed <= 185000) {
+		if(speed>=0 && speed <= 500) {
 			return true;
 		} 
 		textArea.append("\n");
