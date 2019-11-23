@@ -42,7 +42,8 @@ public class ControllerImpl {
 		String msg;
 		try {
 			msg = channel.receiveMsg();
-			model.update("Received: "+msg);		
+			model.update("Received: "+msg);
+			//msg = "m";
 			Thread.sleep(500);
 			if (msg.equals("m") || msg.equals("s") || msg.equals("a")) {
 				model.update("System connected"); 

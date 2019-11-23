@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
 
 public class GUI {
     //sostituire con interfaccia
@@ -109,6 +110,12 @@ public class GUI {
 		manualPanel.add(angleField);
 		angleField.setColumns(10);
 		
+		/*
+		 * JSlider angle = new JSlider(JSlider.HORIZONTAL,0,180,5);
+		 * angle.setMajorTickSpacing(10); angle.setMinorTickSpacing(1);
+		 * angle.setPaintTicks(true); angle.setPaintLabels(true);
+		 * manualPanel.add(angle);
+		 */
 		sendAngle = new JButton("send angle");
 		sendAngle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

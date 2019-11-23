@@ -83,8 +83,12 @@ public class ModelImpl {
 	}
 
 	private void exitCurrentMode() {
-		if(this.mode.equals(mode)) {
-			
+		if (mode.equals("m")) {
+			this.exitMan();
+		}else if(mode.equals("s")) {
+			this.exitSingle();
+		}else if(mode.equals("a")) {
+			this.exitAuto();
 		}
 	}
 	
