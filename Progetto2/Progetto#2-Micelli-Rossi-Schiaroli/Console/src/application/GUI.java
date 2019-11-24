@@ -104,12 +104,10 @@ public class GUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		frame.setResizable(false);
-		textArea= new JTextArea();
+		textArea= new JTextArea("Welcome");
 		textArea.setRows(10);
 		frame.getContentPane().add(textArea, BorderLayout.SOUTH);
-		
-		textArea.setText("Welcome");
-		
+				
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		JPanel manualPanel = new JPanel();
 		JPanel singlePanel = new JPanel();
