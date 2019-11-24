@@ -14,8 +14,6 @@ class Scheduler {
 public:
   void init(int basePeriod);  
   virtual bool addTask(Task* task);
-  virtual void activateTask(Task* task);
-  virtual void shutDownAllTasks();  
   virtual void schedule();
 };
 

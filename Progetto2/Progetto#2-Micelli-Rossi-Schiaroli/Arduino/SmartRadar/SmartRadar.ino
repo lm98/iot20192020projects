@@ -9,7 +9,6 @@
 #include "SlowBlink.h"
 #include "SleepMode.h"
 
-//NB VALUTARE DI CANCELLARE LE CLASSI DI SONAR (BASTA IL TASK)
 
 //Macros
 #define POT_PIN 14
@@ -129,43 +128,6 @@ void setup()
 }
 
 void loop(){
-  /*
-  if(connEnabled==false){
-    syncronize();
-  }
-  */
+
   scheduler.schedule();
 }
-
-void syncronize(){
-  if (MsgService.isMsgAvailable()){
-
-    Msg* msg = MsgService.receiveMsg();
-    if(msg->getContent() == "connecting"){
-      MsgService.sendMsg("s");
-    }
-    //state = MANUAL;
-    connEnabled = true;
-  }
-}
-
-/*
-  Serial communication rules:
-
-  Manual message param:
-    Sending: <MANUAL> <angle> <distance>
-    Receive: <direction> 
-
-  Single message param:
-    Sending: <SINGLE> <angle> and <distance>
-      Ps. there can be several line sented over serial
-    Receiving: <Speed value>
-
-  Auto message param:
-    Sending: <angle> <distance>
-      or <alarm> <value> value can be alarmTrue/False
-      or TrackingTrue/False
-      or TrackingTrue + distance
-    Receiving: <Value>
-      User can change servo speed with specified value
-*/

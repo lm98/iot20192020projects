@@ -14,7 +14,7 @@ public class ControllerImpl {
 	public ControllerImpl(ModelImpl model) {
 		String[] portNames = SerialPortList.getPortNames();
 		try {
-			this.channel = new SerialCommChannel(portNames[0],9600);
+			this.channel = new SerialCommChannel("COM5",9600);
 		} catch (Exception e) {
 			e.printStackTrace();
 			}
