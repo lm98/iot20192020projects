@@ -112,12 +112,12 @@ void setup()
 
   //Setting alarm led task
   ledATask = new SlowBlink(LED_A_PIN);
-  ledATask->init(300);
+  ledATask->init(150);
   scheduler.addTask(ledATask);  //Setting alarm led task
  
   //Setting detection led task
   ledDTask = new SlowBlink(LED_D_PIN);
-  ledDTask->init(300);
+  ledDTask->init(150);
   scheduler.addTask(ledDTask);
 
   //Setting sleeping mode task
