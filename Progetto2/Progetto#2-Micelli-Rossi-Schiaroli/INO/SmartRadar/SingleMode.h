@@ -7,7 +7,7 @@ class SingleMode : public Task{
 
     int pirPin;
     int potPin;
-    
+
     public:
     SingleMode(int pirPin, int potPin);
     void tick();

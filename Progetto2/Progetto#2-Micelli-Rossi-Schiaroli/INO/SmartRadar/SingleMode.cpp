@@ -4,13 +4,14 @@
 #include "SonarScan.h"
 #include "EventCheck.h"
 #include "SleepMode.h"
-
+#include "SlowBlink.h"
 
 //extern Scheduler *scheduler;
 extern ServoMove *servoTask;
 extern SonarScan *sonarTask;
 extern EventCheck *eventTask;
 extern SleepMode *sleepTask;
+extern SlowBlink *ledDTask;
 
 SingleMode::SingleMode(int pirPin, int potPin){
     this->pirPin = pirPin;
@@ -26,17 +27,18 @@ void SingleMode::init(int period){
 
 void SingleMode::tick(){
 
+    ledDTask->setActive(false);
 
-/* Read servo speed from console  */
-    if(eventTask->isValueAvailable()){
-        servoTask->setActive(true);
+/* Read servo speed from console if servo isn't moving */
+    if(eventTask->isValueAvailable()&&servoTask->getPos()==0){
+        //servoTask->setActive(true);
         int speedCons = eventTask->getValue();
         if(servoTask->getServoSpeed() != speedCons){
             servoTask->setServoSpeed(speedCons);
         }
-    } else {
+    } else if(servoTask->getPos()==0){
     
-/* Read servo speed from potentiometer */
+/* Read servo speed from potentiometer if servo isn't moving */
         int speedPot = map(analogRead(potPin),0,1023,0,500);
         if(servoTask->getServoSpeed() != speedPot){
             servoTask->setServoSpeed(speedPot);
@@ -47,7 +49,6 @@ void SingleMode::tick(){
 /* When pir detects a movement, servo makes a complete sweep */
     int detected = digitalRead(pirPin);
     if ((detected == HIGH)&&(servoTask->getPos()==0)){
-        Serial.println("s dtct");
         sleepTask->setSleeping(false);
         
         servoTask->setNewPosition(180);
@@ -67,6 +68,12 @@ void SingleMode::tick(){
 /* Activate sonar every delta movement, otherwise we don't scan. */
     if((((servoTask->getPos())%(servoTask->getDelta()))==0) && (servoTask->getNewPos() != 0)){
         sonarTask->setActive(true);
+        if(sonarTask->getLastDetected()<1.50){
+            Serial.println("s dtct");
+            ledDTask->setActive(true);
+        } else {
+            ledDTask->setActive(false);
+        }
     } else {
         sonarTask->setActive(false);
     }
@@ -77,6 +84,7 @@ void SingleMode::shutDown(){
         servoTask->restart();
         servoTask->setActive(false);
         sonarTask->setActive(false);
+        ledDTask->setActive(false);
         this->setActive(false);
     }
 }

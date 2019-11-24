@@ -6,10 +6,11 @@
 class AutoMode : public Task{
     
     float dNear, dFar;
+    int potPin;
 
     public:
     
-    AutoMode(float dNear, float dFar);
+    AutoMode(float dNear, float dFar, int potPin);
     void tick();
     void init(int period);
     void shutDown();

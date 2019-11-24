@@ -13,7 +13,8 @@
 
 //Macros
 #define POT_PIN 14
-#define LED_PIN 8
+#define LED_A_PIN 8
+#define LED_D_PIN 7
 #define SERVO 6
 #define SPEED_MIN 3
 #define SPEED_MAX 8
@@ -38,7 +39,8 @@ AutoMode *autoTask;
 SingleMode *singleTask;
 ServoMove *servoTask;
 SonarScan *sonarTask;
-SlowBlink *ledTask;
+SlowBlink *ledATask;
+SlowBlink *ledDTask;
 SleepMode *sleepTask;
 
 //Define variables
@@ -89,7 +91,7 @@ void setup()
   scheduler.addTask(manualTask);
 
   //Setting auto mode task
-  autoTask = new AutoMode(D_NEAR, D_FAR);
+  autoTask = new AutoMode(D_NEAR, D_FAR, POT_PIN);
   autoTask->init(1500);
   scheduler.addTask(autoTask);
 
@@ -109,9 +111,14 @@ void setup()
   scheduler.addTask(sonarTask);
 
   //Setting alarm led task
-  ledTask = new SlowBlink(LED_PIN);
-  ledTask->init(450);
-  scheduler.addTask(ledTask);
+  ledATask = new SlowBlink(LED_A_PIN);
+  ledATask->init(300);
+  scheduler.addTask(ledATask);  //Setting alarm led task
+ 
+  //Setting detection led task
+  ledDTask = new SlowBlink(LED_D_PIN);
+  ledDTask->init(300);
+  scheduler.addTask(ledDTask);
 
   //Setting sleeping mode task
   sleepTask = new SleepMode();
