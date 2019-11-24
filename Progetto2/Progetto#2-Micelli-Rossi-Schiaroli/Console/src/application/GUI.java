@@ -40,8 +40,18 @@ public class GUI {
 		return false;
 	}
 	
-	private boolean checkSpeed() {
-		Integer speed = Integer.parseInt(angleField.getText());
+	private boolean checkSpeedS() {
+		Integer speed = Integer.parseInt(speedFieldSingle.getText());
+		if(speed>=0 && speed <= 500) {
+			return true;
+		} 
+		textArea.append("\n");
+		textArea.append("send a reasonable speed between 0 & 500");
+		return false;
+	}
+	
+	private boolean checkSpeedA() {
+		Integer speed = Integer.parseInt(speedFieldAuto.getText());
 		if(speed>=0 && speed <= 500) {
 			return true;
 		} 
@@ -157,7 +167,7 @@ public class GUI {
 		sendSpeedS.setBounds(25, 90, 117, 25);
 		sendSpeedS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(checkSpeed()) {
+				if(checkSpeedS()) {
 					controller.send(speedFieldSingle.getText());
 				}
 				speedFieldSingle.setText("");
@@ -193,7 +203,7 @@ public class GUI {
 		sendSpeedA.setBounds(25, 90, 117, 25);
 		sendSpeedA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(checkSpeed()) {
+				if(checkSpeedA()) {
 					controller.send(speedFieldSingle.getText());
 				}
 				speedFieldSingle.setText("");
