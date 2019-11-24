@@ -89,12 +89,4 @@ public class Receiver extends Thread{
 		}
 	System.out.println("Thread Stopped");
 	}
-
-	public void stopT() {
-		this.stop = true;
-	}
-	
-	public void restart() {
-		this.stop = false;
-	}
 }
