@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SmartDumpster</string>
+    <string name="connect_button">Connect to Smart Dumpster</string>
+    <string name="status_lable">Status: not connected</string>
+    <string name="junk_btn_a">A</string>
+    <string name="junk_btn_b">B</string>
+    <string name="junk_btn_c">C</string>
+    <string name="log_lable">LOG:</string>
+</resources>
