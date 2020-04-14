@@ -9,7 +9,6 @@ if ($avail){
  } else {
     $state=' unavailable';
     $nstate= 'available';
-
  }
 
 $deposits = get_deposits();
@@ -24,7 +23,7 @@ $deposits = get_deposits();
 
 <h1>Dumpster Server</h1>
 
-<h2>Numero di depositi:</h2>
+<h2>Number of deposits:</h2>
 <p><?php echo $deposits; ?></p>
 
 <h2>Dumpster is now <?php echo $state;?> </h2>
@@ -41,5 +40,8 @@ if (!$avail){
     require('set_available.html');
 }
 ?>
+<br/>
+<br/>
+<a href="stats.php">Click here to see some graphs</a>
 </body>
 </html>
