@@ -1,163 +1,101 @@
 package com.example.smartdumpster;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 
-import com.example.smartdumpster.utils.C;
-
-import java.util.UUID;
-
-import unibo.btlib.BluetoothChannel;
-import unibo.btlib.BluetoothUtils;
-import unibo.btlib.ConnectToBluetoothServerTask;
-import unibo.btlib.ConnectionTask;
-import unibo.btlib.RealBluetoothChannel;
-import unibo.btlib.exceptions.BluetoothDeviceNotFound;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
-
-    private BluetoothChannel btChannel;
-
+    RequestQueue requestQueue;
+    TextView tokenStatusView;
     /**
-     * Verifies presence of bluetooth module in the device, if so, asks for enabling.
-     * Then initializes the UI.
-     *
-     * @param savedInstanceState
+     * Token Request tag
      */
+    private final static String TAG = "TOKEN_REQUEST";
+    /**
+     * Token serves as a permission to open the physical dumpster
+     */
+    private JSONObject token;
+    private boolean hasToken;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        hasToken = false;
 
-        if(btAdapter != null && !btAdapter.isEnabled()){
-            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), C.bluetooth.ENABLE_BT_REQUEST);
-        }
-
-        initUI();
-    }
-
-    /**
-     * Initializes every button in UI with appropriate listener
-     */
-    private void initUI() {
-        //Connect button
-        findViewById(R.id.connect_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.requestTokenButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    connectToBTServer();
-                } catch (BluetoothDeviceNotFound bluetoothDeviceNotFound) {
-                    bluetoothDeviceNotFound.printStackTrace();
+                if (!hasToken) {
+                    createTokenRequest();
                 }
             }
         });
 
-        //Junk buttons:
-
-        findViewById(R.id.junk_btn_A).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = "A";
-                btChannel.sendMessage(message);
-            }
-        });
-
-        findViewById(R.id.junk_btn_B).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = "B";
-                btChannel.sendMessage(message);
-            }
-        });
-
-        findViewById(R.id.junk_btn_C).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = "C";
-                btChannel.sendMessage(message);
-            }
-        });
     }
 
-    /**
-     * Close the bluetooth channel
-     */
     @Override
     protected void onStop() {
         super.onStop();
 
-        btChannel.close();
+        // Cancel token request
+        if (requestQueue != null) {
+            requestQueue.cancelAll(TAG);
+        }
     }
 
     /**
-     * Updates Log with results from previous operations
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * Creates the request for the token
      */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, @Nullable final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == C.bluetooth.ENABLE_BT_REQUEST && resultCode == RESULT_OK) {
-            Log.d(C.APP_LOG_TAG, "Bluetooth enabled!");
-        }
-
-        if (requestCode == C.bluetooth.ENABLE_BT_REQUEST && resultCode == RESULT_CANCELED) {
-            Log.d(C.APP_LOG_TAG, "Bluetooth not enabled!");
-        }
-    }
-
-    private void connectToBTServer() throws BluetoothDeviceNotFound {
-        final BluetoothDevice serverDevice = BluetoothUtils.getPairedDeviceByName(C.bluetooth.BT_DEVICE_ACTING_AS_SERVER_NAME);
-
-        final UUID uuid = BluetoothUtils.getEmbeddedDeviceDefaultUuid();
-        //final UUID uuid = BluetoothUtils.generateUuidFromString(C.bluetooth.BT_SERVER_UUID);
-
-        new ConnectToBluetoothServerTask(serverDevice, uuid, new ConnectionTask.EventListener() {
-            @Override
-            public void onConnectionActive(final BluetoothChannel channel) {
-
-                ((TextView) findViewById(R.id.status_lable)).setText(String.format("Status : connected to server on device %s",
-                        serverDevice.getName()));
-
-                findViewById(R.id.connect_button).setEnabled(false);
-
-                btChannel = channel;
-                btChannel.registerListener(new RealBluetoothChannel.Listener() {
+    private void createTokenRequest() {
+        requestQueue = Volley.newRequestQueue(this);
+        String url = "http://localhost/dumpster/permission.php";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                     @Override
-                    public void onMessageReceived(String receivedMessage) {
-                        ((TextView) findViewById(R.id.log_content)).append(String.format("> [RECEIVED from %s] %s\n",
-                                btChannel.getRemoteDeviceName(),
-                                receivedMessage));
+                    public void onResponse(JSONArray response) {
+                        try {
+                            token = response.getJSONObject(0);
+                            setTokenStatus(true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            setTokenStatus(false);
+                        }
                     }
-
+                }, new Response.ErrorListener() {
                     @Override
-                    public void onMessageSent(String sentMessage) {
-                        ((TextView) findViewById(R.id.log_content)).append(String.format("> [SENT to %s] %s\n",
-                                btChannel.getRemoteDeviceName(),
-                                sentMessage));
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("LAB", error.toString());
                     }
                 });
-            }
+        jsonArrayRequest.setTag(TAG);
 
-            @Override
-            public void onConnectionCanceled() {
-                ((TextView) findViewById(R.id.status_lable)).setText(String.format("Status : unable to connect, device %s not found!",
-                        C.bluetooth.BT_DEVICE_ACTING_AS_SERVER_NAME));
-            }
-        }).execute();
+        // Add the request to the RequestQueue.
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void setTokenStatus(boolean tokenObtained){
+       if(tokenObtained){
+           hasToken = true;
+           tokenStatusView.setText(R.string.tokenOk);
+       } else {
+           hasToken = false;
+           tokenStatusView.setText(R.string.tokenNok);
+       }
     }
 }

@@ -1,2 +1,2 @@
 rootProject.name='SmartDumpster'
-include ':app', ':bt-lib'
+include ':app'
