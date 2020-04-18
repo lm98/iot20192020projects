@@ -8,3 +8,8 @@ password''
 
 quindi digitare su google 
 localhost/dumpster/index.php
+
+How to execute local development server without xampp (UNIX):
+1: cd into project directory iot20192020projects/Progetto3/d_server/dumpster/
+2: php -S localhost:8080
+3: (other bash) ngrok http 80

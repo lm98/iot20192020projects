@@ -2,12 +2,16 @@
 #include <ESP8266WiFi.h>
 
 /* wifi network name */
-char* ssidName = "";
+char* ssidName = "FASTWEB-enzo-2,4";
 /* WPA2 PSK password */
-char* pwd = "";
+char* pwd = "casaenzo2017";
 /* service IP address */ 
 char* address = "http://*.ngrok.io";
 
+/*
+ * Questo programma invia ogni ~5 secondi un messaggio json al service
+ * comunicando il peso del cassonetto, letto dal potenziometro
+ */
 void setup() { 
   Serial.begin(115200);                                
   WiFi.begin(ssidName, pwd);
