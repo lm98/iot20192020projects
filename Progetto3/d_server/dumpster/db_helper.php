@@ -138,19 +138,19 @@ function success($jsonobj){
 }
 
 function deposit($jsonobj){
-    json_decode($jsonobj, true);
+    $decoded= json_decode($jsonobj);
     $conn = db_connect();
-    $date = date('Y-m-d');
-    $A = jsonobj['a'];
-    $B = jsonobj['b'];
-    $C = jsonobj['c'];
-    $sql = "INSERT INTO deposit (deposit_id, a_deposited, b_deposited, c_deposited, date) VALUES (NULL, $A, $B, $C, $date )";
+    $A = $decoded->a;
+    $B = $decoded->b;
+    $C = $decoded->c;
+
+    $sql = "INSERT INTO deposit (a_deposited, b_deposited, c_deposited, date) VALUES ($A, $B, $C, CURRENT_DATE )";
     if (!$conn->query($sql) === TRUE) {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 
     $wheight = $A + $B + $C;
-    $sql = "SELECT wheight, deposits, wheight_max FROM general";
+    $sql = "SELECT weight, deposits, wheight_max FROM general";
     $result = $conn->query($sql);
     
     if ($result->num_rows > 0) {
@@ -158,17 +158,17 @@ function deposit($jsonobj){
     } else {
         exit('error');
     }
-    $wheight += $row['wheight'];
+    $wheight += $row['weight'];
     $deposits = $row['deposits'];
     $wheight_max = $row['wheight_max'];
     $deposits++;
-    $sql = "UPDATE general SET wheight = $wheight, deposits = $deposits";
+    $sql = "UPDATE general SET weight = $wheight, deposits = $deposits";
 
     if (!$conn->query($sql) === TRUE) {
         echo "Error updating record: " . $conn->error;
     }
     //controls if the wheight is too much
-    if($wheight>wheight_max){
+    if($wheight>$wheight_max){
         $sql = "UPDATE general SET available = 0";
 
         if (!$conn->query($sql) === TRUE) {
