@@ -7,7 +7,6 @@ include 'db_helper.php';
 $json = '{"a":35,"b":37,"c":43,"id":15}';
 success($json);
 http_response_code(200);*/
-$_POST["jsonobj"]= '{"a":35,"b":37,"c":43}';
 if (isset($_POST["jsonobj"])){
     deposit($_POST["jsonobj"]);
     http_response_code(200);
