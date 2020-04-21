@@ -139,11 +139,11 @@ function success($jsonobj){
 
 function deposit($jsonobj){
     $decoded= json_decode($jsonobj);
-    $conn = db_connect();
     $A = $decoded->a;
     $B = $decoded->b;
     $C = $decoded->c;
 
+    $conn = db_connect();
     $sql = "INSERT INTO deposit (a_deposited, b_deposited, c_deposited, date) VALUES ($A, $B, $C, CURRENT_DATE )";
     if (!$conn->query($sql) === TRUE) {
         echo "Error: " . $sql . "<br>" . $conn->error;
@@ -174,6 +174,16 @@ function deposit($jsonobj){
         if (!$conn->query($sql) === TRUE) {
             echo "Error updating record: " . $conn->error;
         }
+    }
+    $conn->close();
+}
+
+function set_avail($avail){
+    $conn = db_connect();
+
+    $sql = "UPDATE general SET available = $avail";
+    if (!$conn->query($sql) === TRUE) {
+        echo "Error updating record: " . $conn->error;
     }
     $conn->close();
 }
@@ -273,5 +283,22 @@ function get_c(){
     }
 }
 
+function check_pass($pass){
+    $conn = db_connect();
+    $sql = "SELECT password FROM general";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        if($row = $result->fetch_assoc()) {
+            $conf_pass = $row["password"];
+        }
+        $conn->close();
+        if($pass == $conf_pass){
+
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
 
 ?>
