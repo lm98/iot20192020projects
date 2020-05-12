@@ -3,4 +3,13 @@
     <string name="request_token">Request Token</string>
     <string name="tokenNok">Non c\'è più Token</string>
     <string name="tokenOk">C\'è Tolkien</string>
+    <string name="tokenACK">Token Request Accepted</string>
+    <string name="tokenNAK">Token Denied!</string>
+    <string name="tokenRequestTag">TOKEN_REQUEST</string>
+    <string name="connect_to_bt">CONNECT TO BT</string>
+    <string name="select_waste">SELEZIONA UN TIPO DI RIFIUTO</string>
+    <string name="a">A</string>
+    <string name="b">B</string>
+    <string name="c">C</string>
+    <string name="more_time">MI SERVE PIU TEMPO</string>
 </resources>

@@ -1,52 +1,59 @@
 package com.example.smartdumpster;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.smartdumpster.utils.C;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
-    RequestQueue requestQueue;
-    TextView tokenStatusView;
+import unibo.btlib.BluetoothChannel;
+import unibo.btlib.BluetoothUtils;
+import unibo.btlib.ConnectToBluetoothServerTask;
+import unibo.btlib.ConnectionTask;
+import unibo.btlib.RealBluetoothChannel;
+import unibo.btlib.exceptions.BluetoothDeviceNotFound;
+
+public class MainActivity extends AppCompatActivity implements DumpsterBTCommunicator, ShowFragment {
+    private RequestQueue requestQueue;
+    private BluetoothChannel btChannel;
+
     /**
      * Token Request tag
      */
-    private final static String TAG = "TOKEN_REQUEST";
-    /**
-     * Token serves as a permission to open the physical dumpster
-     */
-    private JSONObject token;
-    private boolean hasToken;
+    private final String TAG = "SMART_DUMPSTER";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        hasToken = false;
+        final BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if(btAdapter != null && !btAdapter.isEnabled()){
+            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), C.bluetooth.ENABLE_BT_REQUEST);
+        }
 
         findViewById(R.id.requestTokenButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!hasToken) {
-                    createTokenRequest();
-                }
+                createTokenRequest();
             }
         });
-
     }
 
     @Override
@@ -57,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestQueue != null) {
             requestQueue.cancelAll(TAG);
         }
+        // Close bluetooth channel
+        if(btChannel != null){
+            btChannel.close();
+        }
     }
 
     /**
@@ -64,38 +75,81 @@ public class MainActivity extends AppCompatActivity {
      */
     private void createTokenRequest() {
         requestQueue = Volley.newRequestQueue(this);
-        String url = "http://localhost/dumpster/permission.php";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        String url = "http://89d8b524.ngrok.io/d_server/dumpster/permission.php";
+
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            token = response.getJSONObject(0);
-                            setTokenStatus(true);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            setTokenStatus(false);
-                        }
+                    public void onResponse(String response) {
+                        //startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        showBTFragment();
                     }
-                }, new Response.ErrorListener() {
+                },
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("LAB", error.toString());
+                        //showBTFragment();
+                        Log.d(TAG, "Error Response code: " + error.getMessage());
                     }
                 });
-        jsonArrayRequest.setTag(TAG);
 
-        // Add the request to the RequestQueue.
-        requestQueue.add(jsonArrayRequest);
+        stringRequest.setTag(TAG);
+        requestQueue.add(stringRequest);
     }
 
-    private void setTokenStatus(boolean tokenObtained){
-       if(tokenObtained){
-           hasToken = true;
-           tokenStatusView.setText(R.string.tokenOk);
-       } else {
-           hasToken = false;
-           tokenStatusView.setText(R.string.tokenNok);
-       }
+    private void connectToBTServer() throws BluetoothDeviceNotFound {
+        final BluetoothDevice serverDevice = BluetoothUtils.getPairedDeviceByName(C.bluetooth.BT_DEVICE_ACTING_AS_SERVER_NAME);
+
+        final UUID uuid = BluetoothUtils.getEmbeddedDeviceDefaultUuid();
+        //final UUID uuid = BluetoothUtils.generateUuidFromString(C.bluetooth.BT_SERVER_UUID);
+
+        new ConnectToBluetoothServerTask(serverDevice, uuid, new ConnectionTask.EventListener() {
+            @Override
+            public void onConnectionActive(final BluetoothChannel channel) {
+
+                btChannel = channel;
+                btChannel.registerListener(new RealBluetoothChannel.Listener() {
+                    @Override
+                    public void onMessageReceived(String receivedMessage) {
+                        Log.d(TAG, "onMessageReceived: "+receivedMessage);
+                    }
+
+                    @Override
+                    public void onMessageSent(String sentMessage) {
+                        Log.d(TAG, "onMessageReceived: "+sentMessage);
+                    }
+                });
+            }
+
+            @Override
+            public void onConnectionCanceled() {
+                Log.d(TAG, "onConnectionCanceled: unable to connect to device");
+            }
+        }).execute();
+    }
+
+    @Override
+    public void showBTFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        //fragmentManager.popBackStack("BACKSTACK_BASE", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        transaction.replace(R.id.fragment_bt_container, new BTFragment());
+        transaction.commit();
+    }
+
+    @Override
+    public void showBTMessageFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        //fragmentManager.popBackStack("BACKSTACK_BASE", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        transaction.replace(R.id.fragment_bt_message_container, new MessageFragment());
+        transaction.commit();
+    }
+
+    @Override
+    public void sendCodedBTMessage(String code){
+        btChannel.sendMessage(code);
     }
 }
