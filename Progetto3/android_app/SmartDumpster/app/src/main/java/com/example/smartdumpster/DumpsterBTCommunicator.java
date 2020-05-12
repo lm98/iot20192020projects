@@ -1,6 +1,10 @@
 package com.example.smartdumpster;
 
+import unibo.btlib.exceptions.BluetoothDeviceNotFound;
+
 public interface DumpsterBTCommunicator {
+
+    void connectToBTServer() throws BluetoothDeviceNotFound;
 
     /**
      * Send a code String representing a message

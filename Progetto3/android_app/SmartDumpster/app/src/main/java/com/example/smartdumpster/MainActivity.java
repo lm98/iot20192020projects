@@ -99,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         requestQueue.add(stringRequest);
     }
 
-    private void connectToBTServer() throws BluetoothDeviceNotFound {
+    @Override
+    public void connectToBTServer() throws BluetoothDeviceNotFound {
         final BluetoothDevice serverDevice = BluetoothUtils.getPairedDeviceByName(C.bluetooth.BT_DEVICE_ACTING_AS_SERVER_NAME);
 
         final UUID uuid = BluetoothUtils.getEmbeddedDeviceDefaultUuid();
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         new ConnectToBluetoothServerTask(serverDevice, uuid, new ConnectionTask.EventListener() {
             @Override
             public void onConnectionActive(final BluetoothChannel channel) {
-
+                showBTMessageFragment();
                 btChannel = channel;
                 btChannel.registerListener(new RealBluetoothChannel.Listener() {
                     @Override

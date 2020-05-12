@@ -8,16 +8,18 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import unibo.btlib.exceptions.BluetoothDeviceNotFound;
+
 public class BTFragment extends Fragment {
-    private ShowFragment showFragmentManager;
+    private DumpsterBTCommunicator btCommunicator;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            showFragmentManager = (ShowFragment) context;
+            btCommunicator = (DumpsterBTCommunicator) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement ShowFragment");
+            throw new ClassCastException(context.toString() + " must implement DumpsterBTCommunicator");
         }
     }
 
@@ -31,7 +33,11 @@ public class BTFragment extends Fragment {
         v.findViewById(R.id.btButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFragmentManager.showBTMessageFragment();
+                try {
+                    btCommunicator.connectToBTServer();
+                } catch (BluetoothDeviceNotFound bluetoothDeviceNotFound) {
+                    bluetoothDeviceNotFound.printStackTrace();
+                }
             }
         });
         return v;
