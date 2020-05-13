@@ -84,13 +84,13 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
                     @Override
                     public void onResponse(String response) {
                         //startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        showBTFragment();
+                        //showBTFragment();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //showBTFragment();
+                        showBTFragment();
                         Log.d(TAG, "Error Response code: " + error.getMessage());
                     }
                 });
