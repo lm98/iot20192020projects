@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import org.json.JSONException;
+
 public class MessageFragment extends Fragment {
     private DumpsterBTCommunicator btCommunicator;
 
@@ -31,6 +33,11 @@ public class MessageFragment extends Fragment {
         v.findViewById(R.id.aButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    btCommunicator.sendTrashType("A");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 btCommunicator.sendCodedBTMessage("A");
             }
         });
@@ -38,6 +45,11 @@ public class MessageFragment extends Fragment {
         v.findViewById(R.id.bButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    btCommunicator.sendTrashType("B");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 btCommunicator.sendCodedBTMessage("B");
             }
         });
@@ -45,6 +57,11 @@ public class MessageFragment extends Fragment {
         v.findViewById(R.id.cButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    btCommunicator.sendTrashType("C");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 btCommunicator.sendCodedBTMessage("C");
             }
         });

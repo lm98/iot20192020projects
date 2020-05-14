@@ -15,9 +15,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.smartdumpster.utils.C;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.UUID;
 
@@ -28,7 +32,7 @@ import unibo.btlib.ConnectionTask;
 import unibo.btlib.RealBluetoothChannel;
 import unibo.btlib.exceptions.BluetoothDeviceNotFound;
 
-public class MainActivity extends AppCompatActivity implements DumpsterBTCommunicator, ShowFragment {
+public class MainActivity extends AppCompatActivity implements DumpsterBTCommunicator{
     private RequestQueue requestQueue;
     private BluetoothChannel btChannel;
 
@@ -99,6 +103,39 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         requestQueue.add(stringRequest);
     }
 
+    /**
+     * Send the trash to deposit type
+     */
+    @Override
+    public void sendTrashType(String type) throws JSONException {
+        requestQueue = Volley.newRequestQueue(this);
+        String url = "http://89d8b524.ngrok.io/d_server/dumpster/set_trash_type.php";
+
+        JSONObject jBody = new JSONObject();
+        jBody.put("type", type);
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                jBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "onResponse: "+response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        showBTFragment();
+                        Log.d(TAG, "Error Response code: " + error.getMessage());
+                    }
+                });
+
+        stringRequest.setTag(TAG);
+        requestQueue.add(stringRequest);
+    }
+
     @Override
     public void connectToBTServer() throws BluetoothDeviceNotFound {
         final BluetoothDevice serverDevice = BluetoothUtils.getPairedDeviceByName(C.bluetooth.BT_DEVICE_ACTING_AS_SERVER_NAME);
@@ -131,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         }).execute();
     }
 
-    @Override
     public void showBTFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -140,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         transaction.commit();
     }
 
-    @Override
     public void showBTMessageFragment(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
