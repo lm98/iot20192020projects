@@ -34,7 +34,7 @@ public class MessageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    btCommunicator.sendTrashType("A");
+                    btCommunicator.sendTrashType("a");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -46,7 +46,7 @@ public class MessageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    btCommunicator.sendTrashType("B");
+                    btCommunicator.sendTrashType("b");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -58,7 +58,7 @@ public class MessageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    btCommunicator.sendTrashType("C");
+                    btCommunicator.sendTrashType("c");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
