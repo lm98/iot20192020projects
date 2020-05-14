@@ -85,9 +85,9 @@ void loop() {
       }
       
   }
-  Serial.print("TIME REMAINING:");
-  Serial.print(millis() - delta);
-  Serial.println(timeInterval/1000000);
+  //Serial.print("TIME REMAINING:");
+  //Serial.print(millis() - delta);
+  //Serial.println(timeInterval/1000000);
   //Serial.print("Time remaining:");
   //Serial.println(remain);
 }
