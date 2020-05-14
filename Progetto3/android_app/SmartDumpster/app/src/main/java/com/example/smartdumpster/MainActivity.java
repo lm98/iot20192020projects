@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
      */
     private void createTokenRequest() {
         requestQueue = Volley.newRequestQueue(this);
-        String url = "http://89d8b524.ngrok.io/d_server/dumpster/permission.php";
+        String url = "https://allco.000webhostapp.com/dumpster/permission.php";
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
     @Override
     public void sendTrashType(String type) throws JSONException {
         requestQueue = Volley.newRequestQueue(this);
-        String url = "http://89d8b524.ngrok.io/d_server/dumpster/set_trash_type.php";
+        String url = "https://allco.000webhostapp.com/dumpster/set_trash_type.php";
 
         JSONObject jBody = new JSONObject();
         jBody.put("type", type);
