@@ -114,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         JSONObject jBody = new JSONObject();
         jBody.put("type", type);
 
+        Log.d(TAG, "sendTrashType: "+type);
+
         JsonObjectRequest stringRequest = new JsonObjectRequest(
                 Request.Method.POST,
                 url,
