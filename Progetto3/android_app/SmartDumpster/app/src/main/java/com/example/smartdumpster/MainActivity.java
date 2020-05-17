@@ -2,10 +2,12 @@ package com.example.smartdumpster;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -35,6 +37,7 @@ import unibo.btlib.exceptions.BluetoothDeviceNotFound;
 public class MainActivity extends AppCompatActivity implements DumpsterBTCommunicator{
     private RequestQueue requestQueue;
     private BluetoothChannel btChannel;
+    private boolean hasToken = false;
 
     /**
      * Token Request tag
@@ -55,7 +58,9 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         findViewById(R.id.requestTokenButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createTokenRequest();
+                if(!hasToken){
+                    createTokenRequest();
+                }
             }
         });
     }
@@ -87,14 +92,13 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        hasToken = true;
                         showBTFragment();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //showBTFragment();
                         Log.d(TAG, "Error Response code: " + error.getMessage());
                     }
                 });
@@ -188,6 +192,18 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
 
     @Override
     public void sendCodedBTMessage(String code){
-        btChannel.sendMessage(code);
+        if(hasToken){
+            btChannel.sendMessage(code);
+            //hasToken = false; //Decommentare questa riga per fare in modo che 1 token valga 1 solo deposito
+        } else {
+            showMessageToast("Token expired!");
+        }
+    }
+
+    private void showMessageToast(String msg){
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, msg, duration);
+        toast.show();
     }
 }
