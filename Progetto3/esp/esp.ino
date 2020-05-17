@@ -3,57 +3,39 @@
 
 #define LED_AV D0
 #define LED_NAV D1
+#define TRIMMER A0
 
-/* wifi network name */
-//char* ssidName = "FASTWEB-enzo-2,4";
-char* ssidName = "Wifi";
-
-/* WPA2 PSK password */
-//char* pwd = "casaenzo2017";
-char* pwd = "password";
-
-/* service IP address */ 
-char* address = "http://allco.000webhostapp.com";
-
-HTTPClient http;
-int flag = 0;
 float value = 0;
 float oldvalue = 0;
+int deposit = 0;
 
-int sendData(float value) {      
-   String msg = "{ \"quantity\":"+ String(value) + "}";
-   http.begin(address + String("/dumpster/insert_weight.php"));
-   http.addHeader("Content-Type", "application/json");
-   int retCode = http.POST(msg);   
-   http.end();
+int sendData(float deposit) {      
+   int retCode = post("{\"quantity\":"+ String(deposit) + "}","/dumpster/insert_weight.php");
+   
+   /*
+    * If weigth is too high, post not avail state to service and switch led state
+    */
    if (value >= 95){  
-    setNAvail();
-    postNotAvail();
-   }    
+    setNotAvailable();
+    Serial.println("Setting dumpster not available, response:" + String(post("{\"avail\":0,\"pass\":\"password\"}","/dumpster/set_availability_esp.php")));
+   }
    return retCode;
 }
 
-int isAvailable() {     
-   http.begin(address + String("/dumpster/permission.php"));
-   http.addHeader("Content-Type", "application/json");
-   int retCode = http.POST("");   
-   http.end();    
-   if(retCode == 200){
-    setAvail();
-    flag = 1;
-   } else if (retCode == 418) {
-    setNAvail();
-    flag = 0;
+int isAvailable() {
+   if(post("","/dumpster/permission.php") == 200){
+    return 1;
    } else {
-    Serial.println("Error asking dumpster state");
+    return 0;
    }
-   
-  return flag;
 }
 
 void setup() {
+  char* ssidName = "Wifi"; //Network name
+  char* pwd = "password"; //Wifi network password
   pinMode(LED_AV, OUTPUT);    //Dichiaro il pin D0 "AVAILABLE" in Output
   pinMode(LED_NAV, OUTPUT);    //Dichiaro il pin D1 "NOT AVAILABLE" in Output
+  pinMode(TRIMMER, OUTPUT);    //Dichiaro il pin D1 "NOT AVAILABLE" in Output
   Serial.begin(115200);                                
   WiFi.begin(ssidName, pwd);
   Serial.print("Connecting...");
@@ -61,55 +43,76 @@ void setup() {
     delay(500);
     Serial.print(".");
   } 
-  Serial.println("\nConnected: \n local IP: " + WiFi.localIP());
   if(isAvailable()){
-    setAvail();
+    setAvailable();
   } else {
-    setNAvail();
+    setNotAvailable();
   }
 }
    
 void loop() { 
  if (WiFi.status()== WL_CONNECTED){   
-    
-   value = (float) analogRead(A0) * 100 / 1023.0; //read sensor from 0 to 100 kilos
    
-   if((value < oldvalue - 3 || value > oldvalue + 3) && value > 3) { //Control if the weight is changed with a threshold of 3 kilos
-
-    Serial.print("sending " + String(value - oldvalue) + "..."); //Print value sent
-    if(isAvailable()){
+   /* 
+    *  Read value from trimmer
+    */
+   value = (float) analogRead(TRIMMER) * 100 / 1023.0;
+   
+   /*
+    * Check if value has dropped from the previous one
+    */
+   deposit = value - oldvalue;
+   
+   /*
+    * Check if the deposit value is > than 3 (error tolerance)
+    * and if the new value is greater than 0 (plus tolerance)
+    */
+   if(deposit > 3 && value > 3) {
     
-    int code = sendData(value - oldvalue); //send data
-       
-    if (code == 200){
-      Serial.println("ok");   
+    /*
+     * Check if service responde with HTTP response code = 200
+     */
+    if(isAvailable()){
+      setAvailable();
+      Serial.println("Deposit " + String(deposit) + "Total:" + String(value)); //Print value sent
+      if (sendData(deposit) == 200){
+        Serial.println("Deposit ok");   
+      } else {
+        Serial.println("Deposit error");
+      } 
     } else {
-      Serial.println("error");
-    } 
-   } 
+      setNotAvailable();
+      Serial.println("Dumpster not available"); 
+    }
   }
-  oldvalue = value;
-  delay(5000);  
+  oldvalue = value; //Update value read
+  delay(5000); //Wait 5 seconds for new reading
  } else { 
    Serial.println("Error in WiFi connection");   
  }
 } 
 
-void setAvail(){
-  digitalWrite(LED_AV,HIGH);
-  digitalWrite(LED_NAV,LOW);
-}
-
-void setNAvail(){
-  digitalWrite(LED_NAV,HIGH);
-  digitalWrite(LED_AV,LOW); 
-}
-
-int postNotAvail(){    
-   String msg = "{avail:0,pass:password}";
-   http.begin(address + String("/dumpster/set_availability_esp.php"));
+/*
+ * Send post message with json message msg to url address + page
+ */
+int post(String msg,String page){
+   HTTPClient http;
+   http.begin("http://allco.000webhostapp.com" + page);
    http.addHeader("Content-Type", "application/json");
    int retCode = http.POST(msg);   
    http.end();    
    return retCode;
+}
+
+/*
+ * These procedures switch the state of available/not available leds
+ */
+void setAvailable(){
+  digitalWrite(LED_AV,HIGH);
+  digitalWrite(LED_NAV,LOW);
+}
+
+void setNotAvailable(){
+  digitalWrite(LED_NAV,HIGH);
+  digitalWrite(LED_AV,LOW); 
 }
