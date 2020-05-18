@@ -33,36 +33,42 @@ public class MessageFragment extends Fragment {
         v.findViewById(R.id.aButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    btCommunicator.sendTrashType("a");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(btCommunicator.getTokenStatus()){
+                    try {
+                        btCommunicator.sendTrashType("a");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    btCommunicator.sendCodedBTMessage("A");
                 }
-                btCommunicator.sendCodedBTMessage("A");
             }
         });
 
         v.findViewById(R.id.bButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    btCommunicator.sendTrashType("b");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(btCommunicator.getTokenStatus()){
+                    try {
+                        btCommunicator.sendTrashType("b");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    btCommunicator.sendCodedBTMessage("B");
                 }
-                btCommunicator.sendCodedBTMessage("B");
             }
         });
 
         v.findViewById(R.id.cButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    btCommunicator.sendTrashType("c");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(btCommunicator.getTokenStatus()){
+                    try {
+                        btCommunicator.sendTrashType("c");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    btCommunicator.sendCodedBTMessage("C");
                 }
-                btCommunicator.sendCodedBTMessage("C");
             }
         });
 

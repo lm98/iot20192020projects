@@ -15,4 +15,6 @@ public interface DumpsterBTCommunicator {
     void sendCodedBTMessage(String code);
 
     void sendTrashType(String type) throws JSONException;
+
+    boolean getTokenStatus();
 }

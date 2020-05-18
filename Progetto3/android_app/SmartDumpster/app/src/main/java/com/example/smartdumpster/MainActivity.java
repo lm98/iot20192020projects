@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
      */
     @Override
     public void sendTrashType(String type) throws JSONException {
-        if(!hasToken){
-            return;
-        }
+        
         requestQueue = Volley.newRequestQueue(this);
         String url = "https://allco.000webhostapp.com/dumpster/set_trash_type.php";
 
@@ -146,6 +144,11 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         stringRequest.setTag(TAG);
         requestQueue.add(stringRequest);
         cancelToken();
+    }
+
+    @Override
+    public boolean getTokenStatus() {
+        return hasToken;
     }
 
     @Override
