@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
 
         stringRequest.setTag(TAG);
         requestQueue.add(stringRequest);
-        //cancelToken();
+        showMessageToast("Sending: "+type);
     }
 
     @Override
