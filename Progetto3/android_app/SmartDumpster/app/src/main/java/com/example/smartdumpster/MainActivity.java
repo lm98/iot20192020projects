@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error Response code: " + error.getMessage());
+                        showMessageToast("Token Denied!");
                     }
                 });
 
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
     public void sendCodedBTMessage(String code){
         if(hasToken){
             btChannel.sendMessage(code);
-            //hasToken = false; //Decommentare questa riga per fare in modo che 1 token valga 1 solo deposito
+            hasToken = false; //Decommentare questa riga per fare in modo che 1 token valga 1 solo deposito
         } else {
             showMessageToast("Token expired!");
         }
