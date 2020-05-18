@@ -93,12 +93,14 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
                     @Override
                     public void onResponse(String response) {
                         hasToken = true;
+                        showMessageToast("Token Acquired!");
                         showBTFragment();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        hasToken = false;
                         showMessageToast("Token Denied!");
                     }
                 });
@@ -112,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
      */
     @Override
     public void sendTrashType(String type) throws JSONException {
+        if(!hasToken){
+            return;
+        }
         requestQueue = Volley.newRequestQueue(this);
         String url = "https://allco.000webhostapp.com/dumpster/set_trash_type.php";
 
@@ -140,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
 
         stringRequest.setTag(TAG);
         requestQueue.add(stringRequest);
+        cancelToken();
     }
 
     @Override
@@ -194,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
     public void sendCodedBTMessage(String code){
         if(hasToken){
             btChannel.sendMessage(code);
-            hasToken = false; //Decommentare questa riga per fare in modo che 1 token valga 1 solo deposito
+            cancelToken(); //Decommentare questa riga per fare in modo che 1 token valga 1 solo deposito
         } else {
             showMessageToast("Token expired!");
         }
@@ -205,5 +211,10 @@ public class MainActivity extends AppCompatActivity implements DumpsterBTCommuni
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, msg, duration);
         toast.show();
+    }
+
+    private void cancelToken(){
+        this.hasToken = false;
+        showMessageToast("You don't have token anymore");
     }
 }
