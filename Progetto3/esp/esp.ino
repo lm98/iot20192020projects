@@ -31,8 +31,8 @@ int isAvailable() {
 }
 
 void setup() {
-  char* ssidName = "Wifi"; //Network name
-  char* pwd = "password"; //Wifi network password
+  char* ssidName = "Casa Wifi"; //Network name
+  char* pwd = "penny2015"; //Wifi network password
   pinMode(LED_AV, OUTPUT);    //Dichiaro il pin D0 "AVAILABLE" in Output
   pinMode(LED_NAV, OUTPUT);    //Dichiaro il pin D1 "NOT AVAILABLE" in Output
   pinMode(TRIMMER, OUTPUT);    //Dichiaro il pin D1 "NOT AVAILABLE" in Output
