@@ -1,12 +1,12 @@
 <?php
 
 function db_connect() {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    
+    $servername = "remotemysql.com";
+    $username = "g1nomYxqFk";
+    $password = "24STCXaUv6";
+    //port 3306
     // Create connection
-    $conn = new mysqli($servername, $username, $password, 'dumpster');
+    $conn = new mysqli($servername, $username, $password, 'g1nomYxqFk');
     
     // Check connection
     if ($conn->connect_error) {
@@ -57,84 +57,13 @@ function inc_depsits(){
     }
 
     $depo = $row['deposits'];
-    echo $depo;
     $depo++;
-    echo $depo;
     $sql = "UPDATE general SET deposits=$depo";
 
     if (!$conn->query($sql) === TRUE) {
         echo "Error updating record: " . $conn->error;
     }
     $conn->close();
-}
-
-function generate_token(){
-    $conn = db_connect();
-    //aggiungo un deposito da confermare, manca il peso dei rifiuti
-    $FUUCK = "INSERT INTO deposit(a_deposited, b_deposited, c_deposited, date) VALUES (1,1,1,CURRENT_DATE)";
-    $sql = "INSERT INTO 'deposit' ('a_deposited', 'b_deposited', 'c_deposited', 'date') VALUES ('1', '1', '1', CURRENT_DATE)";
-
-    if ($conn->query($FUUCK) === TRUE) {
-        //prendo l'ultimo id inserito
-        $last_id = $conn->insert_id;
-        $conn->close();
-        return $last_id;
-    } else {
-        $conn->close();
-        exit('error');
-    } 
-}
-
-function success($jsonobj){
-    $json_decoded = json_decode($jsonobj, true);
-    $A = $json_decoded['a'];
-    $B = $json_decoded['b'];
-    $C = $json_decoded['c'];
-    $id = $json_decoded['id'];
-    $conn = db_connect();
-
-    //aggiorno il deposito in attesa
-    $sql = "UPDATE deposit SET a_deposited = $A, b_deposited = $B, c_deposited = $C where deposit_id = $id";
-    if ($conn->query($sql) === TRUE) {
-        //echo "Record updated successfully";
-    } else {
-        echo "Error updating record: " . $conn->error;
-    }
-
-    $wheight = $A + $B + $C;
-    $sql = "SELECT weight, deposits, wheight_max FROM general";
-    $result = $conn->query($sql);
-    
-    if ($result->num_rows > 0) {
-        // output data of each row
-        while($row = $result->fetch_assoc()) {
-            $wheight += $row["weight"];
-            $deposits = $row["deposits"];
-            $wheight_max = $row["wheight_max"];
-            $deposits++;
-
-            $sql = "UPDATE general SET weight = $wheight, deposits = $deposits";
-
-            if (!$conn->query($sql) === TRUE) {
-                echo "Error updating record: " . $conn->error;
-            }
-
-            if($wheight>$wheight_max){
-                $sql = "UPDATE general SET available = 0";
-        
-                if (!$conn->query($sql) === TRUE) {
-                    exit("Error updating record: " . $conn->error);
-                }
-            } 
-        }
-        $conn->close();
-    } else {
-        echo "0 results";
-    }
-    
-    
-    //controls if the wheight is too much
-    
 }
 
 function deposit($jsonobj){
@@ -209,23 +138,6 @@ function toggle_avail(){
     $conn->close();
 }
 
-//solo per provare delle funzioni, da togliere
-function get_last_id(){
-    $conn = db_connect();
-
-    $sql = "SELECT MAX(deposit_id) FROM deposit";
-    $result = $conn->query($sql);
-    
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_row();
-    } else {
-        echo "error";
-    }
-    $id = $row[0]; 
-    $conn->close();
-    return $id;
-}
-
 function get_a(){
     $conn = db_connect();
     $a_trash = array();
@@ -267,7 +179,7 @@ function get_b(){
 function get_c(){
     $conn = db_connect();
     $c_trash = array();
-    $sql = "SELECT c_deposited, date FROM deposit";
+    $sql = "SELECT c_deposited, date FROM deposit ";
     $result = $conn->query($sql);
         
     if ($result->num_rows > 0) {
@@ -293,12 +205,66 @@ function check_pass($pass){
         }
         $conn->close();
         if($pass == $conf_pass){
-
-        }
-        return true;
+            return true;
+        }   
     } else {
         return false;
     }
 }
 
+
+function set_trash_type($json){
+    //set_avail(0);
+    $obj = json_decode($json);
+    $conn = db_connect();
+    $sql = "INSERT INTO deposit (deposit_id, a_deposited, b_deposited, c_deposited, date, tmp_deposit) VALUES (NULL,'0', '0', '0', CURRENT_DATE ,'$obj->type')";
+    if (!$conn->query($sql) === TRUE) {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+    return true;
+}
+
+function deposit_fix($json){
+    $obj = json_decode($json);
+    $quantity = $obj->quantity;
+    $conn = db_connect();
+    $trash;
+    $id;
+    $wheight_control=0;
+    $sql_control  = "SELECT a_deposited, b_deposited,c_deposited FROM deposit ORDER BY deposit_id DESC LIMIT 1";
+    $result_control = $conn->query($sql_control);
+    if ($result_control->num_rows > 0) {
+        if($row = $result_control->fetch_assoc()) {
+            $wheight_control = $row["a_deposited"] +  $row["b_deposited"] + $row["c_deposited"];
+        }
+    }
+    if ($wheight_control == 0){
+        $sql = "SELECT deposit_id, tmp_deposit FROM deposit ORDER BY deposit_id DESC LIMIT 1";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            if($row = $result->fetch_assoc()) {
+                $trash = $row["tmp_deposit"];
+                $id = $row["deposit_id"];
+            }
+        }
+    
+        $sql1 = "UPDATE deposit SET ".$trash."_deposited = '$quantity' WHERE deposit_id = ".$id;
+        if (!$conn->query($sql1) === TRUE) {
+        }
+    }
+    $conn->close();
+    inc_depsits();
+}
+
+function clean_empty_rows(){
+    $obj = json_decode($json);
+    $conn = db_connect();
+    $sql = "DELETE FROM deposit WHERE a_deposited + b_deposited + c_deposited =0";
+    if (!$conn->query($sql) === TRUE) {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+        return false;
+    }
+    return true;
+}
 ?>
