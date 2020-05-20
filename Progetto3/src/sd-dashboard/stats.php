@@ -27,23 +27,23 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	},
 	data: [{
 		type: "column",
-		name: "A type trash",
+		name: "kg of A type trash",
 		indexLabel: "{y}",
-		yValueFormatString: "kg #0.##",
+		yValueFormatString: "#0.##",
 		showInLegend: true,
 		dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
 	},{
 		type: "column",
-		name: "B type trash",
+		name: "kg of B type trash",
 		indexLabel: "{y}",
-		yValueFormatString: "kg #0.##",
+		yValueFormatString: "#0.##",
 		showInLegend: true,
 		dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
 	},{
 		type: "column",
-		name: "C type trash",
+		name: "kg of C type trash",
 		indexLabel: "{y}",
-		yValueFormatString: "kg #0.##",
+		yValueFormatString: "#0.##",
 		showInLegend: true,
 		dataPoints: <?php echo json_encode($dataPoints3, JSON_NUMERIC_CHECK); ?>
 	}]

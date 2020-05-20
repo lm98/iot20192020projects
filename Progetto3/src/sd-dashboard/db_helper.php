@@ -141,7 +141,7 @@ function toggle_avail(){
 function get_a(){
     $conn = db_connect();
     $a_trash = array();
-    $sql = "SELECT a_deposited, date FROM deposit";
+    $sql = "SELECT a_deposited, date FROM deposit ORDER BY deposit_id DESC LIMIT 25";
     $result = $conn->query($sql);
     
     if ($result->num_rows > 0) {
@@ -160,7 +160,7 @@ function get_a(){
 function get_b(){
     $conn = db_connect();
     $b_trash = array();
-    $sql = "SELECT b_deposited, date FROM deposit";
+    $sql = "SELECT b_deposited, date FROM deposit ORDER BY deposit_id DESC LIMIT 25";
     $result = $conn->query($sql);
         
     if ($result->num_rows > 0) {
@@ -179,7 +179,7 @@ function get_b(){
 function get_c(){
     $conn = db_connect();
     $c_trash = array();
-    $sql = "SELECT c_deposited, date FROM deposit ";
+    $sql = "SELECT c_deposited, date FROM deposit ORDER BY deposit_id DESC LIMIT 25 ";
     $result = $conn->query($sql);
         
     if ($result->num_rows > 0) {
